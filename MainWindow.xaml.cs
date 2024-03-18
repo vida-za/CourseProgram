@@ -10,7 +10,6 @@ namespace CourseProgram.Views
         public MainWindow()
         {
             InitializeComponent();
-            _NavigationFrame.Navigate(new LoginPage());
         }
     }
 }

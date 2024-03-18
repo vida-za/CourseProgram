@@ -1,29 +1,57 @@
 ﻿using System;
-using System.ComponentModel;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
-    public class Driver : IModel //Водитель
+    public class Driver //Водитель
     {
-        [DisplayName("Номер водителя")]
-        public int? ID { get; set; } //КодВодителя
-        [DisplayName("Категория")]
-        public string? Category { get; set; } //Категория
-        [DisplayName("ФИО")]
-        public string? FIO { get; set; } //ФИО
-        [DisplayName("Дата рождения")]
-        public DateOnly? BirthDay { get; set; } //ДатаРождения
-        [DisplayName("Паспортные данные")]
-        public string? Passport { get; set; } //ПаспортныеДанные
-        [DisplayName("Телефон")]
-        public string? Phone { get; set; } //Телефон
-        [DisplayName("Дата начала")]
-        public DateOnly? DateStart { get; set; } //ДатаНачала
-        [DisplayName("Дата окончания")]
-        public DateOnly? DateEnd { get; set; } //ДатаОкончания 
+        //public int ID { get; } //КодВодителя
+        public DriverCategory Category { get; } //Категория
+        public string FIO { get; } //ФИО
+        public DateTime BirthDay { get; } //ДатаРождения
+        public string Passport { get; } //ПаспортныеДанные
+        public string? Phone { get; } //Телефон
+        public DateTime DateStart { get; } //ДатаНачала
+        public DateTime DateEnd { get; } //ДатаОкончания 
+
+        public Driver(/*int id,*/ DriverCategory category, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd)
+        {
+            //ID = id;
+            Category = category;
+            FIO = fio;
+            BirthDay = birthDay;
+            Passport = passport;
+            Phone = phone;
+            DateStart = dateStart;
+            DateEnd = dateEnd;
+        }
 
         public string GetSelectors() => " \"КодВодителя\", \"Категория\", \"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
 
         public string GetTable() => " From \"Водитель\";";
+
+        public override string ToString()
+        {
+            return $"{Category}{FIO}{BirthDay}{Passport}{Phone}{DateStart}{DateEnd}";
+        }
+
+        public override bool Equals(object obj) => obj is Driver driver && Passport == driver.Passport;
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Passport);
+        }
+
+        public static bool operator ==(Driver driver1, Driver driver2)
+        {
+            if (driver1 is null && driver2 is null) return true;
+
+            return driver1 is not null && driver1.Equals(driver2);
+        }
+
+        public static bool operator !=(Driver driver1, Driver driver2)
+        {
+            return !(driver1 == driver2);
+        }
     }
 }

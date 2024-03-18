@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="H.XamlStyler" Version="1.0.4" />
     <PackageReference Include="Npgsql" Version="8.0.2" />
   </ItemGroup>
 	

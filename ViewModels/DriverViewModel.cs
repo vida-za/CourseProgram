@@ -1,48 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using CourseProgram.Models;
+﻿using CourseProgram.Models;
 
 namespace CourseProgram.ViewModels
 {
-    public class DriverViewModel : BaseViewModel<Driver>
+    public class DriverViewModel : BaseViewModel
     {
-        public DriverViewModel()
+        private readonly Driver _driver;
+
+        //public int ID => _driver.ID;
+        public string Category => _driver.Category.ToString();
+        public string FIO => _driver.FIO;
+        public string BirthDay => _driver.BirthDay.ToString("d");
+        public string Passport => _driver.Passport;
+        public string? Phone => _driver.Phone;
+        public string DateStart => _driver.DateStart.ToString("d");
+        public string DateEnd => _driver.DateEnd.ToString("d");
+
+        public DriverViewModel(Driver driver)
         {
-            Title = "";
-            IsBusy = false;
-
-            Items = new List<Driver>();
-            SelectedItems = new List<Driver>();
-            LoadItemsCommand();
-        }
-
-        public List<Driver> Items { get; set; }
-        public List<Driver> SelectedItems { get; set; }
-
-        private async void LoadItemsCommand()
-        {
-            IsBusy = true;
-
-            try
-            {
-                var _drivers = await Data.GetItemsAsync(true);
-                Task load = new(() =>
-                {
-                    Items.Clear();
-                    foreach (var drv in _drivers)
-                        Items.Add(drv);
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            _driver = driver;
         }
     }
 }
