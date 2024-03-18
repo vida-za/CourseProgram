@@ -19,5 +19,10 @@ namespace CourseProgram.ViewModels
         {
             _driver = driver;
         }
+
+        public Driver GetDriver()
+        {
+            return _driver;
+        }
     }
 }

@@ -14,6 +14,17 @@ namespace CourseProgram.Models
         public DateTime DateStart { get; } //ДатаНачала
         public DateTime DateEnd { get; } //ДатаОкончания 
 
+        public Driver()
+        {
+            Category = new DriverCategory();
+            FIO = string.Empty;
+            BirthDay = new DateTime();
+            Passport = string.Empty;
+            Phone = string.Empty;
+            DateStart = new DateTime();
+            DateEnd = new DateTime();
+        }
+
         public Driver(/*int id,*/ DriverCategory category, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd)
         {
             //ID = id;

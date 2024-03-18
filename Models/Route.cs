@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CourseProgram.Models
+﻿namespace CourseProgram.Models
 {
     public class Route
     {
-        public Route(int id, Machine machine, Driver driver, string type, float distance, string status)
+        public Route()
         {
-            Id = id;
+            Machine = new Machine();
+            Driver = new Driver();
+            Type = string.Empty;
+            Distance = float.NaN;
+            Status = string.Empty;
+        }
+
+        public Route(/*int id*/, Machine machine, Driver driver, string type, float distance, string status)
+        {
+            //Id = id;
             Machine = machine;
             Driver = driver;
             Type = type;
@@ -19,7 +21,7 @@ namespace CourseProgram.Models
             Status = status;
         }
 
-        public int Id { get; } //КодМаршрута
+        //public int Id { get; } //КодМаршрута
         public Machine Machine { get; } //КодМашины
         public Driver Driver { get; } //КодВодителя
         public string Type { get; } //Тип

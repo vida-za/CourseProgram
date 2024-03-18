@@ -16,11 +16,12 @@ namespace CourseProgram.ViewModels
             _drivers = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
+            DeleteDriverCommand = new DeleteDriverCommand(this, driverData);
 
             UpdateDrivers();
         }
 
-        private void UpdateDrivers()
+        public void UpdateDrivers()
         {
             _drivers.Clear();
 
@@ -37,6 +38,18 @@ namespace CourseProgram.ViewModels
         public IEnumerable<DriverViewModel> Drivers => _drivers;
 
         public ICommand AddDriverCommand { get; }
+        public ICommand DeleteDriverCommand { get; }
+
+        private DriverViewModel _selectedDriver;
+        public DriverViewModel SelectedDriver
+        {
+            get => _selectedDriver;
+            set
+            {
+                _selectedDriver = value;
+                OnPropertyChanged(nameof(SelectedDriver));
+            }
+        }
 
     }
 }

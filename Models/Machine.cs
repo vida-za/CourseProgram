@@ -4,9 +4,29 @@ namespace CourseProgram.Models
 {
     public class Machine
     {
-        public Machine(int id, string typeMachine, string typeBodywork, string typeLoading, float loadCapacity, float volume, bool hydroBoard, float lengthBodywork, float widthBodywork, float heightBodywork, string stamp, string name, string stateNumber, string status, DateTime timeStart, DateTime timeEnd)
+        public Machine()
         {
-            Id = id;
+            //Id = 0;
+            TypeMachine = string.Empty;
+            TypeBodywork = string.Empty;
+            TypeLoading = string.Empty;
+            LoadCapacity = float.NaN;
+            Volume = float.NaN;
+            HydroBoard = false;
+            LengthBodywork = float.NaN;
+            WidthBodywork = float.NaN;
+            HeightBodywork = float.NaN;
+            Stamp = string.Empty;
+            Name = string.Empty;
+            StateNumber = string.Empty;
+            Status = string.Empty;
+            TimeStart = new DateTime();
+            TimeEnd = new DateTime();
+        }
+
+        public Machine(/*int id, */string typeMachine, string typeBodywork, string typeLoading, float loadCapacity, float volume, bool hydroBoard, float lengthBodywork, float widthBodywork, float heightBodywork, string stamp, string name, string stateNumber, string status, DateTime timeStart, DateTime timeEnd)
+        {
+            //Id = id;
             TypeMachine = typeMachine;
             TypeBodywork = typeBodywork;
             TypeLoading = typeLoading;
@@ -24,7 +44,7 @@ namespace CourseProgram.Models
             TimeEnd = timeEnd;
         }
 
-        public int Id { get; } //КодМашины
+        //public int Id { get; } //КодМашины
         public string TypeMachine { get; } //ТипМашины
         public string TypeBodywork { get; } //ТипКузова
         public string TypeLoading { get; } //ТипЗагрузки

@@ -13,7 +13,7 @@ namespace CourseProgram.DataClasses
             _drivers = new List<Driver>();
         }
 
-        public IEnumerable<Driver> GetDriversAll() => _drivers;
+        public List<Driver> GetDriversAll() => _drivers;
 
         public void AddDriver(Driver driver) 
         {
@@ -26,6 +26,19 @@ namespace CourseProgram.DataClasses
             }
 
             _drivers.Add(driver);
+        }
+
+        public void RemoveDriver(Driver driver) 
+        {
+            {
+                for (int i = 0; i < _drivers.Count; i++) 
+                {
+                    if (_drivers[i] == driver) 
+                    { 
+                        _drivers.RemoveAt(i); 
+                    }
+                }
+            }
         }
     }
 }
