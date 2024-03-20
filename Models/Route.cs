@@ -11,7 +11,7 @@
             Status = string.Empty;
         }
 
-        public Route(/*int id*/, Machine machine, Driver driver, string type, float distance, string status)
+        public Route(/*int id,*/ Machine machine, Driver driver, string type, float distance, string status)
         {
             //Id = id;
             Machine = machine;

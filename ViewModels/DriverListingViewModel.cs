@@ -5,18 +5,20 @@ using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.DataClasses;
+using CourseProgram.Stores;
 
 namespace CourseProgram.ViewModels
 {
     public class DriverListingViewModel : BaseViewModel
     {
-        public DriverListingViewModel(DriverData driverData, NavigationService addDriverNavigationService)
+        public DriverListingViewModel(DriverData driverData, NavigationService addDriverNavigationService, NavigationStore navigationStore)
         {
             _driverData = driverData;
             _drivers = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
             DeleteDriverCommand = new DeleteDriverCommand(this, driverData);
+            DetailDriverCommand = new NavigateCommand(new NavigationService(navigationStore, () => SelectedDriver));
 
             UpdateDrivers();
         }
@@ -39,6 +41,7 @@ namespace CourseProgram.ViewModels
 
         public ICommand AddDriverCommand { get; }
         public ICommand DeleteDriverCommand { get; }
+        public ICommand DetailDriverCommand { get; }
 
         private DriverViewModel _selectedDriver;
         public DriverViewModel SelectedDriver
@@ -50,6 +53,5 @@ namespace CourseProgram.ViewModels
                 OnPropertyChanged(nameof(SelectedDriver));
             }
         }
-
     }
 }

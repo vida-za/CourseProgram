@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="CourseProgram.Views.DriverView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CourseProgram.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="{Binding FIO}"
+                   Margin="0 5 0 0"
+                   Style="{StaticResource Header}" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Category" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="1"
+                       Text="{Binding Category}" />
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="BirthDay" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding BirthDay}" />
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Passport" />
+            <TextBlock Grid.Row="2"
+                       Grid.Column="1"
+                       Text="{Binding Passport}" />
+
+            <TextBlock Grid.Row="3"
+                       Grid.Column="0"
+                       Text="Phone" />
+            <TextBlock Grid.Row="3"
+                       Grid.Column="1"
+                       Text="{Binding Phone}" />
+
+            <TextBlock Grid.Row="4"
+                       Grid.Column="0"
+                       Text="DateStart" />
+            <TextBlock Grid.Row="4"
+                       Grid.Column="1"
+                       Text="{Binding DateStart}" />
+
+            <TextBlock Grid.Row="5"
+                       Grid.Column="0"
+                       Text="DateEnd" />
+            <TextBlock Grid.Row="5"
+                       Grid.Column="1"
+                       Text="{Binding DateEnd}" />
+        </Grid>
+    </Grid>
+</UserControl>

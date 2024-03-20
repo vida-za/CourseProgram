@@ -14,16 +14,18 @@ namespace CourseProgram
     {
         private readonly InitData _initData;
         private readonly NavigationStore _naviagtionStore;
+        private readonly ServicesStore _servicesStore;
 
         public App()
         {
             _initData = new InitData();
             _naviagtionStore = new NavigationStore();
+            _servicesStore = new ServicesStore();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            _naviagtionStore.CurrentViewModel = CreateDriverListingViewModel();
+            _naviagtionStore.CurrentViewModel = CreateLoginViewModel();
 
             MainWindow = new MainWindow()
             {
@@ -34,14 +36,10 @@ namespace CourseProgram
             base.OnStartup(e);
         }
 
-        private AddDriverViewModel CreateAddDriverViewModel()
-        {
-            return new AddDriverViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
-        }
+        private AddDriverViewModel CreateAddDriverViewModel() => new AddDriverViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
 
-        private DriverListingViewModel CreateDriverListingViewModel() 
-        {
-            return new DriverListingViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateAddDriverViewModel));
-        }
+        private DriverListingViewModel CreateDriverListingViewModel() => new DriverListingViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateAddDriverViewModel), _naviagtionStore);
+
+        private LoginViewModel CreateLoginViewModel() => new LoginViewModel(new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
     }
 }

@@ -48,10 +48,7 @@ namespace CourseProgram.Models
 
         public override bool Equals(object obj) => obj is Driver driver && Passport == driver.Passport;
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Passport);
-        }
+        public override int GetHashCode() => HashCode.Combine(Passport);
 
         public static bool operator ==(Driver driver1, Driver driver2)
         {
@@ -60,9 +57,6 @@ namespace CourseProgram.Models
             return driver1 is not null && driver1.Equals(driver2);
         }
 
-        public static bool operator !=(Driver driver1, Driver driver2)
-        {
-            return !(driver1 == driver2);
-        }
+        public static bool operator !=(Driver driver1, Driver driver2) => !(driver1 == driver2);
     }
 }

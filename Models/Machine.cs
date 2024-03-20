@@ -64,5 +64,23 @@ namespace CourseProgram.Models
         public string GetSelectors() => " \"КодМашины\", \"ТипМашины\", \"ТипКузова\", \"ТипЗагрузки\", \"Грузоподъёмность\", \"Объём\", \"Гидроборт\", \"ДлинаКузова\", \"ШиринаКузова\", \"ВысотаКузова\", \"Марка\", \"Название\", \"ГосНомер\", \"Состояние\", \"ВремяПоступления\", \"ВремяОкончания\"";
 
         public string GetTable() => " From \"Машина\";";
+
+        public override string ToString()
+        {
+            return $"{TypeMachine}{TypeBodywork}{TypeLoading}{LoadCapacity}{Volume}{HydroBoard}{LengthBodywork}{WidthBodywork}{HeightBodywork}{Stamp}{Name}{StateNumber}{Status}{TimeStart}{TimeEnd}";
+        }
+
+        public override bool Equals(object obj) => obj is Machine machine && Name == machine.Name;
+
+        public override int GetHashCode() => HashCode.Combine(Name);
+
+        public static bool operator ==(Machine machine1, Machine machine2)
+        {
+            if (machine1 is null && machine2 is null) return true;
+
+            return machine1 is not null && machine1.Equals(machine2);
+        }
+
+        public static bool operator !=(Machine machine1, Machine machine2) => !(machine1 == machine2);
     }
 }
