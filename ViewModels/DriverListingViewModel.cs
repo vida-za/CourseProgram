@@ -6,36 +6,39 @@ using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.DataClasses;
 using CourseProgram.Stores;
+using CourseProgram.Services.DataServices;
 
 namespace CourseProgram.ViewModels
 {
     public class DriverListingViewModel : BaseViewModel
     {
-        public DriverListingViewModel(DriverData driverData, NavigationService addDriverNavigationService, NavigationStore navigationStore)
+        public DriverListingViewModel(DriverDataService driverDataService, NavigationService addDriverNavigationService, NavigationStore navigationStore)
         {
-            _driverData = driverData;
+            _driverDataService = driverDataService;
             _drivers = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
-            DeleteDriverCommand = new DeleteDriverCommand(this, driverData);
+            DeleteDriverCommand = new DeleteDriverCommand(this, driverDataService);
             DetailDriverCommand = new NavigateCommand(new NavigationService(navigationStore, () => SelectedDriver));
 
             UpdateDrivers();
         }
 
-        public void UpdateDrivers()
+        public async void UpdateDrivers()
         {
             _drivers.Clear();
 
-            foreach (Driver driver in _driverData.GetDriversAll())
+            IEnumerable<Driver> temp = await _driverDataService.GetItemsAsync();
+
+            foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new DriverViewModel(driver);
+                DriverViewModel driverViewModel = new(driver);
                 _drivers.Add(driverViewModel);
             }
         }
 
         private readonly ObservableCollection<DriverViewModel> _drivers;
-        private readonly DriverData _driverData;
+        private readonly DriverDataService _driverDataService;
 
         public IEnumerable<DriverViewModel> Drivers => _drivers;
 

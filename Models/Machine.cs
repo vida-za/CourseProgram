@@ -6,7 +6,7 @@ namespace CourseProgram.Models
     {
         public Machine()
         {
-            //Id = 0;
+            ID = 0;
             TypeMachine = string.Empty;
             TypeBodywork = string.Empty;
             TypeLoading = string.Empty;
@@ -24,9 +24,9 @@ namespace CourseProgram.Models
             TimeEnd = new DateTime();
         }
 
-        public Machine(/*int id, */string typeMachine, string typeBodywork, string typeLoading, float loadCapacity, float volume, bool hydroBoard, float lengthBodywork, float widthBodywork, float heightBodywork, string stamp, string name, string stateNumber, string status, DateTime timeStart, DateTime timeEnd)
+        public Machine(int id, string typeMachine, string typeBodywork, string typeLoading, float loadCapacity, float volume, bool hydroBoard, float lengthBodywork, float widthBodywork, float heightBodywork, string stamp, string name, string stateNumber, string status, DateTime timeStart, DateTime timeEnd)
         {
-            //Id = id;
+            ID = id;
             TypeMachine = typeMachine;
             TypeBodywork = typeBodywork;
             TypeLoading = typeLoading;
@@ -44,7 +44,7 @@ namespace CourseProgram.Models
             TimeEnd = timeEnd;
         }
 
-        //public int Id { get; } //КодМашины
+        public int ID { get; } //КодМашины
         public string TypeMachine { get; } //ТипМашины
         public string TypeBodywork { get; } //ТипКузова
         public string TypeLoading { get; } //ТипЗагрузки
@@ -61,9 +61,11 @@ namespace CourseProgram.Models
         public DateTime TimeStart { get; } //ВремяПоступления
         public DateTime TimeEnd { get; } //ВремяОкончания
 
-        public string GetSelectors() => " \"КодМашины\", \"ТипМашины\", \"ТипКузова\", \"ТипЗагрузки\", \"Грузоподъёмность\", \"Объём\", \"Гидроборт\", \"ДлинаКузова\", \"ШиринаКузова\", \"ВысотаКузова\", \"Марка\", \"Название\", \"ГосНомер\", \"Состояние\", \"ВремяПоступления\", \"ВремяОкончания\"";
+        public static string GetSelectors() => "\"ТипМашины\", \"ТипКузова\", \"ТипЗагрузки\", \"Грузоподъёмность\", \"Объём\", \"Гидроборт\", \"ДлинаКузова\", \"ШиринаКузова\", \"ВысотаКузова\", \"Марка\", \"Название\", \"ГосНомер\", \"Состояние\", \"ВремяПоступления\", \"ВремяОкончания\"";
 
-        public string GetTable() => " From \"Машина\";";
+        public static string GetTable() => "\"Машина\"";
+
+        public static string GetSelectorID() => "\"КодМашины\"";
 
         public override string ToString()
         {

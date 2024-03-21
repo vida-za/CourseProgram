@@ -7,7 +7,16 @@ namespace CourseProgram.Models
 {
     public static class Constants
     {
-        public enum DriverCategory { A, B, C, D, BE, CE, DE }
+        private const string ServerConst = "localhost:5433";
+        private const string DatabaseConst = "CourseDB";
+        public static string Server = ServerConst;
+        public static string Database = DatabaseConst;
+
+        static public class User
+        {
+            static public string Username { get; set; }
+            static public string Password { get; set; }
+        }
 
         public static T Cast<T>(this Object myobj)
         {

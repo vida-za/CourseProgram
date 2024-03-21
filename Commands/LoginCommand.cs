@@ -1,37 +1,37 @@
 ﻿using CourseProgram.Services;
 using CourseProgram.ViewModels;
 using System.Threading;
+using System.Threading.Tasks;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Commands
 {
-    public class LoginCommand : CommandBase
+    public class LoginCommand : CommandBaseAsync
     {
         private readonly LoginViewModel _loginViewModel;
-        private readonly NavigationService _navigationService;
         private DBConnection db;
 
-        public LoginCommand(LoginViewModel loginViewModel, NavigationService navigationService)
+        public LoginCommand(LoginViewModel loginViewModel)
         {
             _loginViewModel = loginViewModel;
-            _navigationService = navigationService;
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            db = new DBConnection(5, null, null, "Login cnn");
+            _loginViewModel.Message = "Waiting";
+
             User.Username = _loginViewModel.Username;
             User.Password = _loginViewModel.Password;
 
-            db.Login = User.Username;
-            db.Password = User.Password;
-            db.AutoConnect();
-            _loginViewModel.Message = "Waiting";
+            db = new DBConnection(Server, Database, User.Username, User.Password, "Login");
 
-            Thread.Sleep(1000);
+            await db.OpenAsync();
+
+            Thread.Sleep(500);
             if (db.ConnectionState == 1)
             {
-                db.CancelConnect();
-                _navigationService.Navigate();
+                db.Close();
+                App.Current.MainWindow.DialogResult = true;
             }
             else
             {

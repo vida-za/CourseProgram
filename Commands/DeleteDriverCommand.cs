@@ -1,21 +1,21 @@
-﻿using CourseProgram.DataClasses;
-using CourseProgram.Models;
+﻿using CourseProgram.Services.DataServices;
 using CourseProgram.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace CourseProgram.Commands
 {
-    public class DeleteDriverCommand : CommandBase
+    public class DeleteDriverCommand : CommandBaseAsync
     {
         private readonly DriverListingViewModel _driverListingViewModel;
-        private readonly DriverData _driverData;
+        private readonly DriverDataService _driverDataService;
 
-        public DeleteDriverCommand(DriverListingViewModel driverListingViewModel, DriverData driverData)
+        public DeleteDriverCommand(DriverListingViewModel driverListingViewModel, DriverDataService driverDataService)
         {
             _driverListingViewModel = driverListingViewModel;
-            _driverData = driverData;
+            _driverDataService = driverDataService;
 
             _driverListingViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -33,11 +33,11 @@ namespace CourseProgram.Commands
             return base.CanExecute(parameter) && _driverListingViewModel.SelectedDriver is not null;
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             try
             {
-                _driverData.RemoveDriver(_driverListingViewModel.SelectedDriver.GetDriver());
+                await _driverDataService.DeleteItemAsync(_driverListingViewModel.SelectedDriver.GetDriver().ID);
 
                 _driverListingViewModel.UpdateDrivers();
             }

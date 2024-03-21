@@ -12,34 +12,41 @@ namespace CourseProgram
     /// </summary>
     public partial class App : Application
     {
-        private readonly InitData _initData;
         private readonly NavigationStore _naviagtionStore;
-        private readonly ServicesStore _servicesStore;
+        private ServicesStore _servicesStore;
 
         public App()
         {
-            _initData = new InitData();
             _naviagtionStore = new NavigationStore();
-            _servicesStore = new ServicesStore();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            _naviagtionStore.CurrentViewModel = CreateLoginViewModel();
-
-            MainWindow = new MainWindow()
-            {
-                DataContext = new MainViewModel(_naviagtionStore)
-            };
-            MainWindow.Show();
-
             base.OnStartup(e);
+
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            LoginWindow loginWindow = new();
+            loginWindow.ShowDialog();
+
+            if ((bool)loginWindow.DialogResult)
+            {
+                _servicesStore = new ServicesStore();
+
+                _naviagtionStore.CurrentViewModel = CreateDriverListingViewModel();
+
+                MainWindow = new MainWindow()
+                {
+                    DataContext = new MainViewModel(_naviagtionStore)
+                };
+                MainWindow.Show();
+            }
+            else
+                Shutdown();
         }
 
-        private AddDriverViewModel CreateAddDriverViewModel() => new AddDriverViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
+        private AddDriverViewModel CreateAddDriverViewModel() => new AddDriverViewModel(_servicesStore._driverService, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
 
-        private DriverListingViewModel CreateDriverListingViewModel() => new DriverListingViewModel(_initData.DriverData, new NavigationService(_naviagtionStore, CreateAddDriverViewModel), _naviagtionStore);
-
-        private LoginViewModel CreateLoginViewModel() => new LoginViewModel(new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
+        private DriverListingViewModel CreateDriverListingViewModel() => new DriverListingViewModel(_servicesStore._driverService, new NavigationService(_naviagtionStore, CreateAddDriverViewModel), _naviagtionStore);
     }
 }

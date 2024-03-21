@@ -1,18 +1,16 @@
 ﻿using CourseProgram.Commands;
-using CourseProgram.DataClasses;
 using CourseProgram.Services;
-using CourseProgram.Stores;
+using CourseProgram.Services.DataServices;
 using System;
 using System.Windows.Input;
-using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.ViewModels
 {
     public class AddDriverViewModel : BaseViewModel
     {
-        public AddDriverViewModel(DriverData driverData, NavigationService driverViewNavigationService)
+        public AddDriverViewModel(DriverDataService driverDataService, NavigationService driverViewNavigationService)
         {
-            SubmitCommand = new AddDriverCommand(this, driverData, driverViewNavigationService);
+            SubmitCommand = new AddDriverCommand(this, driverDataService, driverViewNavigationService);
             CancelCommand = new NavigateCommand(driverViewNavigationService);
         }
 
@@ -24,17 +22,6 @@ namespace CourseProgram.ViewModels
             {
                 _driverName = value;
                 OnPropertyChanged(nameof(DriverName));
-            }
-        }
-
-        private DriverCategory _category;
-        public DriverCategory Category
-        {
-            get => _category;
-            set
-            {
-                _category = value;
-                OnPropertyChanged(nameof(Category));
             }
         }
 

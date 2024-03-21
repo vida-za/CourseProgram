@@ -13,19 +13,13 @@ namespace CourseProgram.Services
         public DateTime end = DateTime.MinValue;
         private bool _hasanswer = false;
 
-        public bool HasAnswer
-        {
-            get { return _hasanswer; }
-        }
+        public bool HasAnswer => _hasanswer;
 
-        public TimeSpan ResponseTime
-        {
-            get { return end - start; }
-        }
+        public TimeSpan ResponseTime => end - start;
 
         private DataTable? data;
 
-        public bool HasData { get { return data != null; } }
+        public bool HasData => data != null;
         public int Columns => HasData ? data.Columns.Count : 0;
         public int Rows => HasData ? data.Rows.Count : 0;
 
@@ -36,8 +30,7 @@ namespace CourseProgram.Services
 
         public void Dispose()
         {
-            if (data != null)
-                data.Dispose();
+            data?.Dispose();
         }
 
         public void SetAnswer()
@@ -58,17 +51,19 @@ namespace CourseProgram.Services
             }
         }
 
+        #region Commands
+
         public void GetData(string query, NpgsqlConnection connection)
         {
             start = DateTime.Now;
-            using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
+            using (NpgsqlCommand cmd = new(query, connection))
             {
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                data = new DataTable
                 {
-                    data = new DataTable();
-                    data.Locale = System.Globalization.CultureInfo.InvariantCulture;
-                    data.Load(reader);
-                }
+                    Locale = System.Globalization.CultureInfo.InvariantCulture
+                };
+                data.Load(reader);
             }
             end = DateTime.Now;
         }
@@ -78,17 +73,16 @@ namespace CourseProgram.Services
         /// </summary>
         /// <param name="cmd"></param>
         /// <param name="param"></param>
-        private void FillParams(NpgsqlCommand cmd, params object[] param)
+        private static void FillParams(NpgsqlCommand cmd, params object[] param)
         {
-            if (param == null) param = new object[] { DBNull.Value };
+            param ??= new object[] { DBNull.Value };
 
             for (int i = 0; i < param.Length; i++)
             {
                 if (param[i] == null) param[i] = DBNull.Value;
-                //if (param[i] is System.Drawing.Bitmap) param[i] = DBConnection.ImageToByteArray((System.Drawing.Bitmap)param[i]);
-                if (param[i] is System.DateTime && ((DateTime)param[i]) == DateTime.MaxValue) param[i] = DBNull.Value;
-                if (param[i] is System.DateTimeOffset && ((DateTimeOffset)param[i]) == DateTimeOffset.MaxValue) param[i] = DBNull.Value;
-                if (param[i] is System.Int32 && ((System.Int32)param[i] == Int32.MinValue)) param[i] = DBNull.Value;
+                if (param[i] is DateTime time && time == DateTime.MaxValue) param[i] = DBNull.Value;
+                if (param[i] is DateTimeOffset offset && offset == DateTimeOffset.MaxValue) param[i] = DBNull.Value;
+                if (param[i] is Int32 && ((int)param[i] == Int32.MinValue)) param[i] = DBNull.Value;
 
                 string paramname = "@" + (i + 1).ToString();
                 NpgsqlDbType paramType;
@@ -122,77 +116,25 @@ namespace CourseProgram.Services
                 if (param[i] == DBNull.Value)
                 {
                     cmd.Parameters.Add(paramname, NpgsqlDbType.Integer).Value = DBNull.Value;
-                    //cmd.Parameters.Add(paramname, DBNull.Value); // System.Data.SqlTypes.SqlBinary.Null);
                 }
                 else
                     cmd.Parameters.Add(paramname, paramType).Value = param[i];
             }
         }
 
-        public void GetDataParam(string query, NpgsqlConnection connection, params object[] param)
-        {
-            start = DateTime.Now;
-            using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
-            {
-                FillParams(cmd, param);
-
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                {
-                    data = new DataTable();
-                    data.Locale = System.Globalization.CultureInfo.InvariantCulture;
-                    data.Load(reader);
-                }
-            }
-            end = DateTime.Now;
-        }
-
-        public void GetDataParamTimeout(string query, NpgsqlConnection connection, int commandTimeout_, params object[] param)
-        {
-            start = DateTime.Now;
-            using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
-            {
-                FillParams(cmd, param);
-
-                cmd.CommandTimeout = (int)commandTimeout_;
-
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
-                {
-                    data = new DataTable();
-                    data.Locale = System.Globalization.CultureInfo.InvariantCulture;
-                    data.Load(reader);
-                }
-            }
-            end = DateTime.Now;
-        }
-
         public void GetDataParam(NpgsqlTransaction transaction, string query, NpgsqlConnection connection, params object[] param)
         {
             start = DateTime.Now;
-            using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
+            using (NpgsqlCommand cmd = new(query, connection))
             {
                 cmd.Transaction = transaction;
                 FillParams(cmd, param);
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                data = new DataTable
                 {
-                    data = new DataTable();
-                    data.Locale = System.Globalization.CultureInfo.InvariantCulture;
-                    data.Load(reader);
-                }
-            }
-            end = DateTime.Now;
-        }
-
-        public void ExecParam(string query, NpgsqlConnection connection, int? commandTimeout_, params object[] param)
-        {
-            start = DateTime.Now;
-            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
-            {
-                FillParams(command, param);
-
-                if (commandTimeout_ != null && (int)commandTimeout_ > 0)
-                    command.CommandTimeout = (int)commandTimeout_;
-
-                command.ExecuteNonQuery();
+                    Locale = System.Globalization.CultureInfo.InvariantCulture
+                };
+                data.Load(reader);
             }
             end = DateTime.Now;
         }
@@ -200,7 +142,7 @@ namespace CourseProgram.Services
         public async Task ExecParamAsync(string query, NpgsqlConnection connection, int? commandTimeout_, params object[] param)
         {
             start = DateTime.Now;
-            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            using (NpgsqlCommand command = new(query, connection))
             {
                 FillParams(command, param);
 
@@ -215,7 +157,7 @@ namespace CourseProgram.Services
         public void ExecParam(NpgsqlTransaction transaction, string query, NpgsqlConnection connection, params object[] param)
         {
             start = DateTime.Now;
-            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            using (NpgsqlCommand command = new(query, connection))
             {
                 command.Transaction = transaction;
                 FillParams(command, param);
@@ -224,11 +166,9 @@ namespace CourseProgram.Services
             end = DateTime.Now;
         }
 
-        public static implicit operator DataRow(DBAnswer answer)
-        {
-            if (answer.HasData && answer.data.Rows.Count > 0) return answer.data.Rows[0];
-            return null;
-        }
+#endregion
+
+        public static implicit operator DataRow(DBAnswer answer) => answer.HasData && answer.data.Rows.Count > 0 ? answer.data.Rows[0] : null;
 
         public int GetScalarInt
         {

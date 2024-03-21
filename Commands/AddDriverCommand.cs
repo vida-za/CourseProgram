@@ -1,25 +1,25 @@
-﻿using CourseProgram.DataClasses;
-using CourseProgram.Exceptions;
+﻿using CourseProgram.Exceptions;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.ViewModels;
 using System;
 using System.ComponentModel;
-using System.Printing;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace CourseProgram.Commands
 {
-    public class AddDriverCommand : CommandBase
+    public class AddDriverCommand : CommandBaseAsync
     {
         private readonly AddDriverViewModel _addDriverViewModel;
-        private readonly DriverData _driverData;
+        private readonly DriverDataService _driverDataService;
         private readonly NavigationService _driverViewNavigationService;
 
-        public AddDriverCommand(AddDriverViewModel addDriverViewModel, DriverData driverData, NavigationService driverViewNavigationService)
+        public AddDriverCommand(AddDriverViewModel addDriverViewModel, DriverDataService driverDataService, NavigationService driverViewNavigationService)
         {
             _addDriverViewModel = addDriverViewModel;
-            _driverData = driverData;
+            _driverDataService = driverDataService;
             _driverViewNavigationService = driverViewNavigationService;
 
             _addDriverViewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -43,10 +43,10 @@ namespace CourseProgram.Commands
                    base.CanExecute(parameter);
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            Driver driver = new Driver(
-                _addDriverViewModel.Category,
+            Driver driver = new(
+                _driverDataService.FindMaxID(),
                 _addDriverViewModel.DriverName,
                 _addDriverViewModel.BirthDay,
                 _addDriverViewModel.Passport,
@@ -57,15 +57,15 @@ namespace CourseProgram.Commands
 
             try
             {
-                _driverData.AddDriver(driver);
+                await _driverDataService.AddItemAsync(driver);
 
                 MessageBox.Show("Successfully add driver", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 _driverViewNavigationService.Navigate();
             }
-            catch (RepeatConflictException<Driver>) 
+            catch (RepeatConflictException<Driver>)
             {
-                MessageBox.Show("This driver is repeat", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("This driver is repeat", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

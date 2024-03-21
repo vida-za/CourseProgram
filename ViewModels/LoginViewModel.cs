@@ -6,16 +6,12 @@ namespace CourseProgram.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
-        private readonly NavigationService _navigationService;
-
-        public LoginViewModel(NavigationService navigationService)
+        public LoginViewModel()
         {
             Username = "postgres"; //debug
             Password = "Gnbxrf2004"; //debug
 
-            _navigationService = navigationService;
-
-            LoginCommand = new LoginCommand(this, _navigationService);
+            LoginCommand = new LoginCommand(this);
         }
 
         private string _username;

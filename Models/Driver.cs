@@ -5,8 +5,7 @@ namespace CourseProgram.Models
 {
     public class Driver //Водитель
     {
-        //public int ID { get; } //КодВодителя
-        public DriverCategory Category { get; } //Категория
+        public int ID { get; } //КодВодителя
         public string FIO { get; } //ФИО
         public DateTime BirthDay { get; } //ДатаРождения
         public string Passport { get; } //ПаспортныеДанные
@@ -16,7 +15,7 @@ namespace CourseProgram.Models
 
         public Driver()
         {
-            Category = new DriverCategory();
+            ID = -1;
             FIO = string.Empty;
             BirthDay = new DateTime();
             Passport = string.Empty;
@@ -25,10 +24,9 @@ namespace CourseProgram.Models
             DateEnd = new DateTime();
         }
 
-        public Driver(/*int id,*/ DriverCategory category, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd)
+        public Driver(int id, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd)
         {
-            //ID = id;
-            Category = category;
+            ID = id;
             FIO = fio;
             BirthDay = birthDay;
             Passport = passport;
@@ -37,18 +35,20 @@ namespace CourseProgram.Models
             DateEnd = dateEnd;
         }
 
-        public string GetSelectors() => " \"КодВодителя\", \"Категория\", \"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
+        public static string GetSelectors() => "\"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
 
-        public string GetTable() => " From \"Водитель\";";
+        public static string GetTable() => "\"Водитель\"";
+
+        public static string GetSelectorID() => "\"КодВодителя\"";
 
         public override string ToString()
         {
-            return $"{Category}{FIO}{BirthDay}{Passport}{Phone}{DateStart}{DateEnd}";
+            return $"{ID}{FIO}{BirthDay}{Passport}{Phone}{DateStart}{DateEnd}";
         }
 
-        public override bool Equals(object obj) => obj is Driver driver && Passport == driver.Passport;
+        public override bool Equals(object obj) => obj is Driver driver && ID == driver.ID;
 
-        public override int GetHashCode() => HashCode.Combine(Passport);
+        public override int GetHashCode() => HashCode.Combine(ID, Passport);
 
         public static bool operator ==(Driver driver1, Driver driver2)
         {

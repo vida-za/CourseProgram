@@ -12,7 +12,6 @@ namespace CourseProgram.Views
         public AddDriverView()
         {
             InitializeComponent();
-            cbx.ItemsSource = Enum.GetValues(typeof(DriverCategory));
         }
     }
 }
