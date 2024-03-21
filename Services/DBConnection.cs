@@ -18,7 +18,7 @@ namespace CourseProgram.Services
             get { return _ConnectionState; }
         }
 
-        private int _reconnectTime = 5;
+        private int _reconnectTime = 7;
         public int ReconnectTime // время повторного соединения в секундах
         {
             set { _reconnectTime = value > 0 ? value : 5; }
