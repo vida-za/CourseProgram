@@ -17,7 +17,7 @@ namespace CourseProgram.Services
         volatile private int _ConnectionState; //состояние соединения: 0 нет соединения, 1 - установлено, -1 - разорвано
         public int ConnectionState => _ConnectionState;
 
-        private int _reconnectTime = 5;
+        private int _reconnectTime = 7;
         public int ReconnectTime // время повторного соединения в секундах
         {
             get => _reconnectTime;
