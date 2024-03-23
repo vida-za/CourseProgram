@@ -7,6 +7,8 @@ using CourseProgram.Services;
 using CourseProgram.DataClasses;
 using CourseProgram.Stores;
 using CourseProgram.Services.DataServices;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
 
 namespace CourseProgram.ViewModels
 {
@@ -15,36 +17,78 @@ namespace CourseProgram.ViewModels
         public DriverListingViewModel(DriverDataService driverDataService, NavigationService addDriverNavigationService, NavigationStore navigationStore)
         {
             _driverDataService = driverDataService;
+            _allDrivers = new ObservableCollection<DriverViewModel>();
+            _freeDrivers = new ObservableCollection<DriverViewModel>();
+            _disDrivers = new ObservableCollection<DriverViewModel>();
             _drivers = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
             DeleteDriverCommand = new DeleteDriverCommand(this, driverDataService);
             DetailDriverCommand = new NavigateCommand(new NavigationService(navigationStore, () => SelectedDriver));
+            SwitchBusyDrivers = new SwitchBusyDrivers(this);
 
-            UpdateDrivers();
+            UpdateData();
+            _drivers = _allDrivers;
         }
 
-        public async void UpdateDrivers()
+        public async void UpdateData()
         {
-            _drivers.Clear();
+            _allDrivers.Clear();
+            _freeDrivers.Clear();
+            _disDrivers.Clear();
 
             IEnumerable<Driver> temp = await _driverDataService.GetItemsAsync();
 
             foreach (Driver driver in temp)
             {
                 DriverViewModel driverViewModel = new(driver);
-                _drivers.Add(driverViewModel);
+                _allDrivers.Add(driverViewModel);
+            }
+
+            temp = await _driverDataService.GetFreeDriversAsync();
+
+            foreach (Driver driver in temp)
+            {
+                DriverViewModel driverViewModel = new(driver);
+                _freeDrivers.Add(driverViewModel);
+            }
+
+            temp = await _driverDataService.GetDisDriversAsync();
+
+            foreach (Driver driver in temp)
+            {
+                DriverViewModel driverViewModel = new(driver);
+                _disDrivers.Add(driverViewModel);
             }
         }
 
-        private readonly ObservableCollection<DriverViewModel> _drivers;
         private readonly DriverDataService _driverDataService;
 
-        public IEnumerable<DriverViewModel> Drivers => _drivers;
+        private readonly ObservableCollection<DriverViewModel> _freeDrivers;
+        public IEnumerable<DriverViewModel> FreeDrivers => _freeDrivers;
+
+
+        private readonly ObservableCollection<DriverViewModel> _allDrivers;
+        public IEnumerable<DriverViewModel> AllDrivers => _allDrivers;
+
+        private readonly ObservableCollection<DriverViewModel> _disDrivers;
+        public IEnumerable<DriverViewModel> DisDrivers => _disDrivers;
+
+        private ObservableCollection<DriverViewModel> _drivers;
+        public IEnumerable<DriverViewModel> Drivers
+        {
+            get => _drivers;
+            set
+            {
+                _drivers = (ObservableCollection<DriverViewModel>)value;
+                OnPropertyChanged(nameof(Drivers));
+            }
+        }
 
         public ICommand AddDriverCommand { get; }
         public ICommand DeleteDriverCommand { get; }
         public ICommand DetailDriverCommand { get; }
+        public ICommand SwitchBusyDrivers { get; }
 
         private DriverViewModel _selectedDriver;
         public DriverViewModel SelectedDriver
@@ -54,6 +98,43 @@ namespace CourseProgram.ViewModels
             {
                 _selectedDriver = value;
                 OnPropertyChanged(nameof(SelectedDriver));
+            }
+        }
+
+        private bool _stateCheckedBusy;
+        public bool StateCheckedBusy
+        {
+            get => _stateCheckedBusy;
+            set
+            {
+                _stateCheckedBusy = value;
+                OnPropertyChanged(nameof(StateCheckedBusy));
+            }
+        }
+
+        private bool _stateCheckedWork;
+        public bool StateCheckedWork
+        {
+            get => _stateCheckedWork;
+            set 
+            { 
+                _stateCheckedWork = value;
+                OnPropertyChanged(nameof(StateCheckedWork));
+            }
+        }
+
+        public void SwitchDrivers()
+        {
+            if (StateCheckedBusy)
+                Drivers = new ObservableCollection<DriverViewModel>(_freeDrivers);
+            else
+                Drivers = new ObservableCollection<DriverViewModel>(_allDrivers);
+
+            if (StateCheckedWork)
+            {
+                foreach (DriverViewModel dvm in _disDrivers)
+                    _drivers.Add(dvm);
+                OnPropertyChanged(nameof(Drivers));
             }
         }
     }

@@ -5,16 +5,20 @@
         public int DriverID { get; }
         public int CategoryID { get; }
 
-        DriverCategories() 
+        public DriverCategories() 
         {
             DriverID = 0;
             CategoryID = 0;
         }
 
-        DriverCategories(int driverID, int categoryID)
+        public DriverCategories(int driverID, int categoryID)
         {
             DriverID = driverID;
             CategoryID = categoryID;
         }
+
+        public static string GetSelectors() => "\"КодВодителя\", \"КодКатегории\"";
+
+        public static string GetTable() => "\"Категории_водителя\"";
     }
 }

@@ -13,6 +13,7 @@ namespace CourseProgram.ViewModels
         public string Phone => _driver.Phone;
         public string DateStart => _driver.DateStart.ToString("d");
         public string DateEnd => _driver.DateEnd.ToString("d");
+        public string Town => _driver.Town;
 
         public DriverViewModel(Driver driver)
         {

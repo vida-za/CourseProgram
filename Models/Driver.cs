@@ -12,6 +12,7 @@ namespace CourseProgram.Models
         public string? Phone { get; } //Телефон
         public DateTime DateStart { get; } //ДатаНачала
         public DateTime DateEnd { get; } //ДатаОкончания 
+        public string Town { get; } //Город
 
         public Driver()
         {
@@ -22,9 +23,10 @@ namespace CourseProgram.Models
             Phone = string.Empty;
             DateStart = new DateTime();
             DateEnd = new DateTime();
+            Town = string.Empty;
         }
 
-        public Driver(int id, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd)
+        public Driver(int id, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd, string town)
         {
             ID = id;
             FIO = fio;
@@ -33,6 +35,7 @@ namespace CourseProgram.Models
             Phone = phone;
             DateStart = dateStart;
             DateEnd = dateEnd;
+            Town = town;
         }
 
         public static string GetSelectors() => "\"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";

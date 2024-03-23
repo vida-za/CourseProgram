@@ -2,7 +2,6 @@
 using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Npgsql;
 
 namespace CourseProgram.Services
@@ -111,7 +110,7 @@ namespace CourseProgram.Services
             throw (new Exception("Нет связи с " + ThreadName));
         }
 
-        public DBAnswer GetDataTableParam(NpgsqlTransaction transaction, string query, params object[] param) //для получения табличных данных с параметром
+        public DBAnswer GetDataTableParam(string query, params object[] param) //для получения табличных данных с параметром
         {
             DBAnswer result = new();
             try
@@ -120,7 +119,7 @@ namespace CourseProgram.Services
                 {
                     if (ConnectionState == 1)
                     {
-                        result.GetDataParam(transaction, query, cnn, param);
+                        result.GetDataParam(query, cnn, param);
                         result.SetAnswer();
                     }
                 }

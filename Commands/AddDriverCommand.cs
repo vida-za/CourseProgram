@@ -2,6 +2,7 @@
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
+using CourseProgram.Stores;
 using CourseProgram.ViewModels;
 using System;
 using System.ComponentModel;
@@ -14,15 +15,19 @@ namespace CourseProgram.Commands
     {
         private readonly AddDriverViewModel _addDriverViewModel;
         private readonly DriverDataService _driverDataService;
+        private readonly DriverCategoriesDataService _driverCategoriesDataService;
         private readonly NavigationService _driverViewNavigationService;
 
-        public AddDriverCommand(AddDriverViewModel addDriverViewModel, DriverDataService driverDataService, NavigationService driverViewNavigationService)
+        public AddDriverCommand(AddDriverViewModel addDriverViewModel, ServicesStore servicesStore, NavigationService driverViewNavigationService)
         {
             _addDriverViewModel = addDriverViewModel;
-            _driverDataService = driverDataService;
+            _driverDataService = servicesStore._driverService;
+            _driverCategoriesDataService = servicesStore._driverCategoriesService;
             _driverViewNavigationService = driverViewNavigationService;
 
             _addDriverViewModel.PropertyChanged += OnViewModelPropertyChanged;
+
+
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -45,19 +50,27 @@ namespace CourseProgram.Commands
 
         public override async Task ExecuteAsync(object? parameter)
         {
+            int newID = await _driverDataService.FindMaxEmptyID();
             Driver driver = new(
-                _driverDataService.FindMaxID(),
+                newID,
                 _addDriverViewModel.DriverName,
                 _addDriverViewModel.BirthDay,
                 _addDriverViewModel.Passport,
                 _addDriverViewModel.Phone,
                 DateTime.Now,
-                DateTime.MaxValue
+                DateTime.MaxValue,
+                string.Empty
                 );
 
             try
             {
                 await _driverDataService.AddItemAsync(driver);
+
+                foreach(Category ctg in _addDriverViewModel.Categories)
+                {
+                    if (ctg.IsChecked)
+                        await _driverCategoriesDataService.AddItemAsync(new DriverCategories(driver.ID, ctg.ID));
+                }
 
                 MessageBox.Show("Successfully add driver", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 

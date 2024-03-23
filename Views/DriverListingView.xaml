@@ -19,16 +19,27 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
                        Text="View Drivers"
                        Style="{StaticResource Header}" />
-            <Button Grid.Column="1"
+            <StackPanel Grid.Column="1"
+                        Margin="10 0 0 0">
+                <CheckBox Content="Show Free"
+                          IsChecked="{Binding StateCheckedBusy}"
+                          Command="{Binding SwitchBusyDrivers}" />
+                <CheckBox Content="Show Dismiss"
+                          IsChecked="{Binding StateCheckedWork}"
+                          Command="{Binding SwitchBusyDrivers}" />
+            </StackPanel>
+
+            <Button Grid.Column="2"
                     Margin="10 0 0 0"
                     Content="Add Driver"
                     Command="{Binding AddDriverCommand}" />
-            <Button Grid.Column="2"
+            <Button Grid.Column="3"
                     Margin="10 0 0 0"
                     Content="Delete Driver"
                     Command="{Binding DeleteDriverCommand}" />
@@ -67,22 +78,6 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="BirthDay">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding BirthDay}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Passport">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Passport}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
                     <GridViewColumn Header="Phone">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -91,21 +86,14 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="DateStart">
+                    <GridViewColumn Header="Town">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DateStart}" />
+                                <TextBlock Text="{Binding Town}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="DateEnd">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DateEnd}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

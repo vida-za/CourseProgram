@@ -122,12 +122,11 @@ namespace CourseProgram.Services
             }
         }
 
-        public void GetDataParam(NpgsqlTransaction transaction, string query, NpgsqlConnection connection, params object[] param)
+        public void GetDataParam(string query, NpgsqlConnection connection, params object[] param)
         {
             start = DateTime.Now;
             using (NpgsqlCommand cmd = new(query, connection))
             {
-                cmd.Transaction = transaction;
                 FillParams(cmd, param);
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
                 data = new DataTable

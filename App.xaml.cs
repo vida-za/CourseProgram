@@ -45,7 +45,7 @@ namespace CourseProgram
                 Shutdown();
         }
 
-        private AddDriverViewModel CreateAddDriverViewModel() => new AddDriverViewModel(_servicesStore._driverService, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
+        private AddDriverViewModel CreateAddDriverViewModel() => new AddDriverViewModel(_servicesStore, new NavigationService(_naviagtionStore, CreateDriverListingViewModel));
 
         private DriverListingViewModel CreateDriverListingViewModel() => new DriverListingViewModel(_servicesStore._driverService, new NavigationService(_naviagtionStore, CreateAddDriverViewModel), _naviagtionStore);
     }

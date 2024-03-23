@@ -17,10 +17,10 @@ namespace CourseProgram.Services.DataServices
             cnn = new DBConnection(Server, Database, User.Username, User.Password, "Category load");
         }
 
-        public int FindMaxID()
+        public async Task<int> FindMaxEmptyID()
         {
             Category category = items.OrderByDescending(x => x.ID).FirstOrDefault();
-            return category != null ? category.ID : 0;
+            return await Task.FromResult(category != null ? category.ID + 1 : 0);
         }
 
         public async Task<bool> AddItemAsync(Category item)
@@ -100,7 +100,7 @@ namespace CourseProgram.Services.DataServices
                 foreach (DataRow row in cnn.GetDataTable(query))
                 {
                     items.Add(new Category(
-                        DBConnection.GetIntOrNull(row[Category.GetSelectorID()], 0),
+                        DBConnection.GetIntOrNull(row["КодКатегории"], 0),
                         DBConnection.GetStringOrNull(row["Наименование"], string.Empty)
                     ));
                 }

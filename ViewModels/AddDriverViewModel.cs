@@ -1,18 +1,44 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
+using CourseProgram.Stores;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace CourseProgram.ViewModels
 {
     public class AddDriverViewModel : BaseViewModel
     {
-        public AddDriverViewModel(DriverDataService driverDataService, NavigationService driverViewNavigationService)
+        public AddDriverViewModel(ServicesStore servicesStore, NavigationService driverViewNavigationService)
         {
-            SubmitCommand = new AddDriverCommand(this, driverDataService, driverViewNavigationService);
+            _categories = new List<Category>();
+
+            SubmitCommand = new AddDriverCommand(this, servicesStore, driverViewNavigationService);
             CancelCommand = new NavigateCommand(driverViewNavigationService);
+
+            _categoryDataService = servicesStore._categoryService;
+
+            UpdateData();
         }
+
+        private async void UpdateData()
+        {
+            _categories.Clear();
+
+            IEnumerable<Category> temp = await _categoryDataService.GetItemsAsync();
+
+            foreach (Category category in temp)
+            {
+                _categories.Add(category);
+            }
+        }
+
+        private readonly CategoryDataService _categoryDataService;
+        private readonly List<Category> _categories;
+        public List<Category> Categories => _categories;
 
         private string _driverName;
         public string DriverName

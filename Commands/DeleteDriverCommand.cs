@@ -39,7 +39,7 @@ namespace CourseProgram.Commands
             {
                 await _driverDataService.DeleteItemAsync(_driverListingViewModel.SelectedDriver.GetDriver().ID);
 
-                _driverListingViewModel.UpdateDrivers();
+                _driverListingViewModel.UpdateData();
             }
             catch (Exception ex) { Debug.Write(ex.Message); }
         }
