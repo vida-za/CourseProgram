@@ -1,16 +1,17 @@
 ﻿using CourseProgram.Commands;
-using CourseProgram.Services;
 using System.Windows.Input;
 
 namespace CourseProgram.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
+        public ICommand ExitApp { get; }
         public LoginViewModel()
         {
             Username = "postgres"; //debug
             Password = "Gnbxrf2004"; //debug
 
+            ExitApp = new ExitAppCommand();
             LoginCommand = new LoginCommand(this);
         }
 

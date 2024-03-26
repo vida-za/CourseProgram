@@ -14,18 +14,19 @@ namespace CourseProgram.ViewModels
 {
     public class DriverListingViewModel : BaseViewModel
     {
-        public DriverListingViewModel(DriverDataService driverDataService, NavigationService addDriverNavigationService, NavigationStore navigationStore)
+        public DriverListingViewModel(ServicesStore servicesStore, NavigationService addDriverNavigationService, NavigationStore navigationStore)
         {
-            _driverDataService = driverDataService;
+            _servicesStore = servicesStore;
+            _navigationStore = navigationStore;
             _allDrivers = new ObservableCollection<DriverViewModel>();
             _freeDrivers = new ObservableCollection<DriverViewModel>();
             _disDrivers = new ObservableCollection<DriverViewModel>();
             _drivers = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
-            DeleteDriverCommand = new DeleteDriverCommand(this, driverDataService);
+            DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore._driverService);
             DetailDriverCommand = new NavigateCommand(new NavigationService(navigationStore, () => SelectedDriver));
-            SwitchBusyDrivers = new SwitchBusyDrivers(this);
+            SwitchBusyDrivers = new SwitchBusyDriversCommand(this);
 
             UpdateData();
             _drivers = _allDrivers;
@@ -37,32 +38,33 @@ namespace CourseProgram.ViewModels
             _freeDrivers.Clear();
             _disDrivers.Clear();
 
-            IEnumerable<Driver> temp = await _driverDataService.GetItemsAsync();
+            IEnumerable<Driver> temp = await _servicesStore._driverService.GetItemsAsync();
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver);
+                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
                 _allDrivers.Add(driverViewModel);
             }
 
-            temp = await _driverDataService.GetFreeDriversAsync();
+            temp = await _servicesStore._driverService.GetFreeDriversAsync();
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver);
+                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
                 _freeDrivers.Add(driverViewModel);
             }
 
-            temp = await _driverDataService.GetDisDriversAsync();
+            temp = await _servicesStore._driverService.GetDisDriversAsync();
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver);
+                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
                 _disDrivers.Add(driverViewModel);
             }
         }
 
-        private readonly DriverDataService _driverDataService;
+        private readonly NavigationStore _navigationStore;
+        private readonly ServicesStore _servicesStore;
 
         private readonly ObservableCollection<DriverViewModel> _freeDrivers;
         public IEnumerable<DriverViewModel> FreeDrivers => _freeDrivers;

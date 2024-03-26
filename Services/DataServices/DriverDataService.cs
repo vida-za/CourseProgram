@@ -12,13 +12,9 @@ namespace CourseProgram.Services.DataServices
 {
     public class DriverDataService : BaseService<Driver>, IDataService<Driver>
     {
-        //private readonly List<Driver> _driversFree;
-
         public DriverDataService() 
         {
             cnn = new DBConnection(Server, Database, User.Username, User.Password, "DriverLoad");
-
-            //_driversFree = new List<Driver>();
         }
 
         public async Task<int> FindMaxEmptyID()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace CourseProgram.Services
 {
@@ -21,7 +22,13 @@ namespace CourseProgram.Services
 
         public void Navigate()
         {
-            _navigationStore.CurrentViewModel = _createViewModel();
+            if (_navigationStore.CurrentViewModel is DriverListingViewModel)
+            {
+                DriverListingViewModel temp = _navigationStore.CurrentViewModel as DriverListingViewModel;
+                if (temp.SelectedDriver is not null) _navigationStore.CurrentViewModel = _createViewModel();
+            }
+            else
+                _navigationStore.CurrentViewModel = _createViewModel();
         }
     }
 }

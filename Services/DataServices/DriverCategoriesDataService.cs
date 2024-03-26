@@ -95,6 +95,31 @@ namespace CourseProgram.Services.DataServices
             return await Task.FromResult(items);
         }
 
+        public async Task<IEnumerable<DriverCategories>> GetItemsByDriverAsync(int id)
+        {
+            query = "Select " + DriverCategories.GetSelectors() + " From " + DriverCategories.GetTable() + " Where \"КодВодителя\" = @1;";
+
+            try
+            {
+                items.Clear();
+                await cnn.OpenAsync();
+                foreach (DataRow row in cnn.GetDataTableParam(query, id))
+                {
+                    items.Add(new DriverCategories(
+                        id,
+                        DBConnection.GetIntOrNull(row["КодКатегории"], 0)
+                        ));
+                }
+            }
+            catch (Exception) { }
+            finally
+            {
+                cnn.Close();
+                query = string.Empty;
+            }
+            return await Task.FromResult(items);
+        }
+
         [Obsolete("Empty")]
         public Task<bool> UpdateItemAsync(DriverCategories item) => Task.FromResult(false);
     }

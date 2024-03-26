@@ -2,10 +2,10 @@
 
 namespace CourseProgram.Commands
 {
-    public class SwitchBusyDrivers : CommandBase
+    public class SwitchBusyDriversCommand : CommandBase
     {
         private readonly DriverListingViewModel _driverListingViewModel;
-        public SwitchBusyDrivers(DriverListingViewModel driverListingViewModel) 
+        public SwitchBusyDriversCommand(DriverListingViewModel driverListingViewModel) 
         { 
             _driverListingViewModel = driverListingViewModel;
         }

@@ -4,74 +4,192 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CourseProgram.Views"
-             mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
-    <Grid>
+             mc:Ignorable="d">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="{Binding FIO}"
-                   Margin="0 5 0 0"
-                   Style="{StaticResource Header}" />
-        <Grid Grid.Row="1">
+        <Grid Margin="10"
+              Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Text="Category" />
-            <TextBlock Grid.Row="0"
-                       Grid.Column="1"
-                       Text="{Binding Category}" />
+                       Text="{Binding FIO}"
+                       Margin="0 5 0 0"
+                       Style="{StaticResource Header}"
+                       HorizontalAlignment="Center" />
 
-            <TextBlock Grid.Row="1"
-                       Grid.Column="0"
-                       Text="BirthDay" />
-            <TextBlock Grid.Row="1"
-                       Grid.Column="1"
-                       Text="{Binding BirthDay}" />
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="2"
-                       Grid.Column="0"
-                       Text="Passport" />
-            <TextBlock Grid.Row="2"
-                       Grid.Column="1"
-                       Text="{Binding Passport}" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Category"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{Binding StringCategories}"
+                           Margin="5 0 0 0" />
 
-            <TextBlock Grid.Row="3"
-                       Grid.Column="0"
-                       Text="Phone" />
-            <TextBlock Grid.Row="3"
-                       Grid.Column="1"
-                       Text="{Binding Phone}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="BirthDay"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding BirthDay}"
+                           Margin="5 5 0 0" />
 
-            <TextBlock Grid.Row="4"
-                       Grid.Column="0"
-                       Text="DateStart" />
-            <TextBlock Grid.Row="4"
-                       Grid.Column="1"
-                       Text="{Binding DateStart}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="Passport"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding Passport}"
+                           Margin="5 5 0 0" />
 
-            <TextBlock Grid.Row="5"
-                       Grid.Column="0"
-                       Text="DateEnd" />
-            <TextBlock Grid.Row="5"
-                       Grid.Column="1"
-                       Text="{Binding DateEnd}" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="0"
+                           Text="Phone"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding Phone}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Text="DateStart"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           Text="{Binding DateStart}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="5"
+                           Grid.Column="0"
+                           Text="DateEnd"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="5"
+                           Grid.Column="1"
+                           Text="{Binding DateEnd}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="6"
+                           Grid.Column="0"
+                           Text="Town"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="6"
+                           Grid.Column="1"
+                           Text="{Binding Town}"
+                           Margin="5 5 0 0" />
+            </Grid>
+
+            <Button Grid.Row="2"
+                    Margin="5"
+                    Content="Back"
+                    Command="{Binding BackCommand}" />
         </Grid>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Grid.Row="1">
+            <ListView ItemsSource="{Binding Routes}"
+                      HorizontalAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="ID">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ID}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="MachineID">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MachineID}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="DriverID">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DriverID}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Type">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Type}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Distance">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Distance}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="Status">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Status}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="CompleteTime">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding CompleteTime}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
+
+
     </Grid>
 </UserControl>

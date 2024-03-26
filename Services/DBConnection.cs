@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -85,6 +86,38 @@ namespace CourseProgram.Services
                 cnn.Close();
                 cnn.Dispose();
             }
+        }
+
+        public async Task<int> GetID(string tableName, string idColumnName)
+        {
+            string query = $"Select \"{idColumnName}\" From \"{tableName}\"";
+
+            DBAnswer result = GetDataTable(query);
+
+            List<int> existingIDs = new List<int>();
+
+            foreach (DataRow row in result)
+            {
+                existingIDs.Add(GetIntOrNull(row[idColumnName], -1));
+            }
+
+            return await FindMinFreeIDAsync(existingIDs);
+        }
+
+        private static async Task<int> FindMinFreeIDAsync(List<int> existingIDs)
+        {
+            existingIDs.Sort();
+
+            int minFreeID = 1;
+            foreach (int id in existingIDs)
+            {
+                if (id == minFreeID)
+                    minFreeID++;
+                else if (id > minFreeID)
+                    break;
+            }
+
+            return await Task.FromResult(minFreeID);
         }
 
         #region Queries

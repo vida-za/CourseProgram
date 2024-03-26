@@ -89,6 +89,25 @@ namespace CourseProgram.Services.DataServices
             return new Category();
         }
 
+        public async Task<string> GetStringByDriverAsync(int id)
+        {
+            query = "Select \"GetStringCategoriesByDriver\"(@1);";
+
+            try
+            {
+                await cnn.OpenAsync();
+                DataRow row = cnn.GetDataTableParam(query, id);
+                return DBConnection.GetStringOrNull(row["GetStringCategoriesByDriver"], string.Empty);
+            }
+            catch (Exception) { }
+            finally
+            {
+                cnn.Close();
+                query = string.Empty;
+            }
+            return string.Empty;
+        }
+
         public async Task<IEnumerable<Category>> GetItemsAsync(bool forceRefresh = false)
         {
             query = "Select " + Category.GetSelectorID() + ", " + Category.GetSelectors() + " From " + Category.GetTable() + ";";
@@ -98,6 +117,31 @@ namespace CourseProgram.Services.DataServices
                 items.Clear();
                 await cnn.OpenAsync();
                 foreach (DataRow row in cnn.GetDataTable(query))
+                {
+                    items.Add(new Category(
+                        DBConnection.GetIntOrNull(row["КодКатегории"], 0),
+                        DBConnection.GetStringOrNull(row["Наименование"], string.Empty)
+                    ));
+                }
+            }
+            catch (Exception) { }
+            finally
+            {
+                cnn.Close();
+                query = string.Empty;
+            }
+            return await Task.FromResult(items);
+        }
+
+        public async Task<IEnumerable<Category>> GetItemsByDriverAsync(int id)
+        {
+            query = "Select * From \"GetCategoriesByDriver\"(@1);";
+
+            try
+            {
+                items.Clear();
+                await cnn.OpenAsync();
+                foreach (DataRow row in cnn.GetDataTableParam(query, id))
                 {
                     items.Add(new Category(
                         DBConnection.GetIntOrNull(row["КодКатегории"], 0),
