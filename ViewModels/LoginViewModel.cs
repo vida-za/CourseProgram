@@ -6,6 +6,8 @@ namespace CourseProgram.ViewModels
     public class LoginViewModel : BaseViewModel
     {
         public ICommand ExitApp { get; }
+        public ICommand LoginCommand { get; set; }
+
         public LoginViewModel()
         {
             Username = "postgres"; //debug
@@ -47,7 +49,5 @@ namespace CourseProgram.ViewModels
                 OnPropertyChanged(nameof(Message));
             }
         }
-
-        public ICommand LoginCommand { get; set; }
     }
 }

@@ -9,11 +9,13 @@ namespace CourseProgram.Commands
     public class LoginCommand : CommandBaseAsync
     {
         private readonly LoginViewModel _loginViewModel;
+        //private readonly INavigationService _navigationService;
         private DBConnection db;
 
-        public LoginCommand(LoginViewModel loginViewModel)
+        public LoginCommand(LoginViewModel loginViewModel/*, INavigationService navigationService*/)
         {
             _loginViewModel = loginViewModel;
+            //_navigationService = navigationService;
         }
 
         public override async Task ExecuteAsync(object? parameter)
@@ -32,6 +34,7 @@ namespace CourseProgram.Commands
             {
                 db.Close();
                 App.Current.MainWindow.DialogResult = true;
+                //_navigationService.Navigate();
             }
             else
             {

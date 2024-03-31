@@ -2,7 +2,7 @@
 
 namespace CourseProgram.Models
 {
-    public class Route
+    public class Route : IModel
     {
         public Route()
         {
@@ -26,7 +26,7 @@ namespace CourseProgram.Models
             CompleteTime = completeTime;
         }
 
-        public int ID { get; } //КодМаршрута
+        public int ID { get; }
         public int MachineID { get; } //КодМашины
         public int DriverID { get; } //КодВодителя
         public string Type { get; } //Тип

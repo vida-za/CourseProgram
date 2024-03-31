@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CourseProgram.Views.DriverListingView"
+﻿<UserControl x:Class="CourseProgram.Views.MachineListingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -27,32 +27,28 @@
                        Style="{StaticResource Header}" />
             <StackPanel Grid.Column="1"
                         Margin="10 0 0 0">
-                <CheckBox Content="Show Free"
+                <CheckBox Content="Показать свободные"
                           IsChecked="{Binding StateCheckedBusy}"
-                          Command="{Binding SwitchBusyDrivers}" />
-                <CheckBox Content="Show Dismiss"
-                          IsChecked="{Binding StateCheckedWork}"
-                          Command="{Binding SwitchBusyDrivers}" />
+                          Command="{Binding }" />
             </StackPanel>
 
             <Button Grid.Column="2"
                     Margin="10 0 0 0"
-                    Content="Add Driver"
-                    Command="{Binding AddDriverCommand}" />
+                    Content="Добавить машину"
+                    Command="{Binding }" />
             <Button Grid.Column="3"
                     Margin="10 0 0 0"
-                    Content="Delete Driver"
-                    Command="{Binding DeleteDriverCommand}" />
+                    Content="Удалить машину"
+                    Command="{Binding }" />
         </Grid>
 
         <ListView Grid.Row="1"
                   Margin="0 25 0 0"
-                  ItemsSource="{Binding Drivers}"
-                  SelectedItem="{Binding SelectedDriver}">
+                  ItemsSource="{Binding Machines}"
+                  SelectedItem="{Binding SelectedMachine}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding DetailDriverCommand}"
-                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" />
+                    <i:InvokeCommandAction Command="{Binding }" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ItemContainerStyle>
@@ -71,26 +67,26 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="FIO">
+                    <GridViewColumn Header="Название">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding FIO}" />
+                                <TextBlock Text="{Binding Name}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Phone">
+                    <GridViewColumn Header="ГосНомер">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Phone}" />
+                                <TextBlock Text="{Binding StateNumber}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Town">
+                    <GridViewColumn Header="Состояние">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Town}" />
+                                <TextBlock Text="{Binding Status}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

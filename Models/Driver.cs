@@ -3,9 +3,9 @@ using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
-    public class Driver //Водитель
+    public class Driver : IModel //Водитель
     {
-        public int ID { get; } //КодВодителя
+        public int ID { get; }
         public string FIO { get; } //ФИО
         public DateTime BirthDay { get; } //ДатаРождения
         public string Passport { get; } //ПаспортныеДанные

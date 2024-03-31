@@ -2,7 +2,7 @@
 
 namespace CourseProgram.Models
 {
-    public class Machine
+    public class Machine : IModel
     {
         public Machine()
         {
@@ -44,7 +44,7 @@ namespace CourseProgram.Models
             TimeEnd = timeEnd;
         }
 
-        public int ID { get; } //КодМашины
+        public int ID { get; }
         public string TypeMachine { get; } //ТипМашины
         public string TypeBodywork { get; } //ТипКузова
         public string TypeLoading { get; } //ТипЗагрузки

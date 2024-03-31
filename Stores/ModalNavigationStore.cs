@@ -1,9 +1,9 @@
-﻿using CourseProgram.ViewModels;
-using System;
+﻿using System;
+using CourseProgram.ViewModels;
 
 namespace CourseProgram.Stores
 {
-    public class NavigationStore
+    public class ModalNavigationStore
     {
         private BaseViewModel _currentViewModel;
         public BaseViewModel CurrentViewModel
@@ -17,11 +17,18 @@ namespace CourseProgram.Stores
             }
         }
 
+        public bool IsOpen => CurrentViewModel != null;
+
+        public event Action CurrentViewModelChanged;
+
+        public void Close()
+        {
+            CurrentViewModel = null;
+        }
+
         private void OnCurrentViewModelChanged()
         {
             CurrentViewModelChanged?.Invoke();
         }
-
-        public event Action CurrentViewModelChanged;
     }
 }

@@ -16,9 +16,9 @@ namespace CourseProgram.Commands
         private readonly AddDriverViewModel _addDriverViewModel;
         private readonly DriverDataService _driverDataService;
         private readonly DriverCategoriesDataService _driverCategoriesDataService;
-        private readonly NavigationService _driverViewNavigationService;
+        private readonly INavigationService _driverViewNavigationService;
 
-        public AddDriverCommand(AddDriverViewModel addDriverViewModel, ServicesStore servicesStore, NavigationService driverViewNavigationService)
+        public AddDriverCommand(AddDriverViewModel addDriverViewModel, ServicesStore servicesStore, INavigationService driverViewNavigationService)
         {
             _addDriverViewModel = addDriverViewModel;
             _driverDataService = servicesStore._driverService;

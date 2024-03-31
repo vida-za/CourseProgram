@@ -12,7 +12,7 @@ namespace CourseProgram.ViewModels
 {
     public class AddDriverViewModel : BaseViewModel
     {
-        public AddDriverViewModel(ServicesStore servicesStore, NavigationService driverViewNavigationService)
+        public AddDriverViewModel(ServicesStore servicesStore, INavigationService driverViewNavigationService)
         {
             _categories = new List<Category>();
 

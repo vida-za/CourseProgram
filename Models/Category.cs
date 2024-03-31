@@ -2,7 +2,7 @@
 
 namespace CourseProgram.Models
 {
-    public class Category
+    public class Category : IModel
     {
         public int ID { get; }
         public string Name { get; }

@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:CourseProgram.Views"
         xmlns:vms="clr-namespace:CourseProgram.ViewModels"
+        xmlns:components="clr-namespace:CourseProgram.Components"
+        xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="MainWindow"
@@ -15,8 +17,7 @@
         SizeToContent="WidthAndHeight"
         FontSize="14">
 
-    <Grid MaxWidth="600"
-          Margin="20 10">
+    <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:DriverListingViewModel}">
                 <views:DriverListingView />
@@ -24,13 +25,26 @@
             <DataTemplate DataType="{x:Type vms:AddDriverViewModel}">
                 <views:AddDriverView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vms:DriverViewModel}">
-                <views:DriverView />
+            <DataTemplate DataType="{x:Type vms:DriverDetailViewModel}">
+                <views:DriverDetailView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:MachineListingViewModel}">
+                <views:MachineListingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:HomeViewModel}">
+                <views:HomeView />
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vms:LayoutViewModel}">
+                <components:Layout />
             </DataTemplate>
         </Grid.Resources>
 
+        <custom:Modal Panel.ZIndex="1"
+                      IsOpen="{Binding IsOpen}">
+            <ContentControl Content="{Binding CurrentModalViewModel}" />
+        </custom:Modal>
+
         <ContentControl Content="{Binding CurrentViewModel}" />
-
     </Grid>
-
 </Window>

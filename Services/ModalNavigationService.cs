@@ -4,12 +4,13 @@ using System;
 
 namespace CourseProgram.Services
 {
-    public class NavigationService<TViewModel> : INavigationService where TViewModel : BaseViewModel
+    public class ModalNavigationService<TViewModel> : INavigationService
+        where TViewModel : BaseViewModel
     {
-        private readonly NavigationStore _navigationStore;
+        private readonly ModalNavigationStore _navigationStore;
         private readonly Func<TViewModel> _createViewModel;
 
-        public NavigationService(NavigationStore navigationStore, Func<TViewModel> createViewModel)
+        public ModalNavigationService(ModalNavigationStore navigationStore, Func<TViewModel> createViewModel)
         {
             _navigationStore = navigationStore;
             _createViewModel = createViewModel;

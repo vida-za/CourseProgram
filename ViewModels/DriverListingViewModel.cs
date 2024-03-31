@@ -1,23 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows.Threading;
 using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.DataClasses;
 using CourseProgram.Stores;
-using CourseProgram.Services.DataServices;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Linq;
 
 namespace CourseProgram.ViewModels
 {
     public class DriverListingViewModel : BaseViewModel
     {
-        public DriverListingViewModel(ServicesStore servicesStore, NavigationService addDriverNavigationService, NavigationStore navigationStore)
+        public DriverListingViewModel() 
+        {
+
+        }
+
+        public DriverListingViewModel(
+            ServicesStore servicesStore,
+            SelectedStore selectedStore,
+            INavigationService addDriverNavigationService,
+            INavigationService detailDriverNavigationService)
         {
             _servicesStore = servicesStore;
-            _navigationStore = navigationStore;
+            _selectedStore = selectedStore;
             _allDrivers = new ObservableCollection<DriverViewModel>();
             _freeDrivers = new ObservableCollection<DriverViewModel>();
             _disDrivers = new ObservableCollection<DriverViewModel>();
@@ -25,11 +32,23 @@ namespace CourseProgram.ViewModels
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
             DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore._driverService);
-            DetailDriverCommand = new NavigateCommand(new NavigationService(navigationStore, () => SelectedDriver));
+            DetailDriverCommand = new NavigateDetailCommand(detailDriverNavigationService);
             SwitchBusyDrivers = new SwitchBusyDriversCommand(this);
 
             UpdateData();
             _drivers = _allDrivers;
+
+            updateTimer = new()
+            {
+                Interval = TimeSpan.FromSeconds(3)
+            };
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Start();
+        }
+
+        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        {
+            UpdateData();
         }
 
         public async void UpdateData()
@@ -42,7 +61,7 @@ namespace CourseProgram.ViewModels
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
+                DriverViewModel driverViewModel = new(driver);
                 _allDrivers.Add(driverViewModel);
             }
 
@@ -50,7 +69,7 @@ namespace CourseProgram.ViewModels
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
+                DriverViewModel driverViewModel = new(driver);
                 _freeDrivers.Add(driverViewModel);
             }
 
@@ -58,13 +77,15 @@ namespace CourseProgram.ViewModels
 
             foreach (Driver driver in temp)
             {
-                DriverViewModel driverViewModel = new(driver, _navigationStore, this, _servicesStore);
+                DriverViewModel driverViewModel = new(driver);
                 _disDrivers.Add(driverViewModel);
             }
         }
 
-        private readonly NavigationStore _navigationStore;
         private readonly ServicesStore _servicesStore;
+        private readonly SelectedStore _selectedStore;
+
+        private DispatcherTimer updateTimer;
 
         private readonly ObservableCollection<DriverViewModel> _freeDrivers;
         public IEnumerable<DriverViewModel> FreeDrivers => _freeDrivers;
@@ -99,6 +120,7 @@ namespace CourseProgram.ViewModels
             set
             {
                 _selectedDriver = value;
+                _selectedStore.CurrentDriver = _selectedDriver;
                 OnPropertyChanged(nameof(SelectedDriver));
             }
         }

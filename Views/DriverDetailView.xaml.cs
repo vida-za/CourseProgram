@@ -5,9 +5,9 @@ namespace CourseProgram.Views
     /// <summary>
     /// Логика взаимодействия для DriverView.xaml
     /// </summary>
-    public partial class DriverView : UserControl
+    public partial class DriverDetailView : UserControl
     {
-        public DriverView()
+        public DriverDetailView()
         {
             InitializeComponent();
         }
