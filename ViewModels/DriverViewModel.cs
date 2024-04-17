@@ -1,31 +1,25 @@
-﻿using CourseProgram.Commands;
-using CourseProgram.Models;
-using CourseProgram.Services;
-using CourseProgram.Stores;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using CourseProgram.Models;
 
 namespace CourseProgram.ViewModels
 {
     public class DriverViewModel : BaseViewModel
     {
-        private readonly Driver _driver;
+        private readonly Driver _model;
 
-        public int ID => _driver.ID;
-        public string FIO => _driver.FIO;
-        public string BirthDay => _driver.BirthDay.ToString("d");
-        public string Passport => _driver.Passport;
-        public string Phone => _driver.Phone;
-        public string DateStart => _driver.DateStart.ToString("d");
-        public string DateEnd => _driver.DateEnd.ToString("d");
-        public string Town => _driver.Town;
+        public int ID => _model.ID;
+        public string FIO => _model.FIO;
+        public string BirthDay => _model.BirthDay.ToString("d");
+        public string Passport => _model.Passport;
+        public string Phone => _model.Phone;
+        public string DateStart => _model.DateStart.ToString("d");
+        public string DateEnd => _model.DateEnd.ToString("d");
+        public string Town => _model.Town;
 
         public DriverViewModel(Driver driver)
         {
-            _driver = driver;
+            _model = driver;
         }
 
-        public Driver GetDriver() => _driver;
+        public Driver GetModel() => _model;
     }
 }

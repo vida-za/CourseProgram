@@ -5,7 +5,6 @@ using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace CourseProgram.ViewModels
@@ -73,8 +72,8 @@ namespace CourseProgram.ViewModels
             }
         }
 
-        private DateTime _birthDay = new(2000, 1, 1);
-        public DateTime BirthDay
+        private DateOnly _birthDay = new(2000, 1, 1);
+        public DateOnly BirthDay
         {
             get => _birthDay;
             set 

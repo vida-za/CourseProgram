@@ -1,32 +1,48 @@
 ﻿using System;
-using static CourseProgram.Models.Constants;
+using System.ComponentModel;
 
 namespace CourseProgram.Models
 {
-    public class Driver : IModel //Водитель
+    public class Driver : IModel, IEquatable<Driver> //Водитель
     {
-        public int ID { get; }
+        [DisplayName("Номер водителя")]
+        public int ID { get; } //КодВодителя
+        [DisplayName("ФИО")]
         public string FIO { get; } //ФИО
-        public DateTime BirthDay { get; } //ДатаРождения
+        [DisplayName("Дата рождения")]
+        public DateOnly BirthDay { get; } //ДатаРождения
+        [DisplayName("Паспорт")]
         public string Passport { get; } //ПаспортныеДанные
+        [DisplayName("Телефон")]
         public string? Phone { get; } //Телефон
-        public DateTime DateStart { get; } //ДатаНачала
-        public DateTime DateEnd { get; } //ДатаОкончания 
+        [DisplayName("Принят")]
+        public DateOnly DateStart { get; } //ДатаНачала
+        [DisplayName("Уволен")]
+        public DateOnly DateEnd { get; } //ДатаОкончания
+        [DisplayName("Город")]
         public string Town { get; } //Город
 
         public Driver()
         {
-            ID = -1;
+            ID = 0;
             FIO = string.Empty;
-            BirthDay = new DateTime();
+            BirthDay = DateOnly.MinValue;
             Passport = string.Empty;
             Phone = string.Empty;
-            DateStart = new DateTime();
-            DateEnd = new DateTime();
+            DateStart = DateOnly.MinValue;
+            DateEnd = DateOnly.MinValue;
             Town = string.Empty;
         }
 
-        public Driver(int id, string fio, DateTime birthDay, string passport, string phone, DateTime dateStart, DateTime dateEnd, string town)
+        public Driver(
+            int id,
+            string fio,
+            DateOnly birthDay,
+            string passport,
+            string phone,
+            DateOnly dateStart,
+            DateOnly dateEnd,
+            string town)
         {
             ID = id;
             FIO = fio;
@@ -38,18 +54,22 @@ namespace CourseProgram.Models
             Town = town;
         }
 
-        public static string GetSelectors() => "\"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
-
-        public static string GetTable() => "\"Водитель\"";
-
-        public static string GetSelectorID() => "\"КодВодителя\"";
+        public string GetSelectors() => "\"КодВодителя\", \"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
+        public string GetTable() => "\"Водитель\"";
+        public string GetSelectorID() => "\"КодВодителя\"";
+        public string GetProcedureDelete() => "\"DeleteDriver\"";
 
         public override string ToString()
         {
             return $"{ID}{FIO}{BirthDay}{Passport}{Phone}{DateStart}{DateEnd}";
         }
 
-        public override bool Equals(object obj) => obj is Driver driver && ID == driver.ID;
+        public bool Equals(Driver? other)
+        {
+            if (other != null)
+                return ID == other.ID;
+            else return false;
+        }
 
         public override int GetHashCode() => HashCode.Combine(ID, Passport);
 
@@ -61,5 +81,7 @@ namespace CourseProgram.Models
         }
 
         public static bool operator !=(Driver driver1, Driver driver2) => !(driver1 == driver2);
+
+        public override bool Equals(object obj) => Equals(obj as Driver);
     }
 }

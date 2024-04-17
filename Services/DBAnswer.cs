@@ -91,6 +91,7 @@ namespace CourseProgram.Services
                 {
                     case "System.DateTimeOffset": paramType = NpgsqlDbType.TimestampTz; break;
                     case "System.DateTime": paramType = NpgsqlDbType.Timestamp; break;
+                    case "System.DateOnly": paramType = NpgsqlDbType.Date; break;
                     case "System.Int64": paramType = NpgsqlDbType.Bigint; break;
                     case "System.Int32": paramType = NpgsqlDbType.Integer; break;
                     case "System.Int16": paramType = NpgsqlDbType.Smallint; break;

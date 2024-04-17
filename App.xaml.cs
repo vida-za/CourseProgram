@@ -33,6 +33,13 @@ namespace CourseProgram
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient<AddMachineViewModel>(s => new AddMachineViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient<MachineDetailViewModel>(s => new MachineDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
 
             //Layout
             services.AddTransient<DriverListingViewModel>(s => new DriverListingViewModel(
@@ -40,7 +47,11 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddDriverNavigationService(s),
                 CreateDriverDetailNavigationService(s)));
-            services.AddTransient<MachineListingViewModel>(s => new MachineListingViewModel());
+            services.AddTransient<MachineListingViewModel>(s => new MachineListingViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                CreateAddMachineNavigationService(s),
+                CreateMachineDetailNavigationService(s)));
             services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
 
             services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
@@ -91,6 +102,16 @@ namespace CourseProgram
         private static INavigationService CreateDriverDetailNavigationService(IServiceProvider serviceProvider)
         {
             return CreateModalNavigationService<DriverDetailViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateAddMachineNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddMachineViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateMachineDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<MachineDetailViewModel>(serviceProvider);
         }
 
         //Layout

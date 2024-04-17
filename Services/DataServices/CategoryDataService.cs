@@ -10,27 +10,22 @@ using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Services.DataServices
 {
-    public class CategoryDataService : BaseService<Category>, IDataService<Category>
+    public class CategoryDataService : BaseService<Category>
     {
         public CategoryDataService() 
         {
             cnn = new DBConnection(Server, Database, User.Username, User.Password, "Category load");
+            temp = new Category();
         }
 
-        public async Task<int> FindMaxEmptyID()
+        public override async Task<bool> AddItemAsync(Category item)
         {
-            Category category = items.OrderByDescending(x => x.ID).FirstOrDefault();
-            return await Task.FromResult(category != null ? category.ID + 1 : 0);
-        }
-
-        public async Task<bool> AddItemAsync(Category item)
-        {
-            query = "Insert Into " + Category.GetTable() + "(" + Category.GetSelectors() + ") Values(@1);";
+            query = $"Insert Into {temp.GetTable()} ({temp.GetSelectors()}) Values(@1, @2);";
 
             try
             {
                 await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, item.Name);
+                var res = await cnn.ExecParamAsync(query, item.ID, item.Name);
                 if (res.HasAnswer) items.Add(item);
             }
             catch (Exception) { }
@@ -42,33 +37,9 @@ namespace CourseProgram.Services.DataServices
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> DeleteItemAsync(int id)
+        public override async Task<Category> GetItemAsync(int id)
         {
-            query = "Delete From " + Category.GetTable() + " Where \"КодКатегории\" = @1;";
-
-            try
-            {
-                await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, id);
-                if (res.HasAnswer)
-                    foreach (Category ctg in items)
-                    {
-                        if (ctg.ID == id)
-                            items.Remove(ctg);
-                    }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(true);
-        }
-
-        public async Task<Category> GetItemAsync(int id)
-        {
-            query = "Select " + Category.GetSelectorID() + ", " + Category.GetSelectors() + " From " + Category.GetTable() + " Where " + Category.GetSelectorID() + " = @1;";
+            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where {temp.GetSelectorID()} = @1;";
 
             try
             {
@@ -77,7 +48,7 @@ namespace CourseProgram.Services.DataServices
 
                 foreach (Category ctg in items)
                 {
-                    if (ctg.ID == DBConnection.GetIntOrNull(row[Category.GetSelectorID()], 0)) return ctg;
+                    if (ctg.ID == DBConnection.GetIntOrNull(row["КодКатегории"], 0)) return ctg;
                 }
             }
             catch (Exception) { }
@@ -86,7 +57,7 @@ namespace CourseProgram.Services.DataServices
                 cnn.Close();
                 query = string.Empty;
             }
-            return new Category();
+            return temp;
         }
 
         public async Task<string> GetStringByDriverAsync(int id)
@@ -108,9 +79,9 @@ namespace CourseProgram.Services.DataServices
             return string.Empty;
         }
 
-        public async Task<IEnumerable<Category>> GetItemsAsync(bool forceRefresh = false)
+        public override async Task<IEnumerable<Category>> GetItemsAsync(bool forceRefresh = false)
         {
-            query = "Select " + Category.GetSelectorID() + ", " + Category.GetSelectors() + " From " + Category.GetTable() + ";";
+            query = $"Select {temp.GetSelectors()} From {temp.GetTable()};";
 
             try
             {
@@ -135,7 +106,7 @@ namespace CourseProgram.Services.DataServices
 
         public async Task<IEnumerable<Category>> GetItemsByDriverAsync(int id)
         {
-            query = "Select * From \"GetCategoriesByDriver\"(@1);";
+            query = $"Select {temp.GetSelectors()} From \"GetCategoriesByDriver\"(@1);";
 
             try
             {
@@ -158,40 +129,20 @@ namespace CourseProgram.Services.DataServices
             return await Task.FromResult(items);
         }
 
-        public async Task<bool> UpdateItemAsync(Category item)
+        public override async Task<IEnumerable<Category>> GetFullTableAsync(bool forceRefresh = false)
         {
-            query = "Update " + Category.GetTable() + " Set";
-            var oldItem = items.FirstOrDefault(c => c == item);
-            if (oldItem == null) return await Task.FromResult(false);
-
-            var values = new List<object>();
-            var propertiesToUpdate = new Dictionary<string, object>();
-            int countModify = 0;
-
-            PropertyInfo[] properties = typeof(Category).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                var oldValue = property.GetValue(oldItem);
-                var newValue = property.GetValue(item);
-                if (!Equals(oldValue, newValue))
-                {
-                    propertiesToUpdate[property.Name] = newValue;
-                    CreatingUpdateQuery(property.Name, ref countModify, ref values, newValue);
-                }
-            }
-
-            if (countModify == 0) return await Task.FromResult(false);
-
-            query += ";";
+            query = $"Select {temp.GetSelectors()} From {temp.GetTable()};";
 
             try
             {
+                items.Clear();
                 await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query);
-                if (res.HasAnswer)
+                foreach (DataRow row in cnn.GetDataTable(query))
                 {
-                    items.Remove(oldItem);
-                    items.Add(item);
+                    items.Add(new Category(
+                        DBConnection.GetIntOrNull(row["КодКатегории"], 0),
+                        DBConnection.GetStringOrNull(row["Наименование"], string.Empty)
+                    ));
                 }
             }
             catch (Exception) { }
@@ -200,15 +151,7 @@ namespace CourseProgram.Services.DataServices
                 cnn.Close();
                 query = string.Empty;
             }
-            return await Task.FromResult(true);
-        }
-
-        private void CreatingUpdateQuery(string column, ref int index, ref List<object> list, object value)
-        {
-            if (index > 0) query += ",";
-            index++;
-            query += $"\"{column}|\" = @{index}";
-            list.Add(value);
+            return await Task.FromResult(items);
         }
     }
 }

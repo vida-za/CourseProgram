@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
+using GalaSoft.MvvmLight.Command;
 
 namespace CourseProgram.ViewModels
 {
-    public class DriverListingViewModel : BaseViewModel
+    public class DriverListingViewModel : BaseListingViewModel
     {
-        public DriverListingViewModel() 
-        {
-
-        }
-
         public DriverListingViewModel(
             ServicesStore servicesStore,
             SelectedStore selectedStore,
@@ -28,15 +26,16 @@ namespace CourseProgram.ViewModels
             _allDrivers = new ObservableCollection<DriverViewModel>();
             _freeDrivers = new ObservableCollection<DriverViewModel>();
             _disDrivers = new ObservableCollection<DriverViewModel>();
-            _drivers = new ObservableCollection<DriverViewModel>();
+            _items = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
             DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore._driverService);
             DetailDriverCommand = new NavigateDetailCommand(detailDriverNavigationService);
             SwitchBusyDrivers = new SwitchBusyDriversCommand(this);
+            SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
 
             UpdateData();
-            _drivers = _allDrivers;
+            _items = _allDrivers;
 
             updateTimer = new()
             {
@@ -51,7 +50,7 @@ namespace CourseProgram.ViewModels
             UpdateData();
         }
 
-        public async void UpdateData()
+        public override async void UpdateData()
         {
             _allDrivers.Clear();
             _freeDrivers.Clear();
@@ -85,26 +84,20 @@ namespace CourseProgram.ViewModels
         private readonly ServicesStore _servicesStore;
         private readonly SelectedStore _selectedStore;
 
-        private DispatcherTimer updateTimer;
+        private readonly DispatcherTimer updateTimer;
 
         private readonly ObservableCollection<DriverViewModel> _freeDrivers;
-        public IEnumerable<DriverViewModel> FreeDrivers => _freeDrivers;
-
-
         private readonly ObservableCollection<DriverViewModel> _allDrivers;
-        public IEnumerable<DriverViewModel> AllDrivers => _allDrivers;
-
         private readonly ObservableCollection<DriverViewModel> _disDrivers;
-        public IEnumerable<DriverViewModel> DisDrivers => _disDrivers;
 
-        private ObservableCollection<DriverViewModel> _drivers;
-        public IEnumerable<DriverViewModel> Drivers
+        private ObservableCollection<DriverViewModel> _items;
+        public ObservableCollection<DriverViewModel> Items
         {
-            get => _drivers;
+            get => _items;
             set
             {
-                _drivers = (ObservableCollection<DriverViewModel>)value;
-                OnPropertyChanged(nameof(Drivers));
+                _items = value;
+                OnPropertyChanged(nameof(Items));
             }
         }
 
@@ -112,16 +105,17 @@ namespace CourseProgram.ViewModels
         public ICommand DeleteDriverCommand { get; }
         public ICommand DetailDriverCommand { get; }
         public ICommand SwitchBusyDrivers { get; }
+        public ICommand SelectionChangedCommand { get; }
 
-        private DriverViewModel _selectedDriver;
-        public DriverViewModel SelectedDriver
+        private DriverViewModel _selectedItem;
+        public DriverViewModel SelectedItem
         {
-            get => _selectedDriver;
+            get => _selectedItem;
             set
             {
-                _selectedDriver = value;
-                _selectedStore.CurrentDriver = _selectedDriver;
-                OnPropertyChanged(nameof(SelectedDriver));
+                _selectedItem = value;
+                _selectedStore.CurrentDriver = _selectedItem;
+                OnPropertyChanged(nameof(SelectedItem));
             }
         }
 
@@ -147,19 +141,42 @@ namespace CourseProgram.ViewModels
             }
         }
 
+        private bool _stateFilter;
+        public bool StateFilter
+        {
+            get => _stateFilter;
+            set
+            {
+                _stateFilter = value;
+                OnPropertyChanged(nameof(StateFilter));
+            }
+        }
+
         public void SwitchDrivers()
         {
             if (StateCheckedBusy)
-                Drivers = new ObservableCollection<DriverViewModel>(_freeDrivers);
+                Items = new ObservableCollection<DriverViewModel>(_freeDrivers);
             else
-                Drivers = new ObservableCollection<DriverViewModel>(_allDrivers);
+                Items = new ObservableCollection<DriverViewModel>(_allDrivers);
 
             if (StateCheckedWork)
             {
                 foreach (DriverViewModel dvm in _disDrivers)
-                    _drivers.Add(dvm);
-                OnPropertyChanged(nameof(Drivers));
+                    Items.Add(dvm);
+                OnPropertyChanged(nameof(Items));
             }
+        }
+
+        protected override void Find()
+        {
+            if (!String.IsNullOrEmpty(TextFilter))
+                SelectedItem = Items.FirstOrDefault(obj => obj.FIO.Contains(TextFilter), SelectedItem);
+        }
+
+        private void SelectionChangedExecute(DataGrid dataGrid)
+        {
+            if (dataGrid.SelectedItem != null)
+                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
         }
     }
 }

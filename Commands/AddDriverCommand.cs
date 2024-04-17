@@ -57,8 +57,8 @@ namespace CourseProgram.Commands
                 _addDriverViewModel.BirthDay,
                 _addDriverViewModel.Passport,
                 _addDriverViewModel.Phone,
-                DateTime.Now,
-                DateTime.MaxValue,
+                DateOnly.FromDateTime(DateTime.Now),
+                DateOnly.MinValue,
                 string.Empty
                 );
 
@@ -72,13 +72,13 @@ namespace CourseProgram.Commands
                         await _driverCategoriesDataService.AddItemAsync(new DriverCategories(driver.ID, ctg.ID));
                 }
 
-                MessageBox.Show("Successfully add driver", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Водитель добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 _driverViewNavigationService.Navigate();
             }
             catch (RepeatConflictException<Driver>)
             {
-                MessageBox.Show("This driver is repeat", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Такой водитель уже имеется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

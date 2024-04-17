@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -23,80 +24,78 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
-                       Text="View Drivers"
+                       Text="Список водителей"
                        Style="{StaticResource Header}" />
             <StackPanel Grid.Column="1"
                         Margin="10 0 0 0">
-                <CheckBox Content="Show Free"
+                <CheckBox Content="Показать свободных"
                           IsChecked="{Binding StateCheckedBusy}"
                           Command="{Binding SwitchBusyDrivers}" />
-                <CheckBox Content="Show Dismiss"
+                <CheckBox Content="Показать уволенных"
                           IsChecked="{Binding StateCheckedWork}"
                           Command="{Binding SwitchBusyDrivers}" />
             </StackPanel>
 
             <Button Grid.Column="2"
                     Margin="10 0 0 0"
-                    Content="Add Driver"
+                    Content="Добавить"
                     Command="{Binding AddDriverCommand}" />
             <Button Grid.Column="3"
                     Margin="10 0 0 0"
-                    Content="Delete Driver"
+                    Content="Уволить"
                     Command="{Binding DeleteDriverCommand}" />
         </Grid>
 
-        <ListView Grid.Row="1"
+        <DataGrid Grid.Row="1"
+                  x:Name="dataGrid"
                   Margin="0 25 0 0"
-                  ItemsSource="{Binding Drivers}"
-                  SelectedItem="{Binding SelectedDriver}">
+                  MaxHeight="250"
+                  ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True"
+                  CanUserDeleteRows="True"
+                  IsReadOnly="True">
             <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                                           CommandParameter="{Binding ElementName=dataGrid}" />
+                </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding DetailDriverCommand}"
-                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" />
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment"
-                            Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="ID">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding ID}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер"
+                                    Binding="{Binding ID}" />
+                <DataGridTextColumn Header="ФИО"
+                                    Binding="{Binding FIO}" />
+                <DataGridTextColumn Header="Номер телефона"
+                                    Binding="{Binding Phone}" />
+                <DataGridTextColumn Header="Город"
+                                    Binding="{Binding Town}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
-                    <GridViewColumn Header="FIO">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding FIO}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+        <Grid Grid.Row="2"
+              Margin="10 10 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
-                    <GridViewColumn Header="Phone">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Phone}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+            <TextBox Grid.Column="0"
+                     Margin="10 0 0 0"
+                     MinWidth="200"
+                     Name="txtFilter"
+                     IsEnabled="{Binding StateFilter}"
+                     Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <GridViewColumn Header="Town">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Town}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                </GridView>
-            </ListView.View>
-        </ListView>
+            <CheckBox Grid.Column="1"
+                      Margin="10 5 0 0"
+                      Content="Поиск (по ФИО)"
+                      IsChecked="{Binding StateFilter}" />
+        </Grid>
     </Grid>
 </UserControl>

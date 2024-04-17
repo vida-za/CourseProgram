@@ -31,10 +31,16 @@
             <DataTemplate DataType="{x:Type vms:MachineListingViewModel}">
                 <views:MachineListingView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:AddMachineViewModel}">
+                <views:AddDriverView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:MachineDetailViewModel}">
+                <views:MachineDetailView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type vms:HomeViewModel}">
                 <views:HomeView />
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type vms:LayoutViewModel}">
                 <components:Layout />
             </DataTemplate>

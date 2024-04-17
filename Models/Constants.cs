@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -16,6 +17,44 @@ namespace CourseProgram.Models
         {
             static public string Username { get; set; }
             static public string Password { get; set; }
+        }
+
+        public enum TypeMachineValues 
+        {
+            [Description("Грузовик")] Truck,
+            [Description("Грузовик с прицепом")] TruckWithTrailer,
+            [Description("Полуприцеп")] SemiTrailer,
+            [Description("Микроавтобус")] Minibus
+        }
+
+        public enum TypeBodyworkValues 
+        { 
+            [Description("Тент")] Tent, 
+            [Description("Реф")] Ref,
+            [Description("Изотерм")] Isotherm,
+            [Description("Борт")] Board
+        }
+
+        public enum TypeLoadingValues 
+        {
+            [Description("Бок")] Side,
+            [Description("Вверх")] Up,
+            [Description("Зад")] Behind
+        }
+
+        public enum MachineStatusValues 
+        {
+            [Description("Ремонт")] Repair,
+            [Description("В ожидании")] Waiting,
+            [Description("На стоянке")] Parking,
+            [Description("В пути")] OnRoad
+        }
+
+        public static string GetEnumDescription(Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+            return attribute?.Description ?? value.ToString();
         }
 
         public static T Cast<T>(this Object myobj)

@@ -12,7 +12,8 @@
                     Value="2" />
         </Style>
 
-        <Style TargetType="TextBlock" x:Key="Header">
+        <Style TargetType="TextBlock"
+               x:Key="Header">
             <Setter Property="FontSize"
                     Value="24" />
         </Style>

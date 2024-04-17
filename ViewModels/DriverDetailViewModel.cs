@@ -40,7 +40,7 @@ namespace CourseProgram.ViewModels
 
             foreach (Route route in temp)
             {
-                RouteViewModel routeViewModel = new(route);
+                RouteViewModel routeViewModel = new(route, _servicesStore);
                 _routes.Add(routeViewModel);
             }
 
@@ -66,6 +66,5 @@ namespace CourseProgram.ViewModels
                 OnPropertyChanged(nameof(StringCategories));
             }
         }
-
     }
 }

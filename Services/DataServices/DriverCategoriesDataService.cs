@@ -7,16 +7,17 @@ using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Services.DataServices
 {
-    public class DriverCategoriesDataService : BaseService<DriverCategories>, IDataService<DriverCategories>
+    public class DriverCategoriesDataService : BaseService<DriverCategories>
     {
         public DriverCategoriesDataService() 
         {
             cnn = new DBConnection(Server, Database, User.Username, User.Password, "CategoriesDrv load");
+            temp = new DriverCategories();
         }
 
-        public async Task<bool> AddItemAsync(DriverCategories item)
+        public override async Task<bool> AddItemAsync(DriverCategories item)
         {
-            query = "Insert Into " + DriverCategories.GetTable() + "(" + DriverCategories.GetSelectors() + ") Values(@1, @2);";
+            query = "Insert Into " + item.GetTable() + "(" + item.GetSelectors() + ") Values(@1, @2);";
             try
             {
                 await cnn.OpenAsync();
@@ -35,44 +36,39 @@ namespace CourseProgram.Services.DataServices
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> DeleteItemAsync(int id)
+        public override async Task<IEnumerable<DriverCategories>> GetFullTableAsync(bool forceRefresh = false)
         {
-            query = "Delete From " + DriverCategories.GetTable() + " Where \"КодВодителя\" = @1;";
+            query = "Select " + temp.GetSelectors() + " From " + temp.GetTable() + ";";
+
             try
             {
+                items.Clear();
                 await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, id);
-                if (res.HasAnswer)
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        var item = items[i];
-                        if (item.DriverID == id)
-                        {
-                            items.RemoveAt(i);
-                        }
-                    }
+                foreach (DataRow row in cnn.GetDataTable(query))
+                {
+                    items.Add(new DriverCategories(
+                        DBConnection.GetIntOrNull(row["КодВодителя"], 0),
+                        DBConnection.GetIntOrNull(row["КодКатегории"], 0)
+                    ));
+                }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
             finally
             {
                 cnn.Close();
                 query = string.Empty;
             }
-            return await Task.FromResult(true);
+            return await Task.FromResult(items);
         }
 
-        [Obsolete("Empty")]
-        public async Task<int> FindMaxEmptyID() => await Task.FromResult(0); //
-
-        [Obsolete("Empty")]
-        public Task<DriverCategories> GetItemAsync(int id) => Task.FromResult(new DriverCategories());
-
-        public async Task<IEnumerable<DriverCategories>> GetItemsAsync(bool forceRefresh = false)
+        public override async Task<DriverCategories> GetItemAsync(int id)
         {
-            query = "Select " + DriverCategories.GetSelectors() + " From " + DriverCategories.GetTable() + ";"; 
+            return await Task.FromResult(temp);
+        }
+
+        public override async Task<IEnumerable<DriverCategories>> GetItemsAsync(bool forceRefresh = false)
+        {
+            query = "Select " + temp.GetSelectors() + " From " + temp.GetTable() + ";"; 
 
             try
             {
@@ -97,7 +93,7 @@ namespace CourseProgram.Services.DataServices
 
         public async Task<IEnumerable<DriverCategories>> GetItemsByDriverAsync(int id)
         {
-            query = "Select " + DriverCategories.GetSelectors() + " From " + DriverCategories.GetTable() + " Where \"КодВодителя\" = @1;";
+            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where \"КодВодителя\" = @1;";
 
             try
             {
@@ -119,8 +115,5 @@ namespace CourseProgram.Services.DataServices
             }
             return await Task.FromResult(items);
         }
-
-        [Obsolete("Empty")]
-        public Task<bool> UpdateItemAsync(DriverCategories item) => Task.FromResult(false);
     }
 }

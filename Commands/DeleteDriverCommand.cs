@@ -9,20 +9,20 @@ namespace CourseProgram.Commands
 {
     public class DeleteDriverCommand : CommandBaseAsync
     {
-        private readonly DriverListingViewModel _driverListingViewModel;
-        private readonly DriverDataService _driverDataService;
+        private readonly DriverListingViewModel _listingViewModel;
+        private readonly DriverDataService _dataService;
 
-        public DeleteDriverCommand(DriverListingViewModel driverListingViewModel, DriverDataService driverDataService)
+        public DeleteDriverCommand(DriverListingViewModel listingViewModel, DriverDataService dataService)
         {
-            _driverListingViewModel = driverListingViewModel;
-            _driverDataService = driverDataService;
+            _listingViewModel = listingViewModel;
+            _dataService = dataService;
 
-            _driverListingViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _listingViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_driverListingViewModel.SelectedDriver))
+            if (e.PropertyName == nameof(_listingViewModel.SelectedItem))
             {
                 OnCanExecuteChanged();
             }
@@ -30,16 +30,16 @@ namespace CourseProgram.Commands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _driverListingViewModel.SelectedDriver is not null;
+            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null;
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
             try
             {
-                await _driverDataService.DeleteItemAsync(_driverListingViewModel.SelectedDriver.GetDriver().ID);
+                await _dataService.DeleteItemAsync(_listingViewModel.SelectedItem.GetModel().ID);
 
-                _driverListingViewModel.UpdateData();
+                _listingViewModel.UpdateData();
             }
             catch (Exception ex) { Debug.Write(ex.Message); }
         }

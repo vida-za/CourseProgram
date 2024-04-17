@@ -17,6 +17,17 @@ namespace CourseProgram.Stores
             }
         }
 
+        private MachineViewModel _currentMachine;
+        public MachineViewModel CurrentMachine
+        {
+            get => _currentMachine;
+            set 
+            {
+                _currentMachine = value;
+                OnCurrentModelChanged();
+            }
+        }
+
         private void OnCurrentModelChanged()
         {
             CurrentModelChanged?.Invoke();

@@ -1,9 +1,25 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace CourseProgram.Models
 {
-    public class Route : IModel
+    public class Route : IModel, IEquatable<Route>
     {
+        [DisplayName("Номер маршрута")]
+        public int ID { get; } //КодМаршрута
+        [DisplayName("Номер машины")]
+        public int MachineID { get; } //КодМашины
+        [DisplayName("Номер водителя")]
+        public int DriverID { get; } //КодВодителя
+        [DisplayName("Тип")]
+        public string Type { get; } //Тип
+        [DisplayName("Расстояние")]
+        public float Distance { get; } //Расстояние
+        [DisplayName("Статус")]
+        public string Status { get; } //Статус
+        [DisplayName("Время выполнения")]
+        public DateTime CompleteTime { get; } //ВремяВыполнения
+
         public Route()
         {
             ID = 0;
@@ -26,18 +42,21 @@ namespace CourseProgram.Models
             CompleteTime = completeTime;
         }
 
-        public int ID { get; }
-        public int MachineID { get; } //КодМашины
-        public int DriverID { get; } //КодВодителя
-        public string Type { get; } //Тип
-        public float Distance { get; } //Расстояние
-        public string Status { get; } //Статус
-        public DateTime CompleteTime { get; }
+        public string GetSelectors() => "\"КодМаршрута\", \"КодМашины\", \"КодВодителя\", \"Тип\", \"Расстояние\", \"Статус\"";
+        public string GetTable() => "\"Маршрут\"";
+        public string GetSelectorID() => "\"КодМаршрута\"";
+        public string GetProcedureDelete() => "\"DeleteRoute\"";
 
-        public static string GetSelectors() => "\"КодМашины\", \"КодВодителя\", \"Тип\", \"Расстояние\", \"Статус\"";
 
-        public static string GetTable() => "\"Маршрут\"";
+        public bool Equals(Route? other)
+        {
+            if (other != null)
+                return ID == other.ID;
+            else return false;
+        }
 
-        public static string GetSelectorID() => "\"КодМаршрута\"";
+        public override bool Equals(object obj) => Equals(obj as Route);
+
+        public override int GetHashCode() => HashCode.Combine(ID, MachineID);
     }
 }

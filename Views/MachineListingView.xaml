@@ -23,76 +23,55 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
-                       Text="View Drivers"
+                       Text="Список машин"
                        Style="{StaticResource Header}" />
             <StackPanel Grid.Column="1"
                         Margin="10 0 0 0">
-                <CheckBox Content="Показать свободные"
+                <CheckBox Content="Показать списанные"
                           IsChecked="{Binding StateCheckedBusy}"
-                          Command="{Binding }" />
+                          Command="{Binding SwitchMachinesCommand}" />
             </StackPanel>
 
             <Button Grid.Column="2"
                     Margin="10 0 0 0"
                     Content="Добавить машину"
-                    Command="{Binding }" />
+                    Command="{Binding AddMachineCommand}" />
             <Button Grid.Column="3"
                     Margin="10 0 0 0"
                     Content="Удалить машину"
-                    Command="{Binding }" />
+                    Command="{Binding DeleteMachineCommand}" />
         </Grid>
 
-        <ListView Grid.Row="1"
+        <DataGrid Grid.Row="1"
+                  x:Name="dataGrid"
                   Margin="0 25 0 0"
-                  ItemsSource="{Binding Machines}"
-                  SelectedItem="{Binding SelectedMachine}">
+                  MaxHeight="250"
+                  ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="True"
+                  CanUserDeleteRows="True"
+                  IsReadOnly="True">
             <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                                           CommandParameter="{Binding ElementName=dataGrid}" />
+                </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding }" />
+                    <i:InvokeCommandAction Command="{Binding DetailMachineCommand}"
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment"
-                            Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="ID">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding ID}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Название">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="ГосНомер">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding StateNumber}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Состояние">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Status}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                </GridView>
-            </ListView.View>
-        </ListView>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер"
+                                    Binding="{Binding ID}" />
+                <DataGridTextColumn Header="Название"
+                                    Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Город"
+                                    Binding="{Binding Town}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

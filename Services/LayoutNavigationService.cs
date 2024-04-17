@@ -21,13 +21,7 @@ namespace CourseProgram.Services
 
         public void Navigate()
         {
-            if (_navigationStore.CurrentViewModel is DriverListingViewModel)
-            {
-                DriverListingViewModel temp = _navigationStore.CurrentViewModel as DriverListingViewModel;
-                if (temp.SelectedDriver is not null) _navigationStore.CurrentViewModel = new LayoutViewModel(_createNavigationBarViewModel(), _createViewModel());
-            }
-            else
-                _navigationStore.CurrentViewModel = new LayoutViewModel(_createNavigationBarViewModel(), _createViewModel());
+            _navigationStore.CurrentViewModel = new LayoutViewModel(_createNavigationBarViewModel(), _createViewModel());
         }
     }
 }
