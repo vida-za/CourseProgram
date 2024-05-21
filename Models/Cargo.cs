@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
@@ -16,9 +17,9 @@ namespace CourseProgram.Models
         [DisplayName("Высота")]
         public float Height { get; } //Высота
         [DisplayName("Тип")]
-        public string Type { get; } //Тип 
+        public TypeCargoValues Type { get; } //Тип
         [DisplayName("Категория")]
-        public string Category { get; } //Категория
+        public CategoriesCargoValues Category { get; } //Категория
         [DisplayName("Вес")]
         public float Weight { get; } //Вес
         [DisplayName("Количество")]
@@ -31,8 +32,8 @@ namespace CourseProgram.Models
             Length = 0;
             Width = 0;
             Height = 0;
-            Type = string.Empty;
-            Category = string.Empty;
+            Type = TypeCargoValues.Null;
+            Category = CategoriesCargoValues.Null;
             Weight = 0;
             Count = 0;
         }
@@ -53,10 +54,28 @@ namespace CourseProgram.Models
             Length = length;
             Width = width;
             Height = height;
-            Type = type;
-            Category = category;
             Weight = weight;
             Count = count;
+
+            Type = type switch
+            {
+                "Негабаритный" => TypeCargoValues.Oversize,
+                "Насыпной" => TypeCargoValues.Bulk,
+                "Пылевидный" => TypeCargoValues.Dusty,
+                "Наливной" => TypeCargoValues.Tanker,
+                "Газообразный" => TypeCargoValues.Gaseous,
+                "Штучный" => TypeCargoValues.Retail,
+                "Скоропортящийся" => TypeCargoValues.Perishable,
+                "Опасный" => TypeCargoValues.Dangerous,
+                _ => TypeCargoValues.Null
+            };
+            Category = category switch
+            {
+                "Легковесный" => CategoriesCargoValues.Light,
+                "Обычный" => CategoriesCargoValues.Usual,
+                "Тяжеловесный" => CategoriesCargoValues.Heavy,
+                _ => CategoriesCargoValues.Null
+            };
         }
 
         public string GetSelectors() => "\"КодГруза\", \"КодЗаказа\", \"Длина\", \"Ширина\", \"Высота\", \"Тип\", \"Категория\", \"Вес\", \"Количество\"";

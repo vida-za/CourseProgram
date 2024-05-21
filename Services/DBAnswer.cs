@@ -80,9 +80,9 @@ namespace CourseProgram.Services
             for (int i = 0; i < param.Length; i++)
             {
                 if (param[i] == null) param[i] = DBNull.Value;
-                if (param[i] is DateTime time && time == DateTime.MaxValue) param[i] = DBNull.Value;
-                if (param[i] is DateTimeOffset offset && offset == DateTimeOffset.MaxValue) param[i] = DBNull.Value;
-                if (param[i] is Int32 && ((int)param[i] == Int32.MinValue)) param[i] = DBNull.Value;
+                if (param[i] is DateTime time && (time == DateTime.MaxValue || time == DateTime.MinValue)) param[i] = DBNull.Value;
+                if (param[i] is DateTimeOffset offset && (offset == DateTimeOffset.MaxValue || offset == DateTimeOffset.MinValue)) param[i] = DBNull.Value;
+                if (param[i] is Int32 && ((int)param[i] == Int32.MaxValue ||(int)param[i] == Int32.MinValue)) param[i] = DBNull.Value;
 
                 string paramname = "@" + (i + 1).ToString();
                 NpgsqlDbType paramType;
@@ -114,11 +114,11 @@ namespace CourseProgram.Services
                         }
                 }
 
-                if (param[i] == DBNull.Value)
-                {
-                    cmd.Parameters.Add(paramname, NpgsqlDbType.Integer).Value = DBNull.Value;
-                }
-                else
+                //if (param[i] == DBNull.Value)
+                //{
+                //    cmd.Parameters.Add(paramname, NpgsqlDbType.Integer).Value = DBNull.Value;
+                //}
+                //else
                     cmd.Parameters.Add(paramname, paramType).Value = param[i];
             }
         }

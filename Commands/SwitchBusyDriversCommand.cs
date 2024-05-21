@@ -1,4 +1,4 @@
-﻿using CourseProgram.ViewModels;
+﻿using CourseProgram.ViewModels.ListingViewModel;
 
 namespace CourseProgram.Commands
 {

@@ -57,6 +57,8 @@
                   Background="Transparent"
                   BorderThickness="0">
             <TreeViewItem Header="Справочники">
+                <Button Content="Адреса"
+                        Command="{Binding NavigationAddressesCommand}" />
                 <Button Content="Водители"
                         Command="{Binding NavigateDriversCommand}" />
                 <Button Content="Машины"

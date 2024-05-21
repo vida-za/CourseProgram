@@ -6,12 +6,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CourseProgram.Commands;
+using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
+using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
 
-namespace CourseProgram.ViewModels
+namespace CourseProgram.ViewModels.ListingViewModel
 {
     public class DriverListingViewModel : BaseListingViewModel
     {
@@ -134,21 +136,10 @@ namespace CourseProgram.ViewModels
         public bool StateCheckedWork
         {
             get => _stateCheckedWork;
-            set 
-            { 
-                _stateCheckedWork = value;
-                OnPropertyChanged(nameof(StateCheckedWork));
-            }
-        }
-
-        private bool _stateFilter;
-        public bool StateFilter
-        {
-            get => _stateFilter;
             set
             {
-                _stateFilter = value;
-                OnPropertyChanged(nameof(StateFilter));
+                _stateCheckedWork = value;
+                OnPropertyChanged(nameof(StateCheckedWork));
             }
         }
 
@@ -169,7 +160,7 @@ namespace CourseProgram.ViewModels
 
         protected override void Find()
         {
-            if (!String.IsNullOrEmpty(TextFilter))
+            if (!string.IsNullOrEmpty(TextFilter))
                 SelectedItem = Items.FirstOrDefault(obj => obj.FIO.Contains(TextFilter), SelectedItem);
         }
 

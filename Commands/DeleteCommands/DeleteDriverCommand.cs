@@ -1,11 +1,11 @@
 ﻿using CourseProgram.Services.DataServices;
-using CourseProgram.ViewModels;
+using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace CourseProgram.Commands
+namespace CourseProgram.Commands.DeleteCommands
 {
     public class DeleteDriverCommand : CommandBaseAsync
     {

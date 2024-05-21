@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Commands.AddCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
@@ -7,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace CourseProgram.ViewModels
+namespace CourseProgram.ViewModels.AddViewModel
 {
     public class AddDriverViewModel : BaseViewModel
     {
@@ -76,7 +77,7 @@ namespace CourseProgram.ViewModels
         public DateOnly BirthDay
         {
             get => _birthDay;
-            set 
+            set
             {
                 _birthDay = value;
                 OnPropertyChanged(nameof(BirthDay));

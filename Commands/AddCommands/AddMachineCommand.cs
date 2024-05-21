@@ -3,12 +3,12 @@ using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
-using CourseProgram.ViewModels;
+using CourseProgram.ViewModels.AddViewModel;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CourseProgram.Commands
+namespace CourseProgram.Commands.AddCommands
 {
     public class AddMachineCommand : CommandBaseAsync
     {
@@ -25,8 +25,8 @@ namespace CourseProgram.Commands
             _addMachineViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-        private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) 
-        { 
+        private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
             if (e.PropertyName == nameof(_addMachineViewModel.TypeMachine) ||
                 e.PropertyName == nameof(_addMachineViewModel.TypeLoading) ||
                 e.PropertyName == nameof(_addMachineViewModel.LoadCapacity) ||
@@ -62,18 +62,18 @@ namespace CourseProgram.Commands
             Machine machine = new(
                 newID,
                 _addMachineViewModel.TypeMachine,
-                _addMachineViewModel.TypeBodywork,
+                _addMachineViewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.TypeBodyworkValues.Null) : _addMachineViewModel.TypeBodywork,
                 _addMachineViewModel.TypeLoading,
                 float.Parse(_addMachineViewModel.LoadCapacity),
-                float.Parse(_addMachineViewModel.Volume),
+                _addMachineViewModel.Volume == null ? float.MinValue : float.Parse(_addMachineViewModel.Volume),
                 _addMachineViewModel.HydroBoard,
-                float.Parse(_addMachineViewModel.LengthBodywork),
-                float.Parse(_addMachineViewModel.WidthBodywork),
-                float.Parse(_addMachineViewModel.HeightBodywork),
+                _addMachineViewModel.LengthBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.LengthBodywork),
+                _addMachineViewModel.WidthBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.WidthBodywork),
+                _addMachineViewModel.HeightBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.HeightBodywork),
                 _addMachineViewModel.Stamp,
                 _addMachineViewModel.Name,
-                _addMachineViewModel.StateNumber,
-                string.Empty,
+                _addMachineViewModel.StateNumber == null ? string.Empty : _addMachineViewModel.StateNumber,
+                Constants.GetEnumDescription(Constants.StatusMachineValues.Waiting),
                 DateTime.Now,
                 DateTime.MinValue,
                 string.Empty
@@ -87,7 +87,7 @@ namespace CourseProgram.Commands
 
                 _machineViewNavigationService.Navigate();
             }
-            catch (RepeatConflictException<Machine>) 
+            catch (RepeatConflictException<Machine>)
             {
                 MessageBox.Show("Такая машина уже имеется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

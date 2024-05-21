@@ -3,13 +3,13 @@ using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
-using CourseProgram.ViewModels;
+using CourseProgram.ViewModels.AddViewModel;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CourseProgram.Commands
+namespace CourseProgram.Commands.AddCommands
 {
     public class AddDriverCommand : CommandBaseAsync
     {
@@ -32,7 +32,7 @@ namespace CourseProgram.Commands
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_addDriverViewModel.DriverName) || 
+            if (e.PropertyName == nameof(_addDriverViewModel.DriverName) ||
                 e.PropertyName == nameof(_addDriverViewModel.Passport) ||
                 e.PropertyName == nameof(_addDriverViewModel.Phone))
             {
@@ -42,9 +42,9 @@ namespace CourseProgram.Commands
 
         public override bool CanExecute(object? parameter)
         {
-            return !string.IsNullOrEmpty(_addDriverViewModel.DriverName) && 
+            return !string.IsNullOrEmpty(_addDriverViewModel.DriverName) &&
                    !string.IsNullOrEmpty(_addDriverViewModel.Passport) &&
-                   !string.IsNullOrEmpty(_addDriverViewModel.Phone) && 
+                   !string.IsNullOrEmpty(_addDriverViewModel.Phone) &&
                    base.CanExecute(parameter);
         }
 
@@ -66,7 +66,7 @@ namespace CourseProgram.Commands
             {
                 await _driverDataService.AddItemAsync(driver);
 
-                foreach(Category ctg in _addDriverViewModel.Categories)
+                foreach (Category ctg in _addDriverViewModel.Categories)
                 {
                     if (ctg.IsChecked)
                         await _driverCategoriesDataService.AddItemAsync(new DriverCategories(driver.ID, ctg.ID));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
@@ -20,7 +21,7 @@ namespace CourseProgram.Models
         [DisplayName("Стоимость")]
         public float Price { get; } //Стоимость
         [DisplayName("Статус")]
-        public string Status { get; } //Статус
+        public StatusOrderValues Status { get; } //Статус
         [DisplayName("Договор")]
         public string File { get; } //Договор
 
@@ -33,7 +34,7 @@ namespace CourseProgram.Models
             TimeLoad = DateTime.MinValue;
             TimeOnLoad = DateTime.MinValue;
             Price = 0;
-            Status = string.Empty;
+            Status = StatusOrderValues.Null;
             File = string.Empty;
         }
 
@@ -55,8 +56,16 @@ namespace CourseProgram.Models
             TimeLoad = timeLoad;
             TimeOnLoad = timeOnLoad;
             Price = price;
-            Status = status;
             File = file;
+
+            Status = status switch
+            {
+                "Выполнен" => StatusOrderValues.Completed,
+                "Отменен" => StatusOrderValues.Cancelled,
+                "В ожидании" => StatusOrderValues.Waiting,
+                "Выполняется" => StatusOrderValues.InProgress,
+                _ => StatusOrderValues.Null,
+            };
         }
 
         public string GetSelectors() => "\"КодЗаказа\", \"КодСотрудника\", \"КодЗаказчика\", \"ДатаЗаказа\", \"ДатаЗагрузки\", \"ДатаВыгрузки\", \"Стоимость\", \"Статус\", \"Договор\"";

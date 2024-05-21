@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="CourseProgram.Views.AddAddressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CourseProgram.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid Grid.IsSharedSizeScope="True"
+          Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="40"
+                           SharedSizeGroup="Row" />
+            <RowDefinition Height="auto"
+                           SharedSizeGroup="Row" />
+            <RowDefinition Height="auto"
+                           SharedSizeGroup="Row" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource Header}"
+                   Text="Добавление адреса" />
+
+        <GroupBox Grid.Row="1"
+                  Header="Обязательные параметры"
+                  Padding="5"
+                  Margin="5">
+            <Grid Margin="0 5 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"
+                                   SharedSizeGroup="Row" />
+                    <RowDefinition Height="auto"
+                                   SharedSizeGroup="Row" />
+                </Grid.RowDefinitions>
+
+                <TextBox Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Город"
+                         Grid.Row="0"
+                         Margin="5"
+                         Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Улица"
+                         Grid.Row="1"
+                         Margin="5"
+                         Text="{Binding Street, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+
+        <TextBox Style="{StaticResource PlaceholderTextBoxStyle}"
+                 Tag="Дом"
+                 Grid.Row="2"
+                 Margin="5"
+                 Text="{Binding House, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBox Style="{StaticResource PlaceholderTextBoxStyle}"
+                 Tag="Строение"
+                 Grid.Row="3"
+                 Margin="5"
+                 Text="{Binding Structure, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBox Style="{StaticResource PlaceholderTextBoxStyle}"
+                 Tag="Корпус"
+                 Grid.Row="4"
+                 Margin="5"
+                 Text="{Binding Frame, UpdateSourceTrigger=PropertyChanged}" />
+
+        <StackPanel Grid.Row="5"
+                    Orientation="Horizontal"
+                    Margin="0 25 0 0">
+            <Button Content="Добавить"
+                    Command="{Binding SubmitCommand}" />
+            <Button Margin="10 0 0 0"
+                    Content="Отмена"
+                    Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

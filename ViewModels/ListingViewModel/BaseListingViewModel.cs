@@ -1,4 +1,4 @@
-﻿namespace CourseProgram.ViewModels
+﻿namespace CourseProgram.ViewModels.ListingViewModel
 {
     public abstract class BaseListingViewModel : BaseViewModel
     {
@@ -11,6 +11,17 @@
                 _textFilter = value;
                 OnPropertyChanged(nameof(TextFilter));
                 Find();
+            }
+        }
+
+        private bool _stateFilter;
+        public bool StateFilter
+        {
+            get => _stateFilter;
+            set
+            {
+                _stateFilter = value;
+                OnPropertyChanged(nameof(StateFilter));
             }
         }
 

@@ -2,6 +2,7 @@
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
+using CourseProgram.ViewModels.EntityViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace CourseProgram.ViewModels
+namespace CourseProgram.ViewModels.DetailViewModel
 {
     public class DriverDetailViewModel : BaseViewModel
     {

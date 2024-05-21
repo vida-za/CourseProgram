@@ -18,7 +18,7 @@ namespace CourseProgram.Services.DataServices
         {
             int i = 0;
             var temp = await GetFullTableAsync();
-            for (i = 1; i < temp.Count(); ++i)
+            for (i = 1; i <= temp.Count(); ++i)
             {
                 if (!temp.Any(d => d.ID == i))
                     return await Task.FromResult(i);

@@ -1,8 +1,10 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
+using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace CourseProgram.ViewModels
+namespace CourseProgram.ViewModels.ListingViewModel
 {
     public class MachineListingViewModel : BaseListingViewModel
     {
@@ -20,7 +22,7 @@ namespace CourseProgram.ViewModels
             ServicesStore servicesStore,
             SelectedStore selectedStore,
             INavigationService addMachineNavigationService,
-            INavigationService detailMachineNavigationService) 
+            INavigationService detailMachineNavigationService)
         {
             _servicesStore = servicesStore;
             _selectedStore = selectedStore;
@@ -125,12 +127,12 @@ namespace CourseProgram.ViewModels
                 Items = new ObservableCollection<MachineViewModel>(_disMachines);
             else
                 Items = new ObservableCollection<MachineViewModel>(_rdyMachines);
-                
+
         }
 
         protected override void Find()
         {
-            if (!String.IsNullOrEmpty(TextFilter))
+            if (!string.IsNullOrEmpty(TextFilter))
                 SelectedItem = Items.FirstOrDefault(obj => obj.Name.Contains(TextFilter), SelectedItem);
         }
 

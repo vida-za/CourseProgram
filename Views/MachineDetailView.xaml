@@ -1,11 +1,10 @@
 ﻿<UserControl x:Class="CourseProgram.Views.MachineDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:CourseProgram.Views"
              mc:Ignorable="d"
-             d:DesignHeight="450"
+             d:DesignHeight="950"
              d:DesignWidth="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -27,8 +26,19 @@
                        Style="{StaticResource Header}"
                        HorizontalAlignment="Center" />
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1"
+                  ScrollViewer.CanContentScroll="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -44,73 +54,153 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0"
-                           Text="Category"
+                           Text="Тип машины"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="0"
-                         Grid.Column="1"
-                         Text="{Binding TypeMachine}"
-                         Margin="5 0 0 0" />
+                           Grid.Column="1"
+                           Text="{Binding TypeMachine}"
+                           Margin="5 0 0 0" />
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
-                           Text="BirthDay"
+                           Text="Тип кузова"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Text="{Binding TypeBodywork}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding TypeBodywork}"
+                           Margin="5 5 0 0" />
 
                 <TextBlock Grid.Row="2"
                            Grid.Column="0"
-                           Text="Passport"
+                           Text="Тип загрузки"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         Text="{Binding TypeLoading}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding TypeLoading}"
+                           Margin="5 5 0 0" />
 
                 <TextBlock Grid.Row="3"
                            Grid.Column="0"
-                           Text="Phone"
+                           Text="Вместимость"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="3"
-                         Grid.Column="1"
-                         Text="{Binding Phone}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding LoadCapacity}"
+                           Margin="5 5 0 0" />
 
                 <TextBlock Grid.Row="4"
                            Grid.Column="0"
-                           Text="DateStart"
+                           Text="Объём"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="4"
-                         Grid.Column="1"
-                         Text="{Binding DateStart}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           Text="{Binding Volume}"
+                           Margin="5 5 0 0" />
 
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
-                           Text="DateEnd"
+                           Text="Есть гидроборт - "
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="5"
-                         Grid.Column="1"
-                         Text="{Binding DateEnd}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="5"
+                           Grid.Column="1"
+                           Text="{Binding HydroBoard}"
+                           Margin="5 5 0 0" />
 
                 <TextBlock Grid.Row="6"
                            Grid.Column="0"
-                           Text="Town"
+                           Text="Длина кузова"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
-                <TextBox Grid.Row="6"
-                         Grid.Column="1"
-                         Text="{Binding Town}"
-                         Margin="5 5 0 0" />
+                <TextBlock Grid.Row="6"
+                           Grid.Column="1"
+                           Text="{Binding LengthBodywork}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="7"
+                           Grid.Column="0"
+                           Text="Ширина кузова"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="7"
+                           Grid.Column="1"
+                           Text="{Binding WidthBodywork}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="8"
+                           Grid.Column="0"
+                           Text="Высоты кузова"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="8"
+                           Grid.Column="1"
+                           Text="{Binding HeightBodywork}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="9"
+                           Grid.Column="0"
+                           Text="Марка"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="9"
+                           Grid.Column="1"
+                           Text="{Binding Stamp}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="10"
+                           Grid.Column="0"
+                           Text="Гос номер"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="10"
+                           Grid.Column="1"
+                           Text="{Binding StateNumber}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="11"
+                           Grid.Column="0"
+                           Text="Состояние"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="11"
+                           Grid.Column="1"
+                           Text="{Binding Status}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="12"
+                           Grid.Column="0"
+                           Text="Время начала эксплуатации"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="12"
+                           Grid.Column="1"
+                           Text="{Binding TimeStart}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="13"
+                           Grid.Column="0"
+                           Text="Время списания"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="13"
+                           Grid.Column="1"
+                           Text="{Binding TimeEnd}"
+                           Margin="5 5 0 0" />
+                
+                <TextBlock Grid.Row="14"
+                           Grid.Column="0"
+                           Text="Сейчас пребывает в"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="14"
+                           Grid.Column="1"
+                           Text="{Binding Town}"
+                           Margin="5 5 0 0" />
             </Grid>
 
             <Button Grid.Row="2"

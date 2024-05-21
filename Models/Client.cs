@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
@@ -10,7 +11,7 @@ namespace CourseProgram.Models
         [DisplayName("Название")]
         public string Name { get; } //Название
         [DisplayName("Тип заказчика")]
-        public string Type { get; } //ТипЗаказчика
+        public TypeClientValues Type { get; } //ТипЗаказчика
         [DisplayName("ИНН")]
         public string INN { get; } //ИНН
         [DisplayName("КПП")]
@@ -36,7 +37,7 @@ namespace CourseProgram.Models
         {
             ID = 0;
             Name = string.Empty;
-            Type = string.Empty;
+            Type = TypeClientValues.Null;
             INN = string.Empty;
             KPP = string.Empty;
             OGRN = string.Empty;
@@ -66,7 +67,6 @@ namespace CourseProgram.Models
         {
             ID = id;
             Name = name;
-            Type = type;
             INN = inn;
             KPP = kpp;
             OGRN = ogrn;
@@ -77,6 +77,13 @@ namespace CourseProgram.Models
             Bank = bank;
             PhoneLoad = phoneLoad;
             PhoneOnLoad = phoneOnLoad;
+
+            Type = type switch
+            {
+                "Физлицо" => TypeClientValues.Physical,
+                "Юрлицо" => TypeClientValues.Legal,
+                _ => TypeClientValues.Null,
+            };
         }
 
         public string GetSelectors() => "\"КодЗаказчика\", \"Название\", \"ТипЗаказчика\", \"ИНН\", \"КПП\", \"ОГРН\", \"Телефон\", \"РасчётныйСчёт\", \"БИК\", \"КорреспондентскийСчёт\", \"Банк\", \"КонтактЗагрузки\", \"КонтактВыгрузки\"";

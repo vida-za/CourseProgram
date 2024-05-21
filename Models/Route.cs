@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
@@ -12,11 +13,11 @@ namespace CourseProgram.Models
         [DisplayName("Номер водителя")]
         public int DriverID { get; } //КодВодителя
         [DisplayName("Тип")]
-        public string Type { get; } //Тип
+        public TypeRouteValues Type { get; } //Тип
         [DisplayName("Расстояние")]
         public float Distance { get; } //Расстояние
         [DisplayName("Статус")]
-        public string Status { get; } //Статус
+        public StatusRouteValues Status { get; } //Статус
         [DisplayName("Время выполнения")]
         public DateTime CompleteTime { get; } //ВремяВыполнения
 
@@ -25,9 +26,9 @@ namespace CourseProgram.Models
             ID = 0;
             MachineID = 0;
             DriverID = 0;
-            Type = string.Empty;
+            Type = TypeRouteValues.Null;
             Distance = float.NaN;
-            Status = string.Empty;
+            Status = StatusRouteValues.Null;
             CompleteTime = DateTime.MinValue;
         }
 
@@ -36,10 +37,24 @@ namespace CourseProgram.Models
             ID = id;
             MachineID = machine;
             DriverID = driver;
-            Type = type;
             Distance = distance;
-            Status = status;
             CompleteTime = completeTime;
+
+            Type = type switch
+            {
+                "Общий" => TypeRouteValues.General,
+                "Обособленный" => TypeRouteValues.Isolated,
+                "Пустой" => TypeRouteValues.Empty,
+                _ => TypeRouteValues.Null,
+            };
+            Status = status switch
+            {
+                "Выполнен" => StatusRouteValues.Completed,
+                "В ожидании" => StatusRouteValues.Waiting,
+                "Выполняется" => StatusRouteValues.InProgress,
+                "Отменен" => StatusRouteValues.Cancelled,
+                _ => StatusRouteValues.Null,
+            };
         }
 
         public string GetSelectors() => "\"КодМаршрута\", \"КодМашины\", \"КодВодителя\", \"Тип\", \"Расстояние\", \"Статус\"";

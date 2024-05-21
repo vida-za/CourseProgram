@@ -5,6 +5,9 @@ using System.Windows;
 using CourseProgram.Services;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using CourseProgram.ViewModels.ListingViewModel;
+using CourseProgram.ViewModels.AddViewModel;
+using CourseProgram.ViewModels.DetailViewModel;
 
 namespace CourseProgram
 {
@@ -40,6 +43,9 @@ namespace CourseProgram
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient<AddAddressViewModel>(s => new AddAddressViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
 
             //Layout
             services.AddTransient<DriverListingViewModel>(s => new DriverListingViewModel(
@@ -52,6 +58,10 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddMachineNavigationService(s),
                 CreateMachineDetailNavigationService(s)));
+            services.AddTransient<AddressListingViewModel>(s => new AddressListingViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                CreateAddAddressNavigationService(s)));
             services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
 
             services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
@@ -114,6 +124,11 @@ namespace CourseProgram
             return CreateModalNavigationService<MachineDetailViewModel>(serviceProvider);
         }
 
+        private static INavigationService CreateAddAddressNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddAddressViewModel>(serviceProvider);
+        }
+
         //Layout
         private static INavigationService CreateLayoutNavigationService<T>(IServiceProvider serviceProvider) where T : BaseViewModel
         {
@@ -133,6 +148,11 @@ namespace CourseProgram
             return CreateLayoutNavigationService<MachineListingViewModel>(serviceProvider);
         }
 
+        private static INavigationService CreateAddressListingNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<AddressListingViewModel>(serviceProvider);
+        }
+
         private static INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
         {
             return CreateLayoutNavigationService<HomeViewModel>(serviceProvider);
@@ -143,6 +163,7 @@ namespace CourseProgram
         private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
         {
             return new NavigationBarViewModel(
+                CreateAddressListingNavigationService(serviceProvider),
                 CreateDriverListingNavigationService(serviceProvider),
                 CreateMachineListingNavigationService(serviceProvider));
         }

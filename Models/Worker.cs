@@ -13,7 +13,7 @@ namespace CourseProgram.Models
         public DateOnly BirthDay { get; } //ДатаРождения
         [DisplayName("Паспортные данные")]
         public string Passport { get; } //ПаспортныеДанные
-        [DisplayName("Телефон")]
+        [DisplayName("Номер телефона")]
         public string Phone { get; } //Телефон
         [DisplayName("Принят")]
         public DateOnly DateStart { get; } //ДатаНачала

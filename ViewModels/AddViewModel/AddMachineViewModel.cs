@@ -1,9 +1,13 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Commands.AddCommands;
 using CourseProgram.Services;
 using CourseProgram.Stores;
+using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
+using static CourseProgram.Models.Constants;
 
-namespace CourseProgram.ViewModels
+namespace CourseProgram.ViewModels.AddViewModel
 {
     public class AddMachineViewModel : BaseViewModel
     {
@@ -16,17 +20,11 @@ namespace CourseProgram.ViewModels
         public ICommand SubmitCommand { get; }
         public ICommand CancelCommand { get; }
 
-        private string _typeMachine;
-        public string TypeMachine
-        {
-            get => _typeMachine;
-            set
-            {
-                _typeMachine = value;
-                OnPropertyChanged(nameof(TypeMachine));
-            }
-        }
+        public ObservableCollection<string> TypeMachineArray => GetFullEnumDescription(typeof(TypeMachineValues));
+        public ObservableCollection<string> TypeBodyworkArray => GetFullEnumDescription(typeof(TypeBodyworkValues));
+        public ObservableCollection<string> TypeLoadingArray => GetFullEnumDescription(typeof(TypeLoadingValues));
 
+        #region don`t must have
         private string _typeBodywork;
         public string TypeBodywork
         {
@@ -38,25 +36,14 @@ namespace CourseProgram.ViewModels
             }
         }
 
-        private string _typeLoading;
-        public string TypeLoading
+        private string _stateNumber;
+        public string StateNumber
         {
-            get => _typeLoading;
+            get => _stateNumber;
             set
             {
-                _typeLoading = value;
-                OnPropertyChanged(nameof(TypeLoading));
-            }
-        }
-
-        private string _loadCapacity;
-        public string LoadCapacity
-        {
-            get => _loadCapacity;
-            set
-            {
-                _loadCapacity = value;
-                OnPropertyChanged(nameof(LoadCapacity));
+                _stateNumber = value;
+                OnPropertyChanged(nameof(StateNumber));
             }
         }
 
@@ -68,17 +55,6 @@ namespace CourseProgram.ViewModels
             {
                 _volume = value;
                 OnPropertyChanged(nameof(Volume));
-            }
-        }
-
-        private bool _hydroBoard;
-        public bool HydroBoard
-        {
-            get => _hydroBoard;
-            set
-            {
-                _hydroBoard = value;
-                OnPropertyChanged(nameof(HydroBoard));
             }
         }
 
@@ -114,6 +90,19 @@ namespace CourseProgram.ViewModels
                 OnPropertyChanged(nameof(HeightBodywork));
             }
         }
+        #endregion
+
+        #region must have
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
 
         private string _stamp;
         public string Stamp
@@ -126,37 +115,49 @@ namespace CourseProgram.ViewModels
             }
         }
 
-        private string _name;
-        public string Name
+        private string _loadCapacity;
+        public string LoadCapacity
         {
-            get => _name;
+            get => _loadCapacity;
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
+                _loadCapacity = value;
+                OnPropertyChanged(nameof(LoadCapacity));
             }
         }
 
-        private string _stateNumber;
-        public string StateNumber
+        private string _typeMachine;
+        public string TypeMachine
         {
-            get => _stateNumber;
+            get => _typeMachine;
             set
             {
-                _stateNumber = value;
-                OnPropertyChanged(nameof(StateNumber));
+                _typeMachine = value;
+                OnPropertyChanged(nameof(TypeMachine));
             }
         }
 
-        private string _status;
-        public string Status
+        private string _typeLoading;
+        public string TypeLoading
         {
-            get => _status;
+            get => _typeLoading;
             set
             {
-                _status = value;
-                OnPropertyChanged(nameof(Status));
+                _typeLoading = value;
+                OnPropertyChanged(nameof(TypeLoading));
             }
         }
+
+        private bool _hydroBoard;
+        public bool HydroBoard
+        {
+            get => _hydroBoard;
+            set
+            {
+                _hydroBoard = value;
+                OnPropertyChanged(nameof(HydroBoard));
+            }
+        }
+        #endregion
     }
 }

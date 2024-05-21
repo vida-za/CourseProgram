@@ -1,18 +1,18 @@
 ﻿using CourseProgram.Services.DataServices;
-using CourseProgram.ViewModels;
+using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace CourseProgram.Commands
+namespace CourseProgram.Commands.DeleteCommands
 {
-    public class DeleteMachineCommand : CommandBaseAsync
+    public class DeleteAddressCommand : CommandBaseAsync
     {
-        private readonly MachineListingViewModel _listingViewModel;
-        private readonly MachineDataService _dataService;
+        private readonly AddressListingViewModel _listingViewModel;
+        private readonly AddressDataService _dataService;
 
-        public DeleteMachineCommand(MachineListingViewModel listingViewModel, MachineDataService dataService)
+        public DeleteAddressCommand(AddressListingViewModel listingViewModel, AddressDataService dataService) 
         {
             _listingViewModel = listingViewModel;
             _dataService = dataService;
@@ -23,9 +23,7 @@ namespace CourseProgram.Commands
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_listingViewModel.SelectedItem))
-            {
                 OnCanExecuteChanged();
-            }
         }
 
         public override bool CanExecute(object? parameter)
@@ -41,7 +39,7 @@ namespace CourseProgram.Commands
 
                 _listingViewModel.UpdateData();
             }
-            catch (Exception ex) { Debug.Write(ex.Message); }
+            catch(Exception ex) { Debug.WriteLine(ex.Message); }
         }
     }
 }
