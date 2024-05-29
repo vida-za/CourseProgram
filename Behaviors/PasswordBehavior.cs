@@ -12,8 +12,8 @@ namespace CourseProgram.Behaviors
 
         public string Password
         {
-            get { return (string)GetValue(PasswordProperty); }
-            set { SetValue(PasswordProperty, value); }
+            get => (string)GetValue(PasswordProperty);
+            set => SetValue(PasswordProperty, value);
         }
 
         protected override void OnAttached()

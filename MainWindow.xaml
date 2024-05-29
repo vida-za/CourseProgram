@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:CourseProgram.Views"
+        xmlns:v="clr-namespace:CourseProgram.Views"
+        xmlns:av="clr-namespace:CourseProgram.Views.AddView"
+        xmlns:dv="clr-namespace:CourseProgram.Views.DetailView"
+        xmlns:lv="clr-namespace:CourseProgram.Views.ListingView"
         xmlns:vm="clr-namespace:CourseProgram.ViewModels"
         xmlns:avm="clr-namespace:CourseProgram.ViewModels.AddViewModel"
         xmlns:dvm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
@@ -23,31 +26,39 @@
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type lvm:DriverListingViewModel}">
-                <views:DriverListingView />
+                <lv:DriverListingView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type avm:AddDriverViewModel}">
-                <views:AddDriverView />
+                <av:AddDriverView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type dvm:DriverDetailViewModel}">
-                <views:DriverDetailView />
+                <dv:DriverDetailView />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type lvm:MachineListingViewModel}">
-                <views:MachineListingView />
+                <lv:MachineListingView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type avm:AddMachineViewModel}">
-                <views:AddMachineView />
+                <av:AddMachineView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type dvm:MachineDetailViewModel}">
-                <views:MachineDetailView />
+                <dv:MachineDetailView />
             </DataTemplate>
+            
             <DataTemplate DataType="{x:Type lvm:AddressListingViewModel}">
-                <views:AddressListingView />
+                <lv:AddressListingView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type avm:AddAddressViewModel}">
-                <views:AddAddressView />
+                <av:AddAddressView />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type lvm:WorkerListingViewModel}">
+                <lv:WorkerListingView />
+            </DataTemplate>
+            
+            
             <DataTemplate DataType="{x:Type vm:HomeViewModel}">
-                <views:HomeView />
+                <v:HomeView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:LayoutViewModel}">

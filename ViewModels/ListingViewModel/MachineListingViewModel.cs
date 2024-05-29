@@ -31,7 +31,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             _rdyMachines = new ObservableCollection<MachineViewModel>();
             _items = new ObservableCollection<MachineViewModel>();
 
-            SwitchMachinesCommand = new SwitchMachinesCommand(this);
+            SwitchMachinesCommand = new SwitchHandlerCommand(this);
             AddMachineCommand = new NavigateCommand(addMachineNavigationService);
             DeleteMachineCommand = new DeleteMachineCommand(this, _servicesStore._machineService);
             DetailMachineCommand = new NavigateDetailCommand(detailMachineNavigationService);
@@ -121,7 +121,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             }
         }
 
-        public void SwitchMachines()
+        public override void SwitchHandler()
         {
             if (StateCheckedBusy)
                 Items = new ObservableCollection<MachineViewModel>(_disMachines);

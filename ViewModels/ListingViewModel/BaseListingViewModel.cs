@@ -28,5 +28,7 @@
         protected abstract void Find();
 
         public abstract void UpdateData();
+
+        public virtual void SwitchHandler() { }
     }
 }

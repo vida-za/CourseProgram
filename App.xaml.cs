@@ -46,6 +46,7 @@ namespace CourseProgram
             services.AddTransient<AddAddressViewModel>(s => new AddAddressViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
+            //services.AddTransient<AddW>
 
             //Layout
             services.AddTransient<DriverListingViewModel>(s => new DriverListingViewModel(
@@ -96,7 +97,7 @@ namespace CourseProgram
                 Shutdown();
         }
 
-        //Modal
+        #region modal
         private static INavigationService CreateModalNavigationService<T>(IServiceProvider serviceProvider) where T : BaseViewModel
         {
             return new ModalNavigationService<T>(
@@ -128,8 +129,9 @@ namespace CourseProgram
         {
             return CreateModalNavigationService<AddAddressViewModel>(serviceProvider);
         }
+        #endregion
 
-        //Layout
+        #region layout
         private static INavigationService CreateLayoutNavigationService<T>(IServiceProvider serviceProvider) where T : BaseViewModel
         {
             return new LayoutNavigationService<T>(
@@ -157,8 +159,7 @@ namespace CourseProgram
         {
             return CreateLayoutNavigationService<HomeViewModel>(serviceProvider);
         }
-
-
+        #endregion
 
         private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
         {

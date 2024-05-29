@@ -33,7 +33,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
             DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore._driverService);
             DetailDriverCommand = new NavigateDetailCommand(detailDriverNavigationService);
-            SwitchBusyDrivers = new SwitchBusyDriversCommand(this);
+            SwitchBusyDrivers = new SwitchHandlerCommand(this);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
 
             UpdateData();
@@ -143,7 +143,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             }
         }
 
-        public void SwitchDrivers()
+        public override void SwitchHandler()
         {
             if (StateCheckedBusy)
                 Items = new ObservableCollection<DriverViewModel>(_freeDrivers);

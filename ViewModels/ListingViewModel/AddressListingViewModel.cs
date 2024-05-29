@@ -17,6 +17,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 {
     public class AddressListingViewModel : BaseListingViewModel
     {
+        #region fields
         private readonly ServicesStore _servicesStore;
         private readonly SelectedStore _selectedStore;
 
@@ -27,6 +28,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public ICommand AddAddressCommand { get; }
         public ICommand DeleteAddressCommand { get; }
         public ICommand SelectionChangedCommand { get; }
+        #endregion
 
         public AddressListingViewModel(
             ServicesStore servicesStore,
