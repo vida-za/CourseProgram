@@ -1,16 +1,12 @@
-﻿using System.Windows.Input;
-using CourseProgram.Commands;
+﻿using CourseProgram.Commands;
 using CourseProgram.Commands.AddCommands;
 using CourseProgram.Services;
 using CourseProgram.Stores;
 
 namespace CourseProgram.ViewModels.AddViewModel
 {
-    public class AddAddressViewModel : BaseViewModel
+    public class AddAddressViewModel : BaseAddViewModel
     {
-        public ICommand SubmitCommand { get; }
-        public ICommand CancelCommand { get; }
-
         public AddAddressViewModel(ServicesStore servicesStore, INavigationService addressViewNavigationService)
         {
             SubmitCommand = new AddAddressCommand(this, servicesStore, addressViewNavigationService);

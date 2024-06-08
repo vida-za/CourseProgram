@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
@@ -47,7 +48,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             _disWorkers = new ObservableCollection<WorkerViewModel>();
 
             AddWorkerCommand = new NavigateCommand(addWorkerNavigationService);
-            //DeleteWorkerCommand = new DeleteWorkerCommand();
+            DeleteWorkerCommand = new DeleteWorkerCommand(this, servicesStore._workerService);
             DetailWorkerCommand = new NavigateDetailCommand(detailWorkerNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
             SwitchHandlerCommand = new SwitchHandlerCommand(this);

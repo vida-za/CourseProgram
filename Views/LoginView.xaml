@@ -1,59 +1,95 @@
 ﻿<UserControl x:Class="CourseProgram.Views.LoginView"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                   xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                   xmlns:beh="clr-namespace:CourseProgram.Behaviors"
-                   mc:Ignorable="d"
-                   d:DesignHeight="450"
-                   d:DesignWidth="800">
-    <Grid HorizontalAlignment="Center"
-          VerticalAlignment="Center">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0"
+                  VerticalAlignment="Top"
+                  HorizontalAlignment="Right"
+                  Header="Настройки"
+                  Padding="5">
+            <StackPanel>
+                <TextBox Text="{Binding Server}"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Сервер"
+                         Margin="0 0 0 10"
+                         HorizontalAlignment="Center"
+                         Width="150" />
 
-        <TextBox Grid.Row="0"
-                 Text="{Binding Username}"
-                 Margin="0 0 0 10"
-                 HorizontalAlignment="Center"
-                 Width="150" />
+                <TextBox  Text="{Binding Database}"
+                          Style="{StaticResource PlaceholderTextBoxStyle}"
+                          Tag="Имя БД"
+                          Margin="0 0 0 10"
+                          HorizontalAlignment="Center"
+                          Width="150" />
+            </StackPanel>
+        </GroupBox>
 
-        <PasswordBox Grid.Row="1"
-                     Margin="0 10 0 10"
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="Row" />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="Row" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0"
+                     Text="{Binding Username}"
+                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                     Tag="Логин"
+                     Margin="0 0 0 10"
                      HorizontalAlignment="Center"
-                     Width="150">
-            <i:Interaction.Behaviors>
-                <beh:PasswordBehavior Password="{Binding Password, Mode=TwoWay}" />
-            </i:Interaction.Behaviors>
-        </PasswordBox>
+                     Width="150" />
 
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    Margin="0 10 0 0"
-                    HorizontalAlignment="Center">
-            <Button Content="Вход"
-                    Command="{Binding LoginCommand}"
-                    MaxWidth="100"
-                    Margin="10 10 0 0" />
-            <Button Content="Выход"
-                    Command="{Binding ExitApp}"
-                    MaxWidth="100"
-                    Margin="10 10 0 0" />
-        </StackPanel>
+            <PasswordBox Grid.Row="1"
+                         Margin="0 0 0 10"
+                         HorizontalAlignment="Center"
+                         Width="150">
+                <i:Interaction.Behaviors>
+                    <beh:PasswordBehavior Password="{Binding Password, Mode=TwoWay}" />
+                </i:Interaction.Behaviors>
+            </PasswordBox>
 
+            <Grid Grid.Row="2"
+                  Grid.IsSharedSizeScope="True"
+                  Width="150">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"
+                                      SharedSizeGroup="Column" />
+                    <ColumnDefinition Width="auto"
+                                      SharedSizeGroup="Column" />
+                </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="3"
-                   Margin="0 10 0 0"
-                   Text="{Binding Message}"
-                   HorizontalAlignment="Center" />
+                <Button Grid.Column="0"
+                        Content="Вход"
+                        Command="{Binding LoginCommand}"
+                        Margin="10 0 5 0" />
+                <Button Grid.Column="1"
+                        Content="Выход"
+                        Command="{Binding ExitApp}"
+                        Margin="5 0 10 0" />
+            </Grid>
+
+            <TextBlock Grid.Row="3"
+                       Margin="0 10 0 0"
+                       Text="{Binding Message}"
+                       HorizontalAlignment="Center" />
+        </Grid>
     </Grid>
 </UserControl>

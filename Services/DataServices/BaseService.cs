@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace CourseProgram.Services.DataServices
         protected List<T> items = new();
         protected string query = string.Empty;
         protected T temp;
+        protected string Server = ConfigurationManager.AppSettings["Server"];
+        protected string Database = ConfigurationManager.AppSettings["DatabaseName"];
 
         public async Task<int> FindMaxEmptyID()
         {

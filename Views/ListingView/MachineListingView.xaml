@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="CourseProgram.Views.MachineListingView"
+﻿<UserControl x:Class="CourseProgram.Views.ListingView.MachineListingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:CourseProgram.Views"
+             xmlns:local="clr-namespace:CourseProgram.Views.ListingView"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -27,8 +27,10 @@
                        Text="Список машин"
                        Style="{StaticResource Header}" />
             <StackPanel Grid.Column="1"
-                        Margin="10 0 0 0">
-                <CheckBox Content="Показать списанные"
+                        Margin="10 0 0 0"
+                        VerticalAlignment="Center">
+                <CheckBox VerticalAlignment="Center"
+                          Content="Показать списанные"
                           IsChecked="{Binding StateCheckedBusy}"
                           Command="{Binding SwitchMachinesCommand}" />
             </StackPanel>

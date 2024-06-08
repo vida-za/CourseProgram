@@ -34,10 +34,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Договор")]
         public string File => _model.File;
 
-        public OrderViewModel(ServicesStore servicesStore, Order model)
+        public OrderViewModel(Order model, ServicesStore servicesStore)
         {
-            _servicesStore = servicesStore;
             _model = model;
+            _servicesStore = servicesStore;
 
             UpdateData();
         }

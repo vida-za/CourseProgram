@@ -6,18 +6,34 @@ namespace CourseProgram.ViewModels
 {
     public class NavigationBarViewModel : BaseViewModel
     {
-        public ICommand NavigationAddressesCommand { get; }
+        #region fields
+        public ICommand NavigateAddressesCommand { get; }
+        //public ICommand NavigateCargoesCommand { get; }
+        public ICommand NavigateClientsCommand { get; }
         public ICommand NavigateDriversCommand { get; }
+        //public ICommand NavigateHaulsCommand { get; }
         public ICommand NavigateMachinesCommand { get; }
+        //public ICommand NavigateOrdersCommand { get; }
+        //public ICommand NavigateRoutesCommand { get; }
+        public ICommand NavigateWorkersCommand { get; }
+        #endregion
 
         public NavigationBarViewModel(
             INavigationService addressesNavigationService,
+            INavigationService clientsNavigationService,
             INavigationService driversNavigationService, 
-            INavigationService machinesNavigationService) 
+            INavigationService machinesNavigationService,
+            INavigationService workersNavigationService) 
         {
-            NavigationAddressesCommand = new NavigateCommand(addressesNavigationService);
+            NavigateAddressesCommand = new NavigateCommand(addressesNavigationService);
+            //NavigateCargoesCommand = new NavigateCommand(cargoesNavigationService); 
+            NavigateClientsCommand = new NavigateCommand(clientsNavigationService);
             NavigateDriversCommand = new NavigateCommand(driversNavigationService);
+            //NavigateHaulsCommand = new NavigateCommand(haulsNavigationService);
             NavigateMachinesCommand = new NavigateCommand(machinesNavigationService);
+            //NavigateOrdersCommand = new NavigateCommand(ordersNavigationService);
+            //NavigateRoutesCommand = new NavigateCommand(routesNavigationService);
+            NavigateWorkersCommand = new NavigateCommand(workersNavigationService);
         }
     }
 }

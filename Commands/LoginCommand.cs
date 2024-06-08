@@ -8,24 +8,22 @@ namespace CourseProgram.Commands
 {
     public class LoginCommand : CommandBaseAsync
     {
-        private readonly LoginViewModel _loginViewModel;
-        //private readonly INavigationService _navigationService;
+        private readonly LoginViewModel _viewModel;
         private DBConnection db;
 
-        public LoginCommand(LoginViewModel loginViewModel/*, INavigationService navigationService*/)
+        public LoginCommand(LoginViewModel viewModel)
         {
-            _loginViewModel = loginViewModel;
-            //_navigationService = navigationService;
+            _viewModel = viewModel;
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            _loginViewModel.Message = "Waiting";
+            _viewModel.Message = "Waiting";
 
-            User.Username = _loginViewModel.Username;
-            User.Password = _loginViewModel.Password;
+            User.Username = _viewModel.Username;
+            User.Password = _viewModel.Password;
 
-            db = new DBConnection(Server, Database, User.Username, User.Password, "Login");
+            db = new DBConnection(_viewModel.Server, _viewModel.Database, User.Username, User.Password, "Login");
 
             await db.OpenAsync();
 
@@ -34,13 +32,12 @@ namespace CourseProgram.Commands
             {
                 db.Close();
                 App.Current.MainWindow.DialogResult = true;
-                //_navigationService.Navigate();
             }
             else
             {
-                _loginViewModel.Username = string.Empty;
-                _loginViewModel.Password = string.Empty;
-                _loginViewModel.Message = "Error";
+                _viewModel.Username = string.Empty;
+                _viewModel.Password = string.Empty;
+                _viewModel.Message = "Error";
             }
         }
     }

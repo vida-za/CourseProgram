@@ -1,0 +1,63 @@
+﻿using CourseProgram.Commands;
+using CourseProgram.Commands.AddCommands;
+using CourseProgram.Services;
+using CourseProgram.Stores;
+using System;
+
+namespace CourseProgram.ViewModels.AddViewModel
+{
+    public class AddWorkerViewModel : BaseAddViewModel
+    {
+        public AddWorkerViewModel(ServicesStore servicesStore, INavigationService navigationService) 
+        {
+            SubmitCommand = new AddWorkerCommand(this, servicesStore, navigationService);
+            CancelCommand = new NavigateCommand(navigationService);
+        }
+
+        #region properties
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        private DateOnly _birthDay = new(2000, 1, 1);
+        public DateOnly BirthDay
+        {
+            get => _birthDay;
+            set
+            {
+                _birthDay = value;
+                OnPropertyChanged(nameof(BirthDay));
+            }
+        }
+
+        private string _passport;
+        public string Passport
+        {
+            get => _passport;
+            set
+            {
+                _passport = value;
+                OnPropertyChanged(nameof(Passport));
+            }
+        }
+
+        private string _phone;
+        public string Phone
+        {
+            get => _phone; 
+            set
+            {
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
+            }
+        }
+        #endregion
+    }
+}

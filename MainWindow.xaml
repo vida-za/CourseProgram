@@ -55,7 +55,22 @@
             <DataTemplate DataType="{x:Type lvm:WorkerListingViewModel}">
                 <lv:WorkerListingView />
             </DataTemplate>
-            
+            <DataTemplate DataType="{x:Type avm:AddWorkerViewModel}">
+                <av:AddWorkerView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dvm:WorkerDetailViewModel}">
+                <dv:WorkerDetailView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type lvm:ClientListingViewModel}">
+                <lv:ClientListingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type avm:AddClientViewModel}">
+                <av:AddClientView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dvm:ClientDetailViewModel}">
+                <dv:ClientDetailView />
+            </DataTemplate>
             
             <DataTemplate DataType="{x:Type vm:HomeViewModel}">
                 <v:HomeView />

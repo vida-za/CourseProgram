@@ -9,15 +9,10 @@ namespace CourseProgram.Models
 {
     public static class Constants
     {
-        private const string ServerConst = "localhost:5433";
-        private const string DatabaseConst = "CourseDB";
-        public static string Server = ServerConst;
-        public static string Database = DatabaseConst;
-
-        static public class User
+        public static class User
         {
-            static public string Username { get; set; }
-            static public string Password { get; set; }
+            public static string Username { get; set; }
+            public static string Password { get; set; }
         }
 
         #region Cargo enums

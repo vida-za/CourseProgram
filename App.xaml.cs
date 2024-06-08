@@ -25,50 +25,78 @@ namespace CourseProgram
             services.AddSingleton<SelectedStore>();
             services.AddSingleton<ModalNavigationStore>();
 
-            services.AddSingleton<INavigationService>(s => CreateHomeNavigationService(s));
+            services.AddSingleton(s => CreateHomeNavigationService(s));
             services.AddSingleton<CloseModalNavigationService>();
 
             //Modal
-            services.AddTransient<AddDriverViewModel>(s => new AddDriverViewModel(
+            services.AddTransient(s => new AddDriverViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
-            services.AddTransient<DriverDetailViewModel>(s => new DriverDetailViewModel(
-                s.GetRequiredService<ServicesStore>(),
-                s.GetRequiredService<SelectedStore>(),
-                s.GetRequiredService<CloseModalNavigationService>()));
-            services.AddTransient<AddMachineViewModel>(s => new AddMachineViewModel(
-                s.GetRequiredService<ServicesStore>(),
-                s.GetRequiredService<CloseModalNavigationService>()));
-            services.AddTransient<MachineDetailViewModel>(s => new MachineDetailViewModel(
+            services.AddTransient(s => new DriverDetailViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
-            services.AddTransient<AddAddressViewModel>(s => new AddAddressViewModel(
+
+            services.AddTransient(s => new AddMachineViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
-            //services.AddTransient<AddW>
+            services.AddTransient(s => new MachineDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
+            services.AddTransient(s => new AddAddressViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
+            services.AddTransient(s => new AddWorkerViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient(s => new WorkerDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
+            services.AddTransient(s => new AddClientViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient(s => new ClientDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
 
             //Layout
-            services.AddTransient<DriverListingViewModel>(s => new DriverListingViewModel(
+            services.AddTransient(s => new DriverListingViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddDriverNavigationService(s),
                 CreateDriverDetailNavigationService(s)));
-            services.AddTransient<MachineListingViewModel>(s => new MachineListingViewModel(
+            services.AddTransient(s => new MachineListingViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddMachineNavigationService(s),
                 CreateMachineDetailNavigationService(s)));
-            services.AddTransient<AddressListingViewModel>(s => new AddressListingViewModel(
+            services.AddTransient(s => new AddressListingViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddAddressNavigationService(s)));
-            services.AddSingleton<HomeViewModel>(s => new HomeViewModel());
+            services.AddTransient(s => new WorkerListingViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                CreateAddWorkerNavigationService(s),
+                CreateWorkerDetailNavigationService(s)));
+            services.AddTransient(s => new ClientListingViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                CreateAddClientNavigationService(s),
+                CreateClientDetailNavigationService(s)));
 
-            services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
+            services.AddSingleton(s => new HomeViewModel());
+
+            services.AddTransient(CreateNavigationBarViewModel);
             services.AddSingleton<MainViewModel>();
 
-            services.AddSingleton<MainWindow>(s => new MainWindow()
+            services.AddSingleton(s => new MainWindow()
             {
                 DataContext = s.GetRequiredService<MainViewModel>()
             });
@@ -105,6 +133,7 @@ namespace CourseProgram
                 () => serviceProvider.GetRequiredService<T>());
         }
 
+        //Driver
         private static INavigationService CreateAddDriverNavigationService(IServiceProvider serviceProvider)
         {
             return CreateModalNavigationService<AddDriverViewModel>(serviceProvider);
@@ -115,6 +144,7 @@ namespace CourseProgram
             return CreateModalNavigationService<DriverDetailViewModel>(serviceProvider);
         }
 
+        //Machine
         private static INavigationService CreateAddMachineNavigationService(IServiceProvider serviceProvider)
         {
             return CreateModalNavigationService<AddMachineViewModel>(serviceProvider);
@@ -125,9 +155,32 @@ namespace CourseProgram
             return CreateModalNavigationService<MachineDetailViewModel>(serviceProvider);
         }
 
+        //Address
         private static INavigationService CreateAddAddressNavigationService(IServiceProvider serviceProvider)
         {
             return CreateModalNavigationService<AddAddressViewModel>(serviceProvider);
+        }
+
+        //Worker
+        private static INavigationService CreateAddWorkerNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddWorkerViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateWorkerDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<WorkerDetailViewModel>(serviceProvider);
+        }
+
+        //Client
+        private static INavigationService CreateAddClientNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddClientViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateClientDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<ClientDetailViewModel>(serviceProvider);
         }
         #endregion
 
@@ -155,6 +208,16 @@ namespace CourseProgram
             return CreateLayoutNavigationService<AddressListingViewModel>(serviceProvider);
         }
 
+        private static INavigationService CreateWorkerListingNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<WorkerListingViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateClientListingNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<ClientListingViewModel>(serviceProvider);
+        }
+
         private static INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
         {
             return CreateLayoutNavigationService<HomeViewModel>(serviceProvider);
@@ -165,8 +228,10 @@ namespace CourseProgram
         {
             return new NavigationBarViewModel(
                 CreateAddressListingNavigationService(serviceProvider),
+                CreateClientListingNavigationService(serviceProvider),
                 CreateDriverListingNavigationService(serviceProvider),
-                CreateMachineListingNavigationService(serviceProvider));
+                CreateMachineListingNavigationService(serviceProvider),
+                CreateWorkerListingNavigationService(serviceProvider));
         }
     }
 }

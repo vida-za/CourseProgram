@@ -6,11 +6,10 @@ using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.AddViewModel
 {
-    public class AddDriverViewModel : BaseViewModel
+    public class AddDriverViewModel : BaseAddViewModel
     {
         public AddDriverViewModel(ServicesStore servicesStore, INavigationService driverViewNavigationService)
         {
@@ -83,8 +82,5 @@ namespace CourseProgram.ViewModels.AddViewModel
                 OnPropertyChanged(nameof(BirthDay));
             }
         }
-
-        public ICommand SubmitCommand { get; }
-        public ICommand CancelCommand { get; }
     }
 }

@@ -2,23 +2,18 @@
 using CourseProgram.Commands.AddCommands;
 using CourseProgram.Services;
 using CourseProgram.Stores;
-using System;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.ViewModels.AddViewModel
 {
-    public class AddMachineViewModel : BaseViewModel
+    public class AddMachineViewModel : BaseAddViewModel
     {
         public AddMachineViewModel(ServicesStore servicesStore, INavigationService machineViewNavigationService)
         {
             SubmitCommand = new AddMachineCommand(this, servicesStore, machineViewNavigationService);
             CancelCommand = new NavigateCommand(machineViewNavigationService);
         }
-
-        public ICommand SubmitCommand { get; }
-        public ICommand CancelCommand { get; }
 
         public ObservableCollection<string> TypeMachineArray => GetFullEnumDescription(typeof(TypeMachineValues));
         public ObservableCollection<string> TypeBodyworkArray => GetFullEnumDescription(typeof(TypeBodyworkValues));

@@ -58,13 +58,17 @@
                   BorderThickness="0">
             <TreeViewItem Header="Справочники">
                 <Button Content="Адреса"
-                        Command="{Binding NavigationAddressesCommand}" />
+                        Command="{Binding NavigateAddressesCommand}" />
                 <Button Content="Водители"
                         Command="{Binding NavigateDriversCommand}" />
                 <Button Content="Машины"
                         Command="{Binding NavigateMachinesCommand}" />
+                <Button Content="Сотрудники"
+                        Command="{Binding NavigateWorkersCommand}" />
+                <Button Content="Заказчики"
+                        Command="{Binding NavigateClientsCommand}" />
             </TreeViewItem>
-            
+
         </TreeView>
     </Grid>
 

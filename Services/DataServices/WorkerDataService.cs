@@ -67,13 +67,13 @@ namespace CourseProgram.Services.DataServices
                 foreach (DataRow row in cnn.GetDataTable(query))
                 {
                     items.Add(new Worker(
-                        DBConnection.GetIntOrNull(row["КодМашины"], 0),
-                        DBConnection.GetStringOrNull(row["ТипМашины"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ТипКузова"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Грузоподъёмность"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["Объём"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["Гидроборт"], DateOnly.MinValue)
+                        DBConnection.GetIntOrNull(row["КодСотрудника"], 0),
+                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
+                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
+                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue)
                         ));
                 }
             }
@@ -120,13 +120,13 @@ namespace CourseProgram.Services.DataServices
                 foreach (DataRow row in cnn.GetDataTable(query))
                 {
                     items.Add(new Worker(
-                        DBConnection.GetIntOrNull(row["КодМашины"], 0),
-                        DBConnection.GetStringOrNull(row["ТипМашины"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ТипКузова"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Грузоподъёмность"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["Объём"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["Гидроборт"], DateOnly.MinValue)
+                        DBConnection.GetIntOrNull(row["КодСотрудника"], 0),
+                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
+                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
+                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
+                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue)
                         ));
                 }
             }

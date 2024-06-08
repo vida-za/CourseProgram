@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="CourseProgram.Views.ListingView.DriverListingView"
+﻿<UserControl x:Class="CourseProgram.Views.ListingView.ClientListingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CourseProgram.Views.ListingView"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -20,30 +21,19 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
-                       Text="Список водителей"
+                       Text="Список заказчиков"
                        Style="{StaticResource Header}" />
-            <StackPanel Grid.Column="1"
-                        Margin="10 0 0 0">
-                <CheckBox Content="Показать свободных"
-                          IsChecked="{Binding StateCheckedBusy}"
-                          Command="{Binding SwitchBusyDrivers}" />
-                <CheckBox Content="Показать уволенных"
-                          IsChecked="{Binding StateCheckedWork}"
-                          Command="{Binding SwitchBusyDrivers}" />
-            </StackPanel>
-
-            <Button Grid.Column="2"
+            <Button Grid.Column="1"
                     Margin="10 0 0 0"
                     Content="Добавить"
-                    Command="{Binding AddDriverCommand}" />
-            <Button Grid.Column="3"
+                    Command="{Binding AddClientCommand}" />
+            <Button Grid.Column="2"
                     Margin="10 0 0 0"
-                    Content="Уволить"
-                    Command="{Binding DeleteDriverCommand}" />
+                    Content="Удалить"
+                    Command="{Binding DeleteClientCommand}" />
         </Grid>
 
         <DataGrid Grid.Row="1"
@@ -52,7 +42,7 @@
                   MaxHeight="250"
                   ItemsSource="{Binding Items}"
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
+                  AutoGenerateColumns="True"
                   CanUserAddRows="True"
                   CanUserDeleteRows="True"
                   IsReadOnly="True">
@@ -61,21 +51,10 @@
                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
                                            CommandParameter="{Binding ElementName=dataGrid}" />
                 </i:EventTrigger>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding DetailDriverCommand}"
-                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
-                </i:EventTrigger>
             </i:Interaction.Triggers>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Номер"
-                                    Binding="{Binding ID}" />
-                <DataGridTextColumn Header="ФИО"
-                                    Binding="{Binding FIO}" />
-                <DataGridTextColumn Header="Номер телефона"
-                                    Binding="{Binding Phone}" />
-                <DataGridTextColumn Header="Город"
-                                    Binding="{Binding Town}" />
-            </DataGrid.Columns>
+            <i:Interaction.Behaviors>
+                <beh:ColumnHeaderBehaviour />
+            </i:Interaction.Behaviors>
         </DataGrid>
 
         <Grid Grid.Row="2"
@@ -90,10 +69,10 @@
                      MinWidth="200"
                      IsEnabled="{Binding StateFilter}"
                      Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}" />
-
             <CheckBox Grid.Column="1"
-                      Margin="10 5 0 0"
-                      Content="Поиск (по ФИО)"
+                      Margin="10 0 0 0"
+                      VerticalAlignment="Center"
+                      Content="Поиск (по названию)"
                       IsChecked="{Binding StateFilter}" />
         </Grid>
     </Grid>

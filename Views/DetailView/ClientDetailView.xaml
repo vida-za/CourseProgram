@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CourseProgram.Views.DetailView.WorkerDetailView"
+﻿<UserControl x:Class="CourseProgram.Views.DetailView.ClientDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -24,13 +24,19 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
-                       Text="{Binding FIO}"
+                       Text="{Binding Name}"
                        Margin="0 5 0 0"
                        Style="{StaticResource Header}"
                        HorizontalAlignment="Center" />
 
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -44,52 +50,112 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0"
-                           Text="Номер телефона:"
+                           Text="Тип заказчика"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="0"
                            Grid.Column="1"
+                           Text="{Binding StringType}"
+                           Margin="5 0 0 0" />
+                
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="ИНН"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding INN}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="КПП"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding KPP}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="0"
+                           Text="ОГРН"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding OGRN}"
+                           Margin="5 0 0 0" />
+                
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Text="Телефон"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
                            Text="{Binding Phone}"
                            Margin="5 0 0 0" />
 
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="5"
                            Grid.Column="0"
-                           Text="День рождения:"
+                           Text="Расчётный счёт"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="5"
                            Grid.Column="1"
-                           Text="{Binding BirthDay}"
+                           Text="{Binding Checking}"
                            Margin="5 0 0 0" />
 
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="6"
                            Grid.Column="0"
-                           Text="Паспортные данные:"
+                           Text="БИК"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="6"
                            Grid.Column="1"
-                           Text="{Binding Passport}"
+                           Text="{Binding BIK}"
                            Margin="5 0 0 0" />
 
-                <TextBlock Grid.Row="3"
+                <TextBlock Grid.Row="7"
                            Grid.Column="0"
-                           Text="Принят:"
+                           Text="КорСчёт"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
-                <TextBlock Grid.Row="3"
+                <TextBlock Grid.Row="7"
                            Grid.Column="1"
-                           Text="{Binding DateStart}"
+                           Text="{Binding Correspondent}"
                            Margin="5 0 0 0" />
 
-                <TextBlock Grid.Row="4"
+                <TextBlock Grid.Row="8"
                            Grid.Column="0"
-                           Text="Уволен:"
+                           Text="Банк"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
-                <TextBlock Grid.Row="4"
+                <TextBlock Grid.Row="8"
                            Grid.Column="1"
-                           Text="{Binding DateEnd}"
+                           Text="{Binding Bank}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="9"
+                           Grid.Column="0"
+                           Text="Контакт загрузки"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="9"
+                           Grid.Column="1"
+                           Text="{Binding PhoneLoad}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="10"
+                           Grid.Column="0"
+                           Text="Контакт выгрузки"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="10"
+                           Grid.Column="1"
+                           Text="{Binding PhoneOnLoad}"
                            Margin="5 0 0 0" />
             </Grid>
 
@@ -100,7 +166,7 @@
         </Grid>
 
         <DataGrid Grid.Row="1"
-                  MaxHeight="200"
+                  MaxHeight="150"
                   ItemsSource="{Binding Orders}"
                   IsReadOnly="True"
                   CanUserAddRows="False"

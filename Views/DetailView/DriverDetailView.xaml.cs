@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CourseProgram.Views
+namespace CourseProgram.Views.DetailView
 {
     /// <summary>
     /// Логика взаимодействия для DriverView.xaml

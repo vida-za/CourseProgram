@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CourseProgram.Views
+namespace CourseProgram.Views.AddView
 {
     /// <summary>
     /// Логика взаимодействия для AddMachineView.xaml

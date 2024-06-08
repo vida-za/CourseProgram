@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="CourseProgram.Views.AddView.AddClientView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CourseProgram.Views.AddView"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid Grid.IsSharedSizeScope="True"
+          Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="40"
+                           SharedSizeGroup="Row" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Добавление заказчика"
+                   Style="{StaticResource Header}" />
+
+        <GroupBox Grid.Row="1"
+                  Header="Обязательные параметры"
+                  Padding="5"
+                  Margin="5">
+            <Grid Margin="0 5 0 0"
+                  Grid.IsSharedSizeScope="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"
+                                   SharedSizeGroup="Row" />
+                    <RowDefinition Height="auto"
+                                   SharedSizeGroup="Row" />
+                    <RowDefinition Height="auto"
+                                   SharedSizeGroup="Row" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"
+                                      SharedSizeGroup="Column" />
+                    <ColumnDefinition Width="auto"
+                                      SharedSizeGroup="Column" />
+                    <ColumnDefinition Width="auto"
+                                      SharedSizeGroup="Column" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Row="0"
+                         Grid.Column="0"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Наименование"
+                         Margin="5"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="ИНН"
+                         Margin="5"
+                         Text="{Binding INN, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox Grid.Row="0"
+                          Grid.Column="2"
+                          Margin="5"
+                          ItemsSource="{Binding TypeArray}"
+                          SelectedItem="{Binding Type}" />
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="0"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="КПП"
+                         Margin="5"
+                         Text="{Binding KPP, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="ОГРН"
+                         Margin="5"
+                         Text="{Binding OGRN, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="2"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Расчётный счет"
+                         Margin="5"
+                         Text="{Binding Checking, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox Grid.Row="2"
+                         Grid.Column="0"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Контакт заказчика"
+                         Margin="5"
+                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Контакт погрузки"
+                         Margin="5"
+                         Text="{Binding PhoneLoad, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="2"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Контакт разгрузки"
+                         Margin="5"
+                         Text="{Binding PhoneOnLoad, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+
+        <Grid Grid.Row="2"
+              Margin="15 0 0 0"
+              Grid.IsSharedSizeScope="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"
+                                  MinWidth="150"
+                                  SharedSizeGroup="Column" />
+                <ColumnDefinition Width="auto"
+                                  SharedSizeGroup="Column" />
+                <ColumnDefinition Width="auto"
+                                  SharedSizeGroup="Column" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                     Tag="БИК"
+                     Margin="5"
+                     Text="{Binding BIK, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Grid.Column="1"
+                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                     Tag="КорСчёт"
+                     Margin="5"
+                     Text="{Binding Correspondent, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Grid.Column="2"
+                     Style="{StaticResource PlaceholderTextBoxStyle}"
+                     Tag="Банк"
+                     Margin="5"
+                     Text="{Binding Bank, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    Margin="0 25 0 0">
+            <Button Content="Добавить"
+                    Command="{Binding SubmitCommand}" />
+            <Button Margin="10 0 0 0"
+                    Content="Отменить"
+                    Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
