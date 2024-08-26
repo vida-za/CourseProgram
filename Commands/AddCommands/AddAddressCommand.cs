@@ -60,7 +60,7 @@ namespace CourseProgram.Commands.AddCommands
             {
                 await _addressDataService.AddItemAsync(address);
                 MessageBox.Show("Адрес добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-                _addressViewNavigationService.Navigate();
+               _addressViewNavigationService.Navigate();
             }
             catch (Exception)
             {

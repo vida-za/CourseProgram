@@ -19,8 +19,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _city;
             set
             {
-                _city = value;
-                OnPropertyChanged(nameof(City));
+                if (value.Length < 101)
+                {
+                    _city = value;
+                    OnPropertyChanged(nameof(City));
+                }
             }
         }
 
@@ -30,8 +33,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _street;
             set
             {
-                _street = value;
-                OnPropertyChanged(nameof(Street));
+                if (value.Length < 101)
+                {
+                    _street = value;
+                    OnPropertyChanged(nameof(Street));
+                }
             }
         }
 
@@ -41,8 +47,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _house;
             set
             {
-                _house = value;
-                OnPropertyChanged(nameof(House));
+                if (value.Length < 11)
+                {
+                    _house = value;
+                    OnPropertyChanged(nameof(House));
+                }
             }
         }
 
@@ -52,8 +61,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _structure;
             set
             {
-                _structure = value;
-                OnPropertyChanged(nameof(Structure));
+                if (value.Length < 6)
+                {
+                    _structure = value;
+                    OnPropertyChanged(nameof(Structure));
+                }
             }
         }
 
@@ -63,8 +75,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _frame;
             set
             {
-                _frame = value;
-                OnPropertyChanged(nameof(Frame));
+                if (value.Length < 6)
+                {
+                    _frame = value;
+                    OnPropertyChanged(nameof(Frame));
+                }
             }
         }
     }

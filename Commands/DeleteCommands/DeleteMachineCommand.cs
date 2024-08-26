@@ -30,7 +30,7 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null;
+            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null && _listingViewModel.SelectedItem.TimeEnd == DateOnly.MinValue.ToString();
         }
 
         public override async Task ExecuteAsync(object? parameter)

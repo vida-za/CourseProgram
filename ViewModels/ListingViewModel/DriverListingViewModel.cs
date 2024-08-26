@@ -161,7 +161,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
         protected override void Find()
         {
             if (!string.IsNullOrEmpty(TextFilter))
-                SelectedItem = Items.FirstOrDefault(obj => obj.FIO.Contains(TextFilter), SelectedItem);
+                SelectedItem = Items.FirstOrDefault(obj => obj.FIO.ToLower().Contains(TextFilter.ToLower()), SelectedItem);
         }
 
         private void SelectionChangedExecute(DataGrid dataGrid)

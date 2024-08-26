@@ -27,7 +27,7 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _viewModel.SelectedItem is not null;
+            return base.CanExecute(parameter) && _viewModel.SelectedItem is not null && _viewModel.SelectedItem.ID < 0; //TO DO Продумать удаление заказчиков
         }
 
         public override async Task ExecuteAsync(object? parameter)
@@ -37,7 +37,7 @@ namespace CourseProgram.Commands.DeleteCommands
                 await _dataService.DeleteItemAsync(_viewModel.SelectedItem.GetModel().ID);
                 _viewModel.UpdateData();
             }
-            catch(Exception ex) { }
+            catch(Exception) { }
         }
     }
 }

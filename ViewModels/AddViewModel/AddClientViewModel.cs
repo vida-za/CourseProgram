@@ -24,8 +24,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _bik;
             set
             {
-                _bik = value;
-                OnPropertyChanged(nameof(BIK));
+                if (value.Length < 10)
+                {
+                    _bik = value;
+                    OnPropertyChanged(nameof(BIK));
+                }
             }
         }
 
@@ -35,8 +38,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _correspondent;
             set
             {
-                _correspondent = value;
-                OnPropertyChanged(nameof(Correspondent));
+                if (value.Length < 21)
+                {
+                    _correspondent = value;
+                    OnPropertyChanged(nameof(Correspondent));
+                }
             }
         }
 
@@ -46,8 +52,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _bank;
             set
             {
-                _bank = value;
-                OnPropertyChanged(nameof(Bank));
+                if (value.Length < 51)
+                {
+                    _bank = value;
+                    OnPropertyChanged(nameof(Bank));
+                }
             }
         }
         #endregion
@@ -59,8 +68,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
+                if (value.Length < 101)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
             }
         }
 
@@ -70,8 +82,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _type;
             set
             {
-                _type = value;
-                OnPropertyChanged(nameof(Type));
+                if (value.Length < 8)
+                {
+                    _type = value;
+                    OnPropertyChanged(nameof(Type));
+                }
             }
         }
 
@@ -81,8 +96,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _inn;
             set
             {
-                _inn = value;
-                OnPropertyChanged(nameof(INN));
+                if (value.Length < 13)
+                {
+                    _inn = value;
+                    OnPropertyChanged(nameof(INN));
+                }
             }
         }
 
@@ -92,8 +110,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _kpp;
             set
             {
-                _kpp = value;
-                OnPropertyChanged(nameof(KPP));
+                if (value.Length < 10)
+                {
+                    _kpp = value;
+                    OnPropertyChanged(nameof(KPP));
+                }
             }
         }
 
@@ -103,8 +124,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _ogrn;
             set
             {
-                _ogrn = value;
-                OnPropertyChanged(nameof(OGRN));
+                if (value.Length < 16)
+                {
+                    _ogrn = value;
+                    OnPropertyChanged(nameof(OGRN));
+                }
             }
         }
 
@@ -114,8 +138,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phone;
             set
             {
-                _phone = value;
-                OnPropertyChanged(nameof(Phone));
+                if (value.Length < 21)
+                {
+                    _phone = value;
+                    OnPropertyChanged(nameof(Phone));
+                }
             }
         }
 
@@ -125,8 +152,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _checking; 
             set
             {
-                _checking = value;
-                OnPropertyChanged(nameof(Checking));
+                if (value.Length < 21)
+                {
+                    _checking = value;
+                    OnPropertyChanged(nameof(Checking));
+                }
             }
         }
 
@@ -136,8 +166,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phoneLoad;
             set
             {
-                _phoneLoad = value;
-                OnPropertyChanged(nameof(PhoneLoad));
+                if (value.Length < 21)
+                {
+                    _phoneLoad = value;
+                    OnPropertyChanged(nameof(PhoneLoad));
+                }
             }
         }
 
@@ -147,8 +180,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phoneOnLoad;
             set
             {
-                _phoneOnLoad = value;
-                OnPropertyChanged(nameof(PhoneLoad));
+                if (value.Length < 21)
+                {
+                    _phoneOnLoad = value;
+                    OnPropertyChanged(nameof(PhoneLoad));
+                }
             }
         }
         #endregion

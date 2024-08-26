@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
-    public class DeleteAddressCommand : CommandBaseAsync
+    public class DeleteAddressCommand : BaseDeleteCommand
     {
         private readonly AddressListingViewModel _listingViewModel;
         private readonly AddressDataService _dataService;
@@ -31,13 +31,14 @@ namespace CourseProgram.Commands.DeleteCommands
             return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null;
         }
 
-        public override async Task ExecuteAsync(object? parameter)
+        protected override async Task ExecuteDeleteAsync(object? parameter)
         {
             try
             {
                 await _dataService.DeleteItemAsync(_listingViewModel.SelectedItem.GetModel().ID);
 
-                _listingViewModel.UpdateData();
+                _listingViewModel.Items.Remove(_listingViewModel.SelectedItem);
+                //_listingViewModel.UpdateData();
             }
             catch(Exception ex) { Debug.WriteLine(ex.Message); }
         }

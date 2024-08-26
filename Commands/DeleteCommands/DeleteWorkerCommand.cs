@@ -8,35 +8,35 @@ namespace CourseProgram.Commands.DeleteCommands
 {
     public class DeleteWorkerCommand : CommandBaseAsync
     {
-        private readonly WorkerListingViewModel _viewModel;
+        private readonly WorkerListingViewModel _listingViewModel;
         private readonly WorkerDataService _dataService;
 
         public DeleteWorkerCommand(WorkerListingViewModel viewModel, WorkerDataService dataService)
         {
-            _viewModel = viewModel;
+            _listingViewModel = viewModel;
             _dataService = dataService;
 
-            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _listingViewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_viewModel.SelectedItem))
+            if (e.PropertyName == nameof(_listingViewModel.SelectedItem))
                 OnCanExecuteChanged();
         }
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _viewModel.SelectedItem is not null;
+            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null && _listingViewModel.SelectedItem.DateEnd == DateOnly.MinValue.ToString();
         }
 
         public override async Task ExecuteAsync(object? parameter) 
         {
             try
             {
-                await _dataService.DeleteItemAsync(_viewModel.SelectedItem.GetModel().ID);
+                await _dataService.DeleteItemAsync(_listingViewModel.SelectedItem.GetModel().ID);
 
-                _viewModel.UpdateData();
+                _listingViewModel.UpdateData();
             }
             catch (Exception ex) { Debug.WriteLine(ex); }
         }

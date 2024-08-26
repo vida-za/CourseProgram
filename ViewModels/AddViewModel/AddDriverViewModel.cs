@@ -45,8 +45,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _driverName;
             set
             {
-                _driverName = value;
-                OnPropertyChanged(nameof(DriverName));
+                if (value.Length < 101)
+                {
+                    _driverName = value;
+                    OnPropertyChanged(nameof(DriverName));
+                }
             }
         }
 
@@ -56,8 +59,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _passport;
             set
             {
-                _passport = value;
-                OnPropertyChanged(nameof(Passport));
+                if (value.Length < 31)
+                {
+                    _passport = value;
+                    OnPropertyChanged(nameof(Passport));
+                }
             }
         }
 
@@ -67,8 +73,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phone;
             set
             {
-                _phone = value;
-                OnPropertyChanged(nameof(Phone));
+                if (value.Length < 21)
+                {
+                    _phone = value;
+                    OnPropertyChanged(nameof(Phone));
+                }
             }
         }
 
@@ -78,8 +87,12 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _birthDay;
             set
             {
-                _birthDay = value;
-                OnPropertyChanged(nameof(BirthDay));
+                if (value < DateOnly.FromDateTime(DateTime.Now).AddYears(-18)
+                    && value > DateOnly.FromDateTime(DateTime.Now).AddYears(-150))
+                {
+                    _birthDay = value;
+                    OnPropertyChanged(nameof(BirthDay));
+                }
             }
         }
     }

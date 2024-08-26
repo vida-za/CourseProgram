@@ -26,8 +26,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _typeBodywork;
             set
             {
-                _typeBodywork = value;
-                OnPropertyChanged(nameof(TypeBodywork));
+                if (value.Length < 51)
+                {
+                    _typeBodywork = value;
+                    OnPropertyChanged(nameof(TypeBodywork));
+                }
             }
         }
 
@@ -37,8 +40,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _stateNumber;
             set
             {
-                _stateNumber = value;
-                OnPropertyChanged(nameof(StateNumber));
+                if (value.Length < 11)
+                {
+                    _stateNumber = value;
+                    OnPropertyChanged(nameof(StateNumber));
+                }
             }
         }
 
@@ -48,8 +54,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _volume;
             set
             {
-                _volume = value;
-                OnPropertyChanged(nameof(Volume));
+                if (float.TryParse(value, out float res))
+                {
+                    _volume = value;
+                    OnPropertyChanged(nameof(Volume));
+                }
             }
         }
 
@@ -59,8 +68,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _lengthBodywork;
             set
             {
-                _lengthBodywork = value;
-                OnPropertyChanged(nameof(LengthBodywork));
+                if (float.TryParse(value, out float res))
+                {
+                    _lengthBodywork = value;
+                    OnPropertyChanged(nameof(LengthBodywork));
+                }
             }
         }
 
@@ -70,8 +82,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _widthBodywork;
             set
             {
-                _widthBodywork = value;
-                OnPropertyChanged(nameof(WidthBodywork));
+                if (float.TryParse(value, out float res))
+                {
+                    _widthBodywork = value;
+                    OnPropertyChanged(nameof(WidthBodywork));
+                }
             }
         }
 
@@ -81,8 +96,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _heightBodywork;
             set
             {
-                _heightBodywork = value;
-                OnPropertyChanged(nameof(HeightBodywork));
+                if (float.TryParse(value, out float res))
+                {
+                    _heightBodywork = value;
+                    OnPropertyChanged(nameof(HeightBodywork));
+                }
             }
         }
         #endregion
@@ -94,8 +112,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
+                if (value.Length < 101)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
             }
         }
 
@@ -105,8 +126,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _stamp;
             set
             {
-                _stamp = value;
-                OnPropertyChanged(nameof(Stamp));
+                if (value.Length < 51)
+                {
+                    _stamp = value;
+                    OnPropertyChanged(nameof(Stamp));
+                }
             }
         }
 
@@ -116,8 +140,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _loadCapacity;
             set
             {
-                _loadCapacity = value;
-                OnPropertyChanged(nameof(LoadCapacity));
+                if (float.TryParse(value, out float res))
+                {
+                    _loadCapacity = value;
+                    OnPropertyChanged(nameof(LoadCapacity));
+                }
             }
         }
 
@@ -127,8 +154,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _typeMachine;
             set
             {
-                _typeMachine = value;
-                OnPropertyChanged(nameof(TypeMachine));
+                if (value.Length < 51)
+                {
+                    _typeMachine = value;
+                    OnPropertyChanged(nameof(TypeMachine));
+                }
             }
         }
 
@@ -138,8 +168,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _typeLoading;
             set
             {
-                _typeLoading = value;
-                OnPropertyChanged(nameof(TypeLoading));
+                if (value.Length < 51)
+                {
+                    _typeLoading = value;
+                    OnPropertyChanged(nameof(TypeLoading));
+                }
             }
         }
 
