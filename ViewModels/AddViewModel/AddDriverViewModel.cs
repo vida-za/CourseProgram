@@ -2,15 +2,19 @@
 using CourseProgram.Commands.AddCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
+using static CourseProgram.Models.Constants;
 using System;
 using System.Collections.Generic;
+using CourseProgram.Services.DataServices.ExtDataService;
 
 namespace CourseProgram.ViewModels.AddViewModel
 {
     public class AddDriverViewModel : BaseAddViewModel
     {
+        private readonly CategoryDataService _dataService;
+        private readonly List<Category> _categories;
+
         public AddDriverViewModel(ServicesStore servicesStore, INavigationService driverViewNavigationService)
         {
             _categories = new List<Category>();
@@ -18,7 +22,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             SubmitCommand = new AddDriverCommand(this, servicesStore, driverViewNavigationService);
             CancelCommand = new NavigateCommand(driverViewNavigationService);
 
-            _categoryDataService = servicesStore._categoryService;
+            _dataService = servicesStore._categoryService;
 
             UpdateData();
         }
@@ -27,7 +31,7 @@ namespace CourseProgram.ViewModels.AddViewModel
         {
             _categories.Clear();
 
-            IEnumerable<Category> temp = await _categoryDataService.GetItemsAsync();
+            IEnumerable<Category> temp = await _dataService.GetTemplateList();
 
             foreach (Category category in temp)
             {
@@ -35,8 +39,6 @@ namespace CourseProgram.ViewModels.AddViewModel
             }
         }
 
-        private readonly CategoryDataService _categoryDataService;
-        private readonly List<Category> _categories;
         public List<Category> Categories => _categories;
 
         private string _driverName;

@@ -2,7 +2,6 @@
 using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
@@ -10,9 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace CourseProgram.ViewModels.ListingViewModel
 {
@@ -33,7 +32,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             SwitchMachinesCommand = new SwitchHandlerCommand(this);
             AddMachineCommand = new NavigateCommand(addMachineNavigationService);
-            DeleteMachineCommand = new DeleteMachineCommand(this, _servicesStore._machineService);
+            DeleteMachineCommand = new DeleteMachineCommand(this, _servicesStore);
             DetailMachineCommand = new NavigateDetailCommand(detailMachineNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
 
@@ -48,9 +47,9 @@ namespace CourseProgram.ViewModels.ListingViewModel
             updateTimer.Start();
         }
 
-        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        private async void UpdateTimer_Tick(object? sender, EventArgs e)
         {
-            UpdateData();
+            await UpdateDataAsync();
         }
 
         public override async void UpdateData()
@@ -72,11 +71,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _disMachines.Add(machineViewModel);
             }
         }
-
-        private readonly ServicesStore _servicesStore;
-        private readonly SelectedStore _selectedStore;
-
-        private readonly DispatcherTimer updateTimer;
 
         private readonly ObservableCollection<MachineViewModel> _disMachines;
         private readonly ObservableCollection<MachineViewModel> _rdyMachines;
@@ -140,6 +134,35 @@ namespace CourseProgram.ViewModels.ListingViewModel
         {
             if (dataGrid.SelectedItem != null)
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+        }
+
+        public override async Task UpdateDataAsync()
+        {
+            ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
+            ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
+
+            IEnumerable<Machine> temp = await _servicesStore._machineService.GetItemsAsync();
+            foreach (Machine machine in temp)
+            {
+                MachineViewModel machineViewModel = new(machine);
+                _newRdyMachines.Add(machineViewModel);
+            }
+
+            temp = await _servicesStore._machineService.GetDisMachinesAsync();
+            foreach (Machine machine in temp)
+            {
+                MachineViewModel machineViewModel = new(machine);
+                _newDisMachines.Add(machineViewModel);
+            }
+
+            _disMachines.Clear();
+            _rdyMachines.Clear();
+
+            foreach (MachineViewModel model in _newDisMachines)
+                _disMachines.Add(model);
+
+            foreach (MachineViewModel model in _newRdyMachines)
+                _rdyMachines.Add(model);
         }
     }
 }

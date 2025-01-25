@@ -1,10 +1,8 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Services.DBServices;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
@@ -12,211 +10,69 @@ namespace CourseProgram.Services.DataServices
 {
     public class MachineDataService : BaseService<Machine>
     {
-        public MachineDataService() 
-        {
-            cnn = new DBConnection(Server, Database, User.Username, User.Password, "MachineLoad");
-            temp = new Machine();
-        }
-
-        public override async Task<bool> AddItemAsync(Machine item)
-        {
-            query = $"Insert Into {temp.GetTable()} ({temp.GetSelectors()}) Values(@1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16);";
-
-            try
-            {
-                await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(
-                    query,
-                    item.ID,
-                    GetEnumDescription(item.TypeMachine),
-                    GetEnumDescription(item.TypeBodywork) == "Неизвестно" ? null : GetEnumDescription(item.TypeBodywork),
-                    GetEnumDescription(item.TypeLoading),
-                    item.LoadCapacity,
-                    item.Volume == float.MinValue ? null : item.Volume,
-                    item.HydroBoard ? "Да" : "Нет",
-                    item.LengthBodywork == float.MinValue ? null : item.LengthBodywork,
-                    item.WidthBodywork == float.MinValue ? null : item.WidthBodywork,
-                    item.HeightBodywork == float.MinValue ? null : item.HeightBodywork,
-                    item.Stamp,
-                    item.Name,
-                    item.StateNumber == string.Empty ? null : item.StateNumber,
-                    GetEnumDescription(item.Status),
-                    item.TimeStart,
-                    item.TimeEnd);
-                if (res.HasAnswer) items.Add(item);
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(true);
-        }
-
-        public override async Task<bool> DeleteItemAsync(int id)
-        {
-            var current = await GetItemAsync(id);
-            if (current == null) return false;
-            if (current.TimeEnd != DateTime.MinValue && current.TimeEnd <= DateTime.Now) return false;
-
-            query = $"Update {temp.GetTable()} Set \"ВремяОкончания\" = current_timestamp Where \"КодМашины\" = @1;";
-
-            try
-            {
-                await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, id);
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(true);
-        }
-
-        public override async Task<Machine> GetItemAsync(int id)
-        {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where \"КодМашины\" = @1;";
-
-            try
-            {
-                await cnn.OpenAsync();
-                DataRow row = cnn.GetDataTableParam(query, id);
-
-                foreach (Machine mach in items)
-                {
-                    if (mach.ID == DBConnection.GetIntOrNull(row["КодМашины"], 0)) return mach;
-                }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return temp;
-        }
-
-        public override async Task<IEnumerable<Machine>> GetItemsAsync(bool forceRefresh = false)
-        {
-            query = $"Select {temp.GetSelectors()}, \"GetTownNowByMachine\"(\"КодМашины\") as \"Город\" From {temp.GetTable()} Where \"ВремяОкончания\" is Null;";
-
-            try
-            {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
-                {
-                    items.Add(new Machine(
-                        DBConnection.GetIntOrNull(row["КодМашины"], 0),
-                        DBConnection.GetStringOrNull(row["ТипМашины"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипКузова"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                        DBConnection.GetFloatOrNull(row["Грузоподъёмность"], 0),
-                        DBConnection.GetFloatOrNull(row["Объём"], 0),
-                        DBConnection.GetStringOrNull(row["Гидроборт"], string.Empty) == "Да",
-                        DBConnection.GetFloatOrNull(row["ДлинаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ШиринаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ВысотаКузова"], 0),
-                        DBConnection.GetStringOrNull(row["Марка"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Название"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ГосНомер"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Состояние"], string.Empty),
-                        DBConnection.GetDateTimeOrNull(row["ВремяПоступления"], DateTime.MinValue),
-                        DBConnection.GetDateTimeOrNull(row["ВремяОкончания"], DateTime.MinValue),
-                        DBConnection.GetStringOrNull(row["Город"], string.Empty)
-                    ));
-                }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
-        }
+        public MachineDataService() : base(User.Username, User.Password) { }
 
         public async Task<IEnumerable<Machine>> GetDisMachinesAsync(bool forceRefresh = false)
         {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where \"ВремяОкончания\" is not Null;";
-
-            try
+            using (var query = new Query(CommandTypes.SelectQuery, Machine.GetTable()))
             {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
+                try
                 {
-                    items.Add(new Machine(
-                        DBConnection.GetIntOrNull(row["КодМашины"], 0),
-                        DBConnection.GetStringOrNull(row["ТипМашины"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипКузова"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                        DBConnection.GetFloatOrNull(row["Грузоподъёмность"], 0),
-                        DBConnection.GetFloatOrNull(row["Объём"], 0),
-                        DBConnection.GetStringOrNull(row["Гидроборт"], string.Empty) == "Да",
-                        DBConnection.GetFloatOrNull(row["ДлинаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ШиринаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ВысотаКузова"], 0),
-                        DBConnection.GetStringOrNull(row["Марка"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Название"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ГосНомер"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Состояние"], string.Empty),
-                        DBConnection.GetDateTimeOrNull(row["ВремяПоступления"], DateTime.MinValue),
-                        DBConnection.GetDateTimeOrNull(row["ВремяОкончания"], DateTime.MinValue),
-                        string.Empty
-                    ));
+                    items.Clear();
+
+                    query.AddFields(Machine.GetFieldNames());
+                    query.WhereClause.IsNotNull("ДатаВремяСписания");
+
+                    DataTable data;
+
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
+                    }
+
+                    if (data != null)
+                    {
+                        foreach (DataRow row in data.Rows)
+                        {
+                            CreateElement(row);
+                        }
+                    }
+
+                    return await Task.FromResult(items);
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetDisMachinesAsync)}: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    query?.Dispose();
                 }
             }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
         }
 
-        public override async Task<IEnumerable<Machine>> GetFullTableAsync(bool forceRefresh = false)
+        public override void CreateElement(DataRow row)
         {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()};";
-
-            try
-            {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
-                {
-                    items.Add(new Machine(
-                        DBConnection.GetIntOrNull(row["КодМашины"], 0),
-                        DBConnection.GetStringOrNull(row["ТипМашины"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипКузова"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                        DBConnection.GetFloatOrNull(row["Грузоподъёмность"], 0),
-                        DBConnection.GetFloatOrNull(row["Объём"], 0),
-                        DBConnection.GetStringOrNull(row["Гидроборт"], string.Empty) == "Да",
-                        DBConnection.GetFloatOrNull(row["ДлинаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ШиринаКузова"], 0),
-                        DBConnection.GetFloatOrNull(row["ВысотаКузова"], 0),
-                        DBConnection.GetStringOrNull(row["Марка"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Название"], string.Empty),
-                        DBConnection.GetStringOrNull(row["ГосНомер"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Состояние"], string.Empty),
-                        DBConnection.GetDateTimeOrNull(row["ВремяПоступления"], DateTime.MinValue),
-                        DBConnection.GetDateTimeOrNull(row["ВремяОкончания"], DateTime.MinValue),
-                        string.Empty
-                        ));
-                }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
+            items.Add(new Machine(GetIntOrNull(row["КодМашины"], 0),
+                GetStringOrNull(row["ТипМашины"], string.Empty),
+                GetStringOrNull(row["ТипКузова"], string.Empty),
+                GetStringOrNull(row["ТипЗагрузки"], string.Empty),
+                GetFloatOrNull(row["Грузоподъёмность"], 0),
+                GetFloatOrNull(row["Объём"], 0),
+                GetStringOrNull(row["Гидроборт"], string.Empty) == "Да",
+                GetFloatOrNull(row["ДлинаКузова"], 0),
+                GetFloatOrNull(row["ШиринаКузова"], 0),
+                GetFloatOrNull(row["ВысотаКузова"], 0),
+                GetStringOrNull(row["Марка"], string.Empty),
+                GetStringOrNull(row["Название"], string.Empty),
+                GetStringOrNull(row["ГосНомер"], string.Empty),
+                GetStringOrNull(row["Состояние"], string.Empty),
+                GetDateTimeOrNull(row["ДатаВремяПоступления"], DateTime.MinValue),
+                GetDateTimeOrNull(row["ДатаВремяСписания"], DateTime.MinValue),
+                string.Empty //TO DO
+                ));
         }
     }
 }

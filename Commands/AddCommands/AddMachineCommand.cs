@@ -1,7 +1,6 @@
 ﻿using CourseProgram.Exceptions;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.AddViewModel;
 using System;
@@ -10,32 +9,30 @@ using System.Windows;
 
 namespace CourseProgram.Commands.AddCommands
 {
-    public class AddMachineCommand : CommandBaseAsync
+    public class AddMachineCommand : BaseAddCommand
     {
-        private readonly AddMachineViewModel _addMachineViewModel;
-        private readonly MachineDataService _machineDataService;
-        private readonly INavigationService _machineViewNavigationService;
+        private readonly AddMachineViewModel _viewModel;
 
         public AddMachineCommand(AddMachineViewModel addMachineViewModel, ServicesStore servicesStore, INavigationService machineViewNavigationService)
         {
-            _addMachineViewModel = addMachineViewModel;
-            _machineDataService = servicesStore._machineService;
-            _machineViewNavigationService = machineViewNavigationService;
+            _viewModel = addMachineViewModel;
+            _servicesStore = servicesStore;
+            _navigationService = machineViewNavigationService;
 
-            _addMachineViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-        private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_addMachineViewModel.TypeMachine) ||
-                e.PropertyName == nameof(_addMachineViewModel.TypeLoading) ||
-                e.PropertyName == nameof(_addMachineViewModel.LoadCapacity) ||
-                e.PropertyName == nameof(_addMachineViewModel.Stamp) ||
-                e.PropertyName == nameof(_addMachineViewModel.Name) ||
-                e.PropertyName == nameof(_addMachineViewModel.Volume) ||
-                e.PropertyName == nameof(_addMachineViewModel.LengthBodywork) ||
-                e.PropertyName == nameof(_addMachineViewModel.WidthBodywork) ||
-                e.PropertyName == nameof(_addMachineViewModel.HeightBodywork))
+            if (e.PropertyName == nameof(_viewModel.TypeMachine) ||
+                e.PropertyName == nameof(_viewModel.TypeLoading) ||
+                e.PropertyName == nameof(_viewModel.LoadCapacity) ||
+                e.PropertyName == nameof(_viewModel.Stamp) ||
+                e.PropertyName == nameof(_viewModel.Name) ||
+                e.PropertyName == nameof(_viewModel.Volume) ||
+                e.PropertyName == nameof(_viewModel.LengthBodywork) ||
+                e.PropertyName == nameof(_viewModel.WidthBodywork) ||
+                e.PropertyName == nameof(_viewModel.HeightBodywork))
             {
                 OnCanExecuteChanged();
             }
@@ -43,37 +40,36 @@ namespace CourseProgram.Commands.AddCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return !string.IsNullOrEmpty(_addMachineViewModel.TypeMachine) &&
-                   !string.IsNullOrEmpty(_addMachineViewModel.TypeLoading) &&
-                   !string.IsNullOrEmpty(_addMachineViewModel.LoadCapacity) &&
-                   !string.IsNullOrEmpty(_addMachineViewModel.Stamp) &&
-                   !string.IsNullOrEmpty(_addMachineViewModel.Name) &&
-                   float.TryParse(_addMachineViewModel.LoadCapacity, out float temp) &&
-                   (float.TryParse(_addMachineViewModel.Volume, out temp) || string.IsNullOrEmpty(_addMachineViewModel.Volume)) &&
-                   (float.TryParse(_addMachineViewModel.LengthBodywork, out temp) || string.IsNullOrEmpty(_addMachineViewModel.LengthBodywork)) &&
-                   (float.TryParse(_addMachineViewModel.WidthBodywork, out temp) || string.IsNullOrEmpty(_addMachineViewModel.WidthBodywork)) &&
-                   (float.TryParse(_addMachineViewModel.HeightBodywork, out temp) || string.IsNullOrEmpty(_addMachineViewModel.HeightBodywork)) &&
+            return !string.IsNullOrEmpty(_viewModel.TypeMachine) &&
+                   !string.IsNullOrEmpty(_viewModel.TypeLoading) &&
+                   !string.IsNullOrEmpty(_viewModel.LoadCapacity) &&
+                   !string.IsNullOrEmpty(_viewModel.Stamp) &&
+                   !string.IsNullOrEmpty(_viewModel.Name) &&
+                   float.TryParse(_viewModel.LoadCapacity, out float temp) &&
+                   (float.TryParse(_viewModel.Volume, out temp) || string.IsNullOrEmpty(_viewModel.Volume)) &&
+                   (float.TryParse(_viewModel.LengthBodywork, out temp) || string.IsNullOrEmpty(_viewModel.LengthBodywork)) &&
+                   (float.TryParse(_viewModel.WidthBodywork, out temp) || string.IsNullOrEmpty(_viewModel.WidthBodywork)) &&
+                   (float.TryParse(_viewModel.HeightBodywork, out temp) || string.IsNullOrEmpty(_viewModel.HeightBodywork)) &&
                    base.CanExecute(parameter);
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            int newID = await _machineDataService.FindMaxEmptyID();
             Machine machine = new(
-                newID,
-                _addMachineViewModel.TypeMachine,
-                _addMachineViewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.TypeBodyworkValues.Null) : _addMachineViewModel.TypeBodywork,
-                _addMachineViewModel.TypeLoading,
-                float.Parse(_addMachineViewModel.LoadCapacity),
-                _addMachineViewModel.Volume == null ? float.MinValue : float.Parse(_addMachineViewModel.Volume),
-                _addMachineViewModel.HydroBoard,
-                _addMachineViewModel.LengthBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.LengthBodywork),
-                _addMachineViewModel.WidthBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.WidthBodywork),
-                _addMachineViewModel.HeightBodywork == null ? float.MinValue : float.Parse(_addMachineViewModel.HeightBodywork),
-                _addMachineViewModel.Stamp,
-                _addMachineViewModel.Name,
-                _addMachineViewModel.StateNumber == null ? string.Empty : _addMachineViewModel.StateNumber,
-                Constants.GetEnumDescription(Constants.StatusMachineValues.Waiting),
+                -1,
+                _viewModel.TypeMachine,
+                _viewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.MachineTypeBodyworkValues.Null) : _viewModel.TypeBodywork,
+                _viewModel.TypeLoading,
+                float.Parse(_viewModel.LoadCapacity),
+                _viewModel.Volume == null ? float.MinValue : float.Parse(_viewModel.Volume),
+                _viewModel.HydroBoard,
+                _viewModel.LengthBodywork == null ? float.MinValue : float.Parse(_viewModel.LengthBodywork),
+                _viewModel.WidthBodywork == null ? float.MinValue : float.Parse(_viewModel.WidthBodywork),
+                _viewModel.HeightBodywork == null ? float.MinValue : float.Parse(_viewModel.HeightBodywork),
+                _viewModel.Stamp,
+                _viewModel.Name,
+                _viewModel.StateNumber == null ? string.Empty : _viewModel.StateNumber,
+                Constants.GetEnumDescription(Constants.MachineStatusValues.Waiting),
                 DateTime.Now,
                 DateTime.MinValue,
                 string.Empty
@@ -81,11 +77,13 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _machineDataService.AddItemAsync(machine);
+                bool result = await _servicesStore._machineService.AddItemAsync(machine);
+                if (result)
+                    MessageBox.Show("Машина добавлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show("Не удалось добавить машину", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                MessageBox.Show("Машина добавлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                _machineViewNavigationService.Navigate();
+                _navigationService.Navigate();
             }
             catch (RepeatConflictException<Machine>)
             {

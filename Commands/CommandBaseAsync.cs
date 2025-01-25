@@ -28,7 +28,10 @@ namespace CourseProgram.Commands
             {
                 await ExecuteAsync(parameter);
             }
-            finally { IsExecuting = false; }
+            finally 
+            { 
+                IsExecuting = false; 
+            }
         }
 
         public abstract Task ExecuteAsync(object? parameter);

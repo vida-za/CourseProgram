@@ -1,26 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CourseProgram.Models
 {
     public class Driver : IModel, IEquatable<Driver> //Водитель
     {
-        [DisplayName("Номер водителя")]
-        public int ID { get; } //КодВодителя
+        [DisplayName("КодВодителя")]
+        public int ID { get; }
         [DisplayName("ФИО")]
-        public string FIO { get; } //ФИО
-        [DisplayName("Дата рождения")]
-        public DateOnly BirthDay { get; } //ДатаРождения
-        [DisplayName("Паспорт")]
-        public string Passport { get; } //ПаспортныеДанные
+        public string FIO { get; }
+        [DisplayName("ДатаРождения")]
+        public DateOnly BirthDay { get; }
+        [DisplayName("ПаспортныеДанные")]
+        public string Passport { get; }
         [DisplayName("Телефон")]
-        public string? Phone { get; } //Телефон
-        [DisplayName("Принят")]
-        public DateOnly DateStart { get; } //ДатаНачала
-        [DisplayName("Уволен")]
-        public DateOnly DateEnd { get; } //ДатаОкончания
-        [DisplayName("Город")]
-        public string Town { get; } //Город
+        public string? Phone { get; }
+        [DisplayName("ДатаНачала")]
+        public DateOnly DateStart { get; }
+        [DisplayName("ДатаОкончания")]
+        public DateOnly DateEnd { get; }
+        public string Town { get; }
+        public string StringCategories { get; private set; }
+
+        private readonly List<Category> ListCategories = new List<Category>();
 
         public Driver()
         {
@@ -32,6 +35,7 @@ namespace CourseProgram.Models
             DateStart = DateOnly.MinValue;
             DateEnd = DateOnly.MinValue;
             Town = string.Empty;
+
         }
 
         public Driver(
@@ -54,22 +58,70 @@ namespace CourseProgram.Models
             Town = town;
         }
 
-        public string GetSelectors() => "\"КодВодителя\", \"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
-        public string GetTable() => "\"Водитель\"";
-        public string GetSelectorID() => "\"КодВодителя\"";
-        public string GetProcedureDelete() => "\"DeleteDriver\"";
+        public Driver(
+            int id,
+            string fio,
+            DateOnly birthDay,
+            string passport,
+            string phone,
+            DateOnly dateStart,
+            DateOnly dateEnd,
+            string town,
+            params Category[] args)
+        {
+            ID = id;
+            FIO = fio;
+            BirthDay = birthDay;
+            Passport = passport;
+            Phone = phone;
+            DateStart = dateStart;
+            DateEnd = dateEnd;
+            Town = town;
+
+            SetCategories(args);
+        }
+
+        public void SetCategories(params Category[] args)
+        {
+            foreach (Category arg in args)
+            {
+                if (arg.IsChecked)
+                    ListCategories.Add(arg);
+            }
+        }
+
+        public List<Category> GetListCategories()
+        {
+            return ListCategories;
+        }
+
+        public void SetStringCategories()
+        {
+            StringCategories = string.Join(", ", ListCategories);
+        }
+
+        public static string GetTable() => "Водитель";
+        public static string GetSelectorID() => "КодВодителя";
+        public static string[] GetFieldNames()
+        {
+            return new[]
+            {
+                "КодВодителя",
+                "ФИО",
+                "ДатаРождения",
+                "ПаспортныеДанные",
+                "Телефон",
+                "ДатаНачала",
+                "ДатаОкончания"
+            };
+        }
 
         public override string ToString()
         {
             return $"{ID}{FIO}{BirthDay}{Passport}{Phone}{DateStart}{DateEnd}";
         }
 
-        public bool Equals(Driver? other)
-        {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
-        }
+        public bool Equals(Driver? other) => other != null && ID == other.ID;
 
         public override int GetHashCode() => HashCode.Combine(ID, Passport);
 

@@ -5,14 +5,14 @@ namespace CourseProgram.Models
 {
     public class Haul : IModel, IEquatable<Haul>
     {
-        [DisplayName("Номер рейса")]
-        public int ID { get; } //КодРейса
-        [DisplayName("Дата начала")]
-        public DateOnly DateStart { get; } //ДатаНачала
-        [DisplayName("Дата окончания")]
-        public DateOnly DateEnd { get; } //ДатаОкончания
-        [DisplayName("Суммарный доход")]
-        public float SumIncome { get; } //СуммарныйДоход
+        [DisplayName("КодРейса")]
+        public int ID { get; }
+        [DisplayName("ДатаНачала")]
+        public DateOnly DateStart { get; }
+        [DisplayName("ДатаОкончания")]
+        public DateOnly DateEnd { get; }
+        [DisplayName("СуммарныйДоход")]
+        public float SumIncome { get; }
 
         public Haul()
         {
@@ -30,17 +30,20 @@ namespace CourseProgram.Models
             SumIncome = sumIncome;
         }
 
-        public string GetSelectors() => "\"КодРейса\", \"ДатаНачала\", \"ДатаОкончания\", \"СуммарныйДоход\"";
-        public string GetTable() => "\"Рейс\"";
-        public string GetSelectorID() => "\"КодРейса\"";
-        public string GetProcedureDelete() => "\"DeleteHaul\"";
-
-        public bool Equals(Haul? other)
+        public static string GetTable() => "Рейс";
+        public static string GetSelectorID() => "КодРейса";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодРейса",
+                "ДатаНачала",
+                "ДатаОкончания",
+                "СуммарныйДоход"
+            };
         }
+
+        public bool Equals(Haul? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Haul);
 

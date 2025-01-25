@@ -5,18 +5,20 @@ namespace CourseProgram.Models
 {
     public class Address : IModel, IEquatable<Address>
     {
-        [DisplayName("Номер адреса")]
-        public int ID { get; } //КодАдреса
+        [DisplayName("КодАдреса")]
+        public int ID { get; }
         [DisplayName("Город")]
-        public string City { get; } //Город
+        public string City { get; }
         [DisplayName("Улица")]
-        public string Street { get; } //Улица
+        public string Street { get; }
         [DisplayName("Дом")]
-        public string House { get; } //Дом
+        public string House { get; }
         [DisplayName("Строение")]
-        public string Structure { get; } //Строение
+        public string Structure { get; }
         [DisplayName("Корпус")]
-        public string Frame { get; } //Корпус
+        public string Frame { get; }
+        [DisplayName("Активен")]
+        public bool Active { get; }
 
         public Address()
         {
@@ -26,6 +28,7 @@ namespace CourseProgram.Models
             House = string.Empty;
             Structure = string.Empty;
             Frame = string.Empty;
+            Active = true;
         }
 
         public Address(
@@ -34,7 +37,8 @@ namespace CourseProgram.Models
             string street,
             string house,
             string structure,
-            string frame)
+            string frame,
+            bool active)
         {
             ID = id;
             City = city;
@@ -42,19 +46,26 @@ namespace CourseProgram.Models
             House = house;
             Structure = structure;
             Frame = frame;
+            Active = active;
         }
 
-        public string GetSelectors() => "\"КодАдреса\", \"Город\", \"Улица\", \"Дом\", \"Строение\", \"Корпус\"";
-        public string GetTable() => "\"Адрес\"";
-        public string GetSelectorID() => "\"КодАдреса\"";
-        public string GetProcedureDelete() => "\"DeleteAddress\"";
-
-        public bool Equals(Address? other)
+        public static string GetTable() => "Адрес";
+        public static string GetSelectorID() => "КодАдреса";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодАдреса",
+                "Город",
+                "Улица",
+                "Дом",
+                "Строение",
+                "Корпус",
+                "Активен"
+            };
         }
+
+        public bool Equals(Address? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Address);
 

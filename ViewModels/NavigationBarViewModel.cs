@@ -13,9 +13,13 @@ namespace CourseProgram.ViewModels
         public ICommand NavigateDriversCommand { get; }
         //public ICommand NavigateHaulsCommand { get; }
         public ICommand NavigateMachinesCommand { get; }
+        public ICommand NavigateNomenclaturesCommand { get; }
         //public ICommand NavigateOrdersCommand { get; }
         //public ICommand NavigateRoutesCommand { get; }
         public ICommand NavigateWorkersCommand { get; }
+
+        public ICommand NavigateHomeCommand { get; }
+        public ICommand NavigateOperationalCommand { get; }
         #endregion
 
         public NavigationBarViewModel(
@@ -23,7 +27,10 @@ namespace CourseProgram.ViewModels
             INavigationService clientsNavigationService,
             INavigationService driversNavigationService, 
             INavigationService machinesNavigationService,
-            INavigationService workersNavigationService) 
+            INavigationService nomenclaturesNavigationService,
+            INavigationService workersNavigationService,
+            INavigationService homeNavigationService,
+            INavigationService operationalNavigationService) 
         {
             NavigateAddressesCommand = new NavigateCommand(addressesNavigationService);
             //NavigateCargoesCommand = new NavigateCommand(cargoesNavigationService); 
@@ -31,9 +38,13 @@ namespace CourseProgram.ViewModels
             NavigateDriversCommand = new NavigateCommand(driversNavigationService);
             //NavigateHaulsCommand = new NavigateCommand(haulsNavigationService);
             NavigateMachinesCommand = new NavigateCommand(machinesNavigationService);
+            NavigateNomenclaturesCommand = new NavigateCommand(nomenclaturesNavigationService);
             //NavigateOrdersCommand = new NavigateCommand(ordersNavigationService);
             //NavigateRoutesCommand = new NavigateCommand(routesNavigationService);
             NavigateWorkersCommand = new NavigateCommand(workersNavigationService);
+
+            NavigateHomeCommand = new NavigateCommand(homeNavigationService);
+            NavigateOperationalCommand = new NavigateCommand(operationalNavigationService);
         }
     }
 }

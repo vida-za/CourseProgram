@@ -1,36 +1,44 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Stores;
 using System.ComponentModel;
 
 namespace CourseProgram.ViewModels.EntityViewModel
 {
     public class CargoViewModel : BaseViewModel
     {
+        private readonly ServicesStore _servicesStore;
+
         private readonly Cargo _model;
+        private Order _orderModel;
+        private Nomenclature _nomenclatureModel;
 
         public Cargo GetModel() => _model;
 
         [DisplayName("Номер груза")]
         public int ID => _model.ID;
-        [DisplayName("Номер заказа")]
-        public string OrderID => _model.OrderID.ToString();
-        [DisplayName("Длина")]
-        public string Length => _model.Length.ToString();
-        [DisplayName("Ширина")]
-        public string Width => _model.Width.ToString();
-        [DisplayName("Высота")]
-        public string Height => _model.Height.ToString();
-        [DisplayName("Тип")]
-        public string Type => Constants.GetEnumDescription(_model.Type);
-        [DisplayName("Категория")]
-        public string Category => Constants.GetEnumDescription(_model.Category);
+        [DisplayName("Номер заявки")]
+        public int OrderID => _model.BudID;
+        [DisplayName("Номер номенклатуры")]
+        public int NomenclatureID => _model.NomenclatureID;
+        [DisplayName("Объём")]
+        public string Volume => _model.Volume.ToString();
         [DisplayName("Вес")]
         public string Weight => _model.Weight.ToString();
         [DisplayName("Количество")]
         public string Count => _model.Count.ToString();
 
-        public CargoViewModel(Cargo cargo)
+        public CargoViewModel(Cargo cargo, ServicesStore servicesStore)
         {
             _model = cargo;
+            _servicesStore = servicesStore;
+
+            UpdateData();
+        }
+
+        private async void UpdateData()
+        {
+            _orderModel = await _servicesStore._orderService.GetItemAsync(OrderID);
+            _nomenclatureModel = await _servicesStore._nomenclatureService.GetItemAsync(NomenclatureID);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.AddViewModel;
 using System;
@@ -10,12 +9,10 @@ using System.Windows.Forms;
 
 namespace CourseProgram.Commands.AddCommands
 {
-    public class AddClientCommand : CommandBaseAsync
+    public class AddClientCommand : BaseAddCommand
     {
         #region fields
         private readonly AddClientViewModel _viewModel;
-        private readonly ClientDataService _dataService;
-        private readonly INavigationService _navigationService;
         #endregion
 
         public AddClientCommand(
@@ -24,14 +21,14 @@ namespace CourseProgram.Commands.AddCommands
             INavigationService navigationService)
         {
             _viewModel = viewModel;
-            _dataService = servicesStore._clientService;
+            _servicesStore = servicesStore;
             _navigationService = navigationService;
 
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         #region methods
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_viewModel.Name) ||
                 e.PropertyName == nameof(_viewModel.Type) ||
@@ -61,9 +58,8 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            int newID = await _dataService.FindMaxEmptyID();
             Client client = new(
-                newID,
+                -1,
                 _viewModel.Name,
                 _viewModel.Type,
                 _viewModel.INN,
@@ -80,13 +76,15 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _dataService.AddItemAsync(client);
-
-                MessageBox.Show("Заказчик добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                bool result = await _servicesStore._clientService.AddItemAsync(client);
+                if (result)
+                    MessageBox.Show("Заказчик добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show("Не удалось добавить заказчика", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 _navigationService.Navigate();
             }
-            catch( Exception ex ) { }
+            catch(Exception) { }
         }
         #endregion
     }

@@ -6,38 +6,38 @@ namespace CourseProgram.Models
 {
     public class Client : IModel, IEquatable<Client>
     {
-        [DisplayName("Номер заказчика")]
-        public int ID { get; } //КодЗаказчика
+        [DisplayName("КодЗаказчика")]
+        public int ID { get; }
         [DisplayName("Название")]
-        public string Name { get; } //Название
-        [DisplayName("Тип заказчика")]
-        public TypeClientValues Type { get; } //ТипЗаказчика
+        public string Name { get; }
+        [DisplayName("ТипЗаказчика")]
+        public ClientTypeValues Type { get; }
         [DisplayName("ИНН")]
-        public string INN { get; } //ИНН
+        public string INN { get; }
         [DisplayName("КПП")]
-        public string KPP { get; } //КПП
+        public string KPP { get; }
         [DisplayName("ОГРН")]
-        public string OGRN { get; } //ОГРН
+        public string OGRN { get; }
         [DisplayName("Телефон")]
-        public string Phone { get; } //Телефон
-        [DisplayName("Расчётный счёт")]
-        public string Checking { get; } //РасчётныйСчёт
+        public string Phone { get; }
+        [DisplayName("РасчётныйСчёт")]
+        public string Checking { get; }
         [DisplayName("БИК")]
-        public string BIK { get; } //БИК
-        [DisplayName("Корреспондентский счёт")]
-        public string Correspondent { get; } //КорреспондентскийСчёт
+        public string BIK { get; }
+        [DisplayName("КорреспондентскийСчёт")]
+        public string Correspondent { get; }
         [DisplayName("Банк")]
-        public string Bank { get; } //Банк
-        [DisplayName("Контакт загрузки")]
-        public string PhoneLoad { get; } //КонтактЗагрузки
-        [DisplayName("Контакт выгрузки")]
-        public string PhoneOnLoad { get; } //КонтактВыгрузки
+        public string Bank { get; }
+        [DisplayName("КонтактЗагрузки")]
+        public string PhoneLoad { get; }
+        [DisplayName("КонтактВыгрузки")]
+        public string PhoneOnLoad { get; }
 
         public Client()
         {
             ID = 0;
             Name = string.Empty;
-            Type = TypeClientValues.Null;
+            Type = ClientTypeValues.Null;
             INN = string.Empty;
             KPP = string.Empty;
             OGRN = string.Empty;
@@ -80,23 +80,35 @@ namespace CourseProgram.Models
 
             Type = type switch
             {
-                "Физлицо" => TypeClientValues.Physical,
-                "Юрлицо" => TypeClientValues.Legal,
-                _ => TypeClientValues.Null,
+                "Физлицо" => ClientTypeValues.Physical,
+                "Юрлицо" => ClientTypeValues.Legal,
+                _ => ClientTypeValues.Null,
             };
         }
 
-        public string GetSelectors() => "\"КодЗаказчика\", \"Название\", \"ТипЗаказчика\", \"ИНН\", \"КПП\", \"ОГРН\", \"Телефон\", \"РасчётныйСчёт\", \"БИК\", \"КорреспондентскийСчёт\", \"Банк\", \"КонтактЗагрузки\", \"КонтактВыгрузки\"";
-        public string GetTable() => "\"Заказчик\"";
-        public string GetSelectorID() => "\"КодЗаказчика\"";
-        public string GetProcedureDelete() => "\"DeleteClient\"";
-
-        public bool Equals(Client? other)
+        public static string GetTable() => "Заказчик";
+        public static string GetSelectorID() => "КодЗаказчика";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодЗаказчика",
+                "Название",
+                "ТипЗаказчика",
+                "ИНН",
+                "КПП",
+                "ОГРН",
+                "Телефон",
+                "РасчётныйСчёт",
+                "БИК",
+                "КорреспондентскийСчёт",
+                "Банк",
+                "КонтактЗагрузки",
+                "КонтактВыгрузки"
+            };
         }
+
+        public bool Equals(Client? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Client);
 

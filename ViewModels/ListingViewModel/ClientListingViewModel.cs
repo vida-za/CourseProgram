@@ -9,20 +9,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace CourseProgram.ViewModels.ListingViewModel
 {
     public class ClientListingViewModel : BaseListingViewModel
     {
         #region fields
-        private readonly ServicesStore _servicesStore;
-        private readonly SelectedStore _selectedStore;
-
-        private readonly DispatcherTimer updateTimer;
-
         private readonly ObservableCollection<ClientViewModel> _allClients;
         private readonly ObservableCollection<ClientViewModel> _disClients;
 
@@ -46,7 +41,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             _disClients = new ObservableCollection<ClientViewModel>();
 
             AddClientCommand = new NavigateCommand(addClientNavigationService);
-            DeleteClientCommand = new DeleteClientCommand(this, servicesStore._clientService);
+            DeleteClientCommand = new DeleteClientCommand(this, _servicesStore);
             DetailClientCommand = new NavigateDetailCommand(detailClientNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
             SwitchHandlerCommand = new SwitchHandlerCommand(this);
@@ -63,29 +58,37 @@ namespace CourseProgram.ViewModels.ListingViewModel
         }
 
         #region methods
-        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        private async void UpdateTimer_Tick(object? sender, EventArgs e)
         {
-            UpdateData();
+            await UpdateDataAsync();
         }
 
         public override async void UpdateData()
         {
-            _allClients.Clear();
-            _disClients.Clear();
+            ObservableCollection<ClientViewModel> _newAllClients = new ObservableCollection<ClientViewModel>();
+            ObservableCollection<ClientViewModel> _newDisClients = new ObservableCollection<ClientViewModel>();
 
             IEnumerable<Client> temp = await _servicesStore._clientService.GetItemsAsync();
-            foreach (Client client in temp)
+            foreach (Client itemTemp in temp)
             {
-                ClientViewModel clientViewModel = new(client);
-                _allClients.Add(clientViewModel);
+                ClientViewModel clientViewModel = new(itemTemp);
+                _newAllClients.Add(clientViewModel);
             }
 
             temp = await _servicesStore._clientService.GetItemsAsync();
-            foreach (Client client in temp)
+            foreach (Client itemTemp in temp)
             {
-                ClientViewModel clientViewModel = new(client);
-                _disClients.Add(clientViewModel);
+                ClientViewModel clientViewModel = new(itemTemp);
+                _newDisClients.Add(clientViewModel);
             }
+
+            _allClients.Clear();
+            _disClients.Clear();
+
+            foreach (ClientViewModel model in  _newAllClients)
+                _allClients.Add(model);
+            foreach (ClientViewModel model in _newDisClients)
+                _disClients.Add(model);
         }
 
         protected override void Find()
@@ -98,6 +101,34 @@ namespace CourseProgram.ViewModels.ListingViewModel
         {
             if (dataGrid.SelectedItem != null)
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+        }
+
+        public override async Task UpdateDataAsync()
+        {
+            ObservableCollection<ClientViewModel> _newAllClients = new ObservableCollection<ClientViewModel>();
+            ObservableCollection<ClientViewModel> _newDisClients = new ObservableCollection<ClientViewModel>();
+
+            IEnumerable<Client> temp = await _servicesStore._clientService.GetItemsAsync();
+            foreach (Client itemTemp in temp)
+            {
+                ClientViewModel clientViewModel = new(itemTemp);
+                _newAllClients.Add(clientViewModel);
+            }
+
+            temp = await _servicesStore._clientService.GetItemsAsync();
+            foreach (Client itemTemp in temp)
+            {
+                ClientViewModel clientViewModel = new(itemTemp);
+                _newDisClients.Add(clientViewModel);
+            }
+
+            _allClients.Clear();
+            _disClients.Clear();
+
+            foreach (ClientViewModel model in _newAllClients)
+                _allClients.Add(model);
+            foreach (ClientViewModel model in _newDisClients)
+                _disClients.Add(model);
         }
         #endregion
 

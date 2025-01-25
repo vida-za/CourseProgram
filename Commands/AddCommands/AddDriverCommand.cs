@@ -1,7 +1,6 @@
 ﻿using CourseProgram.Exceptions;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.AddViewModel;
 using System;
@@ -11,30 +10,24 @@ using System.Windows;
 
 namespace CourseProgram.Commands.AddCommands
 {
-    public class AddDriverCommand : CommandBaseAsync
+    public class AddDriverCommand : BaseAddCommand
     {
-        private readonly AddDriverViewModel _addDriverViewModel;
-        private readonly DriverDataService _driverDataService;
-        private readonly DriverCategoriesDataService _driverCategoriesDataService;
-        private readonly INavigationService _driverViewNavigationService;
+        private readonly AddDriverViewModel _viewModel;
 
         public AddDriverCommand(AddDriverViewModel addDriverViewModel, ServicesStore servicesStore, INavigationService driverViewNavigationService)
         {
-            _addDriverViewModel = addDriverViewModel;
-            _driverDataService = servicesStore._driverService;
-            _driverCategoriesDataService = servicesStore._driverCategoriesService;
-            _driverViewNavigationService = driverViewNavigationService;
+            _viewModel = addDriverViewModel;
+            _servicesStore = servicesStore;
+            _navigationService = driverViewNavigationService;
 
-            _addDriverViewModel.PropertyChanged += OnViewModelPropertyChanged;
-
-
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_addDriverViewModel.DriverName) ||
-                e.PropertyName == nameof(_addDriverViewModel.Passport) ||
-                e.PropertyName == nameof(_addDriverViewModel.Phone))
+            if (e.PropertyName == nameof(_viewModel.DriverName) ||
+                e.PropertyName == nameof(_viewModel.Passport) ||
+                e.PropertyName == nameof(_viewModel.Phone))
             {
                 OnCanExecuteChanged();
             }
@@ -42,39 +35,36 @@ namespace CourseProgram.Commands.AddCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return !string.IsNullOrEmpty(_addDriverViewModel.DriverName) &&
-                   !string.IsNullOrEmpty(_addDriverViewModel.Passport) &&
-                   !string.IsNullOrEmpty(_addDriverViewModel.Phone) &&
+            return !string.IsNullOrEmpty(_viewModel.DriverName) &&
+                   !string.IsNullOrEmpty(_viewModel.Passport) &&
+                   !string.IsNullOrEmpty(_viewModel.Phone) &&
                    base.CanExecute(parameter);
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            int newID = await _driverDataService.FindMaxEmptyID();
             Driver driver = new(
-                newID,
-                _addDriverViewModel.DriverName,
-                _addDriverViewModel.BirthDay,
-                _addDriverViewModel.Passport,
-                _addDriverViewModel.Phone,
+                -1,
+                _viewModel.DriverName,
+                _viewModel.BirthDay,
+                _viewModel.Passport,
+                _viewModel.Phone,
                 DateOnly.FromDateTime(DateTime.Now),
                 DateOnly.MinValue,
                 string.Empty
                 );
 
+            driver.SetCategories(_viewModel.Categories.ToArray());
+
             try
             {
-                await _driverDataService.AddItemAsync(driver);
+                bool result = await _servicesStore._driverService.AddItemAsync(driver);
+                if (result)
+                    MessageBox.Show("Водитель добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show("Не удалось добавить водителя", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                foreach (Category ctg in _addDriverViewModel.Categories)
-                {
-                    if (ctg.IsChecked)
-                        await _driverCategoriesDataService.AddItemAsync(new DriverCategories(driver.ID, ctg.ID));
-                }
-
-                MessageBox.Show("Водитель добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                _driverViewNavigationService.Navigate();
+                _navigationService.Navigate();
             }
             catch (RepeatConflictException<Driver>)
             {

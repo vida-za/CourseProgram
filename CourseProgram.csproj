@@ -16,5 +16,9 @@
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="SimpleModal.WPF" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\CacheData\" />
+  </ItemGroup>
 	
 </Project>

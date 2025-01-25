@@ -52,8 +52,13 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <TreeView Grid.Row="0"
-                  Margin="10 10 0 0"
+        <Button Grid.Row="0"
+                Content="Приветствие"
+                Command="{Binding NavigateHomeCommand}" />
+        <Button Grid.Row="1"
+                Content="Опер. данные"
+                Command="{Binding NavigateOperationalCommand}" />
+        <TreeView Grid.Row="2"
                   Background="Transparent"
                   BorderThickness="0">
             <TreeViewItem Header="Справочники">
@@ -67,6 +72,8 @@
                         Command="{Binding NavigateWorkersCommand}" />
                 <Button Content="Заказчики"
                         Command="{Binding NavigateClientsCommand}" />
+                <Button Content="Номенклатура"
+                        Command="{Binding NavigateNomenclaturesCommand}" />
             </TreeViewItem>
 
         </TreeView>

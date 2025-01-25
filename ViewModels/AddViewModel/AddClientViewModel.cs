@@ -15,7 +15,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             CancelCommand = new NavigateCommand(navigationService);
         }
 
-        public ObservableCollection<string> TypeArray => GetFullEnumDescription(typeof(TypeClientValues));
+        public ObservableCollection<string> TypeArray => GetFullEnumDescription(typeof(ClientTypeValues));
 
         #region don`t must have
         private string _bik;

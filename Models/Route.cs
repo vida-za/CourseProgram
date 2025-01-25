@@ -6,69 +6,84 @@ namespace CourseProgram.Models
 {
     public class Route : IModel, IEquatable<Route>
     {
-        [DisplayName("Номер маршрута")]
-        public int ID { get; } //КодМаршрута
-        [DisplayName("Номер машины")]
-        public int MachineID { get; } //КодМашины
-        [DisplayName("Номер водителя")]
-        public int DriverID { get; } //КодВодителя
+        [DisplayName("КодМаршрута")]
+        public int ID { get; }
+        [DisplayName("КодМашины")]
+        public int MachineID { get; }
+        [DisplayName("КодВодителя")]
+        public int DriverID { get; }
         [DisplayName("Тип")]
-        public TypeRouteValues Type { get; } //Тип
+        public RouteTypeValues Type { get; }
         [DisplayName("Расстояние")]
-        public float Distance { get; } //Расстояние
+        public float Distance { get; }
         [DisplayName("Статус")]
-        public StatusRouteValues Status { get; } //Статус
-        [DisplayName("Время выполнения")]
-        public DateTime CompleteTime { get; } //ВремяВыполнения
+        public RouteStatusValues Status { get; }
+        [DisplayName("ВремяВыполнения")]
+        public DateTime CompleteTime { get; }
+        [DisplayName("КодАдресаНачала")]
+        public int AddressStartID { get; }
+        [DisplayName("КодАдресаОкончания")]
+        public int AddressEndID { get; }
 
         public Route()
         {
             ID = 0;
             MachineID = 0;
             DriverID = 0;
-            Type = TypeRouteValues.Null;
+            Type = RouteTypeValues.Null;
             Distance = float.NaN;
-            Status = StatusRouteValues.Null;
+            Status = RouteStatusValues.Null;
             CompleteTime = DateTime.MinValue;
+            AddressStartID = 0;
+            AddressEndID = 0;
         }
 
-        public Route(int id, int machine, int driver, string type, float distance, string status, DateTime completeTime)
+        public Route(int id, int machine, int driver, string type, float distance, string status, DateTime completeTime, int addressStartID, int addressEndID)
         {
             ID = id;
             MachineID = machine;
             DriverID = driver;
             Distance = distance;
             CompleteTime = completeTime;
+            AddressStartID = addressStartID;
+            AddressEndID = addressEndID;
 
             Type = type switch
             {
-                "Общий" => TypeRouteValues.General,
-                "Обособленный" => TypeRouteValues.Isolated,
-                "Пустой" => TypeRouteValues.Empty,
-                _ => TypeRouteValues.Null,
+                "Общий" => RouteTypeValues.General,
+                "Обособленный" => RouteTypeValues.Isolated,
+                "Пустой" => RouteTypeValues.Empty,
+                _ => RouteTypeValues.Null,
             };
             Status = status switch
             {
-                "Выполнен" => StatusRouteValues.Completed,
-                "В ожидании" => StatusRouteValues.Waiting,
-                "Выполняется" => StatusRouteValues.InProgress,
-                "Отменен" => StatusRouteValues.Cancelled,
-                _ => StatusRouteValues.Null,
+                "Выполнен" => RouteStatusValues.Completed,
+                "В ожидании" => RouteStatusValues.Waiting,
+                "Выполняется" => RouteStatusValues.InProgress,
+                "Отменен" => RouteStatusValues.Cancelled,
+                _ => RouteStatusValues.Null,
             };
         }
 
-        public string GetSelectors() => "\"КодМаршрута\", \"КодМашины\", \"КодВодителя\", \"Тип\", \"Расстояние\", \"Статус\"";
-        public string GetTable() => "\"Маршрут\"";
-        public string GetSelectorID() => "\"КодМаршрута\"";
-        public string GetProcedureDelete() => "\"DeleteRoute\"";
-
-
-        public bool Equals(Route? other)
+        public static string GetTable() => "Маршрут";
+        public static string GetSelectorID() => "КодМаршрута";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодМаршрута",
+                "КодМашины",
+                "КодВодителя",
+                "Тип",
+                "Расстояние",
+                "Статус",
+                "ВремяВыполнения",
+                "КодАдресаНачала",
+                "КодАдресаОкончания"
+            };
         }
+
+        public bool Equals(Route? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Route);
 

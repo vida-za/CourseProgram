@@ -19,13 +19,15 @@ namespace CourseProgram
         {
             IServiceCollection services = new ServiceCollection();
 
+            services.AddSingleton<LogManager>();
+
             //Store
             services.AddSingleton<NavigationStore>();
             services.AddSingleton<ServicesStore>();
             services.AddSingleton<SelectedStore>();
             services.AddSingleton<ModalNavigationStore>();
 
-            services.AddSingleton(s => CreateHomeNavigationService(s));
+            services.AddSingleton(CreateHomeNavigationService);
             services.AddSingleton<CloseModalNavigationService>();
 
             //Modal
@@ -65,6 +67,10 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
 
+            services.AddTransient(s => new AddNomenclatureViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
             //Layout
             services.AddTransient(s => new DriverListingViewModel(
                 s.GetRequiredService<ServicesStore>(),
@@ -90,6 +96,13 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddClientNavigationService(s),
                 CreateClientDetailNavigationService(s)));
+            services.AddTransient(s => new OperationalViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>()));
+            services.AddTransient(s => new NomenclatureListingViewModel(
+                s.GetRequiredService<ServicesStore>(), 
+                s.GetRequiredService<SelectedStore>(),
+                CreateAddNomenclatureNavigationService(s)));
 
             services.AddSingleton(s => new HomeViewModel());
 
@@ -102,11 +115,15 @@ namespace CourseProgram
             });
 
             _serviceProvider = services.BuildServiceProvider();
+
+            LogManager.Initialize(_serviceProvider.GetRequiredService<LogManager>());
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            await LogManager.Instance.WriteLogAsync("App start");
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -115,14 +132,19 @@ namespace CourseProgram
 
             if ((bool)loginWindow.DialogResult)
             {
+                await LogManager.Instance.WriteLogAsync("User login");
+
                 INavigationService initialNavigationService = _serviceProvider.GetRequiredService<INavigationService>();
                 initialNavigationService.Navigate();
 
                 MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
                 MainWindow.Show();
             }
-            else
+            else 
+            {
+                await LogManager.Instance.WriteLogAsync("User not login");
                 Shutdown();
+            }
         }
 
         #region modal
@@ -182,6 +204,12 @@ namespace CourseProgram
         {
             return CreateModalNavigationService<ClientDetailViewModel>(serviceProvider);
         }
+
+        //Nomenclature
+        private static INavigationService CreateAddNomenclatureNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddNomenclatureViewModel>(serviceProvider);
+        }
         #endregion
 
         #region layout
@@ -222,6 +250,16 @@ namespace CourseProgram
         {
             return CreateLayoutNavigationService<HomeViewModel>(serviceProvider);
         }
+
+        private static INavigationService CreateOperationalNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<OperationalViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateNomenclatureNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<NomenclatureListingViewModel>(serviceProvider);
+        }
         #endregion
 
         private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
@@ -231,7 +269,10 @@ namespace CourseProgram
                 CreateClientListingNavigationService(serviceProvider),
                 CreateDriverListingNavigationService(serviceProvider),
                 CreateMachineListingNavigationService(serviceProvider),
-                CreateWorkerListingNavigationService(serviceProvider));
+                CreateNomenclatureNavigationService(serviceProvider),
+                CreateWorkerListingNavigationService(serviceProvider),
+                CreateHomeNavigationService(serviceProvider),
+                CreateOperationalNavigationService(serviceProvider));
         }
     }
 }

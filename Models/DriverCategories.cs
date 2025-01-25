@@ -1,11 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace CourseProgram.Models
 {
     public class DriverCategories : IModel, IEquatable<DriverCategories>
     {
         public int ID { get; }
+        [DisplayName("КодВодителя")]
         public int DriverID { get; }
+        [DisplayName("КодКатегории")]
         public int CategoryID { get; }
 
         public DriverCategories() 
@@ -22,17 +25,18 @@ namespace CourseProgram.Models
             CategoryID = categoryID;
         }
 
-        public string GetSelectors() => "\"КодВодителя\", \"КодКатегории\"";
-        public string GetTable() => "\"Категории_водителя\"";
-        public string GetSelectorID() => "\"\"";
-        public string GetProcedureDelete() => "\"DeleteDriverCategories\"";
-
-        public bool Equals(DriverCategories? other)
+        public static string GetTable() => "Категории_водителя";
+        public static string GetSelectorID() => "";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return DriverID == other.DriverID && CategoryID == other.CategoryID;
-            else return false;
+            return new[]
+            {
+                "КодВодителя",
+                "КодКатегории"
+            };
         }
+
+        public bool Equals(DriverCategories? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as DriverCategories);
 

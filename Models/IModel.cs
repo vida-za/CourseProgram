@@ -4,9 +4,8 @@
     {
         public int ID { get; }
 
-        public string GetSelectors();
-        public string GetTable();
-        public string GetSelectorID();
-        public string GetProcedureDelete();
+        public static abstract string GetTable();
+        public static abstract string GetSelectorID();
+        public static abstract string[] GetFieldNames();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.AddViewModel;
 using System;
@@ -10,22 +9,20 @@ using System.Windows.Forms;
 
 namespace CourseProgram.Commands.AddCommands
 {
-    public class AddWorkerCommand : CommandBaseAsync
+    public class AddWorkerCommand : BaseAddCommand
     {
         private readonly AddWorkerViewModel _viewModel;
-        private readonly WorkerDataService _dataService;
-        private readonly INavigationService _navigationService;
 
         public AddWorkerCommand(AddWorkerViewModel viewModel, ServicesStore servicesStore, INavigationService navigationService)
         {
             _viewModel = viewModel;
-            _dataService = servicesStore._workerService;
+            _servicesStore = servicesStore;
             _navigationService = navigationService;
 
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
-        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_viewModel.Name) ||
                 e.PropertyName == nameof(_viewModel.Passport))
@@ -41,9 +38,8 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            int newID = await _dataService.FindMaxEmptyID();
             Worker worker = new(
-                newID,
+                -1,
                 _viewModel.Name,
                 _viewModel.BirthDay,
                 _viewModel.Passport,
@@ -54,13 +50,15 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _dataService.AddItemAsync(worker);
-
-                MessageBox.Show("Сотрудник добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                bool result = await _servicesStore._workerService.AddItemAsync(worker);
+                if (result)
+                    MessageBox.Show("Сотрудник добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show("Не удалось добавить сотрудника", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 _navigationService.Navigate();
             }
-            catch(Exception ex) { }
+            catch(Exception) { }
         }
     }
 }

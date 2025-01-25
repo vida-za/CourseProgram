@@ -5,20 +5,20 @@ namespace CourseProgram.Models
 {
     public class Worker : IModel, IEquatable<Worker>
     {
-        [DisplayName("Номер сотрудника")]
-        public int ID { get; } //КодСотрудника
+        [DisplayName("КодСотрудника")]
+        public int ID { get; }
         [DisplayName("ФИО")]
-        public string FIO { get; } //ФИО
-        [DisplayName("Дата рождения")]
-        public DateOnly BirthDay { get; } //ДатаРождения
-        [DisplayName("Паспортные данные")]
-        public string Passport { get; } //ПаспортныеДанные
-        [DisplayName("Номер телефона")]
-        public string Phone { get; } //Телефон
-        [DisplayName("Принят")]
-        public DateOnly DateStart { get; } //ДатаНачала
-        [DisplayName("Уволен")]
-        public DateOnly DateEnd { get; } //ДатаОкончания
+        public string FIO { get; }
+        [DisplayName("ДатаРождения")]
+        public DateOnly BirthDay { get; }
+        [DisplayName("ПаспортныеДанные")]
+        public string Passport { get; }
+        [DisplayName("Телефон")]
+        public string Phone { get; }
+        [DisplayName("ДатаНачалаРаботы")]
+        public DateOnly DateStart { get; }
+        [DisplayName("ДатаОкончанияРаботы")]
+        public DateOnly DateEnd { get; }
 
         public Worker()
         {
@@ -42,17 +42,23 @@ namespace CourseProgram.Models
             DateEnd = dateEnd;
         }
 
-        public string GetSelectors() => "\"КодСотрудника\", \"ФИО\", \"ДатаРождения\", \"ПаспортныеДанные\", \"Телефон\", \"ДатаНачала\", \"ДатаОкончания\"";
-        public string GetTable() => "\"Сотрудник\"";
-        public string GetSelectorID() => "\"КодСотрудника\"";
-        public string GetProcedureDelete() => "\"DeleteWorker\"";
-
-        public bool Equals(Worker? other)
+        public static string GetTable() => "Сотрудник";
+        public static string GetSelectorID() => "КодСотрудника";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодСотрудника",
+                "ФИО",
+                "ДатаРождения",
+                "ПаспортныеДанные",
+                "Телефон",
+                "ДатаНачалаРаботы",
+                "ДатаОкончанияРаботы"
+            };
         }
+
+        public bool Equals(Worker? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Worker);
 

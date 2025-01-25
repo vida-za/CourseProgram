@@ -1,20 +1,20 @@
-﻿using CourseProgram.Services.DataServices;
+﻿using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
-    public class DeleteClientCommand : CommandBaseAsync
+    public class DeleteClientCommand : BaseDeleteCommand
     {
         private readonly ClientListingViewModel _viewModel;
-        private readonly ClientDataService _dataService;
 
-        public DeleteClientCommand(ClientListingViewModel viewModel, ClientDataService dataService)
+        public DeleteClientCommand(ClientListingViewModel viewModel, ServicesStore servicesStore)
         {
             _viewModel = viewModel;
-            _dataService = dataService;
+            _servicesStore = servicesStore;
 
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
@@ -25,19 +25,33 @@ namespace CourseProgram.Commands.DeleteCommands
                 OnCanExecuteChanged();
         }
 
-        public override bool CanExecute(object? parameter)
+        protected override bool IsItemSelected()
         {
-            return base.CanExecute(parameter) && _viewModel.SelectedItem is not null && _viewModel.SelectedItem.ID < 0; //TO DO Продумать удаление заказчиков
+            return _viewModel.SelectedItem != null;
         }
 
-        public override async Task ExecuteAsync(object? parameter)
+        protected override async Task ExecuteDeleteAsync(object? parameter)
         {
             try
             {
-                await _dataService.DeleteItemAsync(_viewModel.SelectedItem.GetModel().ID);
-                _viewModel.UpdateData();
+                bool check = await _servicesStore._clientService.CheckCanDelete(_viewModel.SelectedItem.ID);
+
+                if (!check)
+                    MessageBox.Show("Нельзя удалить клиента так как он уже используется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                {
+                    bool result = await _servicesStore._clientService.DeleteItemAsync(_viewModel.SelectedItem.ID);
+                    if (result)
+                        MessageBox.Show("Клиент удален", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    else
+                        MessageBox.Show("Не удалось удалить клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                await _viewModel.UpdateDataAsync();
             }
-            catch(Exception) { }
+            catch(Exception) 
+            {
+            }
         }
     }
 }

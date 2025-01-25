@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 using CourseProgram.Commands;
 using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
@@ -26,12 +26,11 @@ namespace CourseProgram.ViewModels.ListingViewModel
             _servicesStore = servicesStore;
             _selectedStore = selectedStore;
             _allDrivers = new ObservableCollection<DriverViewModel>();
-            _freeDrivers = new ObservableCollection<DriverViewModel>();
             _disDrivers = new ObservableCollection<DriverViewModel>();
             _items = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
-            DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore._driverService);
+            DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore);
             DetailDriverCommand = new NavigateDetailCommand(detailDriverNavigationService);
             SwitchBusyDrivers = new SwitchHandlerCommand(this);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
@@ -47,48 +46,39 @@ namespace CourseProgram.ViewModels.ListingViewModel
             updateTimer.Start();
         }
 
-        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        private async void UpdateTimer_Tick(object? sender, EventArgs e)
         {
-            UpdateData();
+            await UpdateDataAsync();
         }
 
         public override async void UpdateData()
         {
-            _allDrivers.Clear();
-            _freeDrivers.Clear();
-            _disDrivers.Clear();
+            ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
+            ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
             IEnumerable<Driver> temp = await _servicesStore._driverService.GetItemsAsync();
-
-            foreach (Driver driver in temp)
+            foreach (Driver itemTemp in temp)
             {
-                DriverViewModel driverViewModel = new(driver);
-                _allDrivers.Add(driverViewModel);
-            }
-
-            temp = await _servicesStore._driverService.GetFreeDriversAsync();
-
-            foreach (Driver driver in temp)
-            {
-                DriverViewModel driverViewModel = new(driver);
-                _freeDrivers.Add(driverViewModel);
+                DriverViewModel driverViewModel = new(itemTemp);
+                _newAllDrivers.Add(driverViewModel);
             }
 
             temp = await _servicesStore._driverService.GetDisDriversAsync();
-
-            foreach (Driver driver in temp)
+            foreach (Driver itemTemp in temp)
             {
-                DriverViewModel driverViewModel = new(driver);
-                _disDrivers.Add(driverViewModel);
+                DriverViewModel driverViewModel = new(itemTemp);
+                _newDisDrivers.Add(driverViewModel);
             }
+
+            _allDrivers.Clear();
+            _disDrivers.Clear();
+
+            foreach (DriverViewModel model in  _newAllDrivers)
+                _allDrivers.Add(model);
+            foreach (DriverViewModel model in _newDisDrivers)
+                _disDrivers.Add(model);
         }
 
-        private readonly ServicesStore _servicesStore;
-        private readonly SelectedStore _selectedStore;
-
-        private readonly DispatcherTimer updateTimer;
-
-        private readonly ObservableCollection<DriverViewModel> _freeDrivers;
         private readonly ObservableCollection<DriverViewModel> _allDrivers;
         private readonly ObservableCollection<DriverViewModel> _disDrivers;
 
@@ -121,17 +111,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
             }
         }
 
-        private bool _stateCheckedBusy;
-        public bool StateCheckedBusy
-        {
-            get => _stateCheckedBusy;
-            set
-            {
-                _stateCheckedBusy = value;
-                OnPropertyChanged(nameof(StateCheckedBusy));
-            }
-        }
-
         private bool _stateCheckedWork;
         public bool StateCheckedWork
         {
@@ -145,11 +124,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override void SwitchHandler()
         {
-            if (StateCheckedBusy)
-                Items = new ObservableCollection<DriverViewModel>(_freeDrivers);
-            else
-                Items = new ObservableCollection<DriverViewModel>(_allDrivers);
-
             if (StateCheckedWork)
             {
                 foreach (DriverViewModel dvm in _disDrivers)
@@ -168,6 +142,38 @@ namespace CourseProgram.ViewModels.ListingViewModel
         {
             if (dataGrid.SelectedItem != null)
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+        }
+
+        public override async Task UpdateDataAsync()
+        {
+            var currentSelected = SelectedItem;
+
+            ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
+            ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
+
+            IEnumerable<Driver> temp = await _servicesStore._driverService.GetItemsAsync();
+            foreach (Driver itemTemp in temp)
+            {
+                DriverViewModel driverViewModel = new(itemTemp);
+                _newAllDrivers.Add(driverViewModel);
+            }
+
+            temp = await _servicesStore._driverService.GetDisDriversAsync();
+            foreach (Driver itemTemp in temp)
+            {
+                DriverViewModel driverViewModel = new(itemTemp);
+                _newDisDrivers.Add(driverViewModel);
+            }
+
+            _allDrivers.Clear();
+            _disDrivers.Clear();
+
+            foreach (DriverViewModel model in _newAllDrivers)
+                _allDrivers.Add(model);
+            foreach (DriverViewModel model in _newDisDrivers)
+                _disDrivers.Add(model);
+
+            SelectedItem = Items.FirstOrDefault(d => d.ID == currentSelected?.ID);
         }
     }
 }

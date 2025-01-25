@@ -3,6 +3,7 @@ using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -57,7 +58,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string StateNumber => _machineViewModel.StateNumber;
         public string Status => _machineViewModel.Status;
         public string TimeStart => _machineViewModel.TimeStart.ToString();
-        public string TimeEnd => _machineViewModel.TimeEnd.ToString();
+        public string TimeEnd => _machineViewModel.TimeEnd;
         public string Town => _machineViewModel.Town;
     }
 }

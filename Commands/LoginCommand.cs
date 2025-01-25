@@ -1,4 +1,4 @@
-﻿using CourseProgram.Services;
+﻿using CourseProgram.Services.DBServices;
 using CourseProgram.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ namespace CourseProgram.Commands
     public class LoginCommand : CommandBaseAsync
     {
         private readonly LoginViewModel _viewModel;
-        private DBConnection db;
+        private Connection loginConnection;
 
         public LoginCommand(LoginViewModel viewModel)
         {
@@ -23,14 +23,14 @@ namespace CourseProgram.Commands
             User.Username = _viewModel.Username;
             User.Password = _viewModel.Password;
 
-            db = new DBConnection(_viewModel.Server, _viewModel.Database, User.Username, User.Password, "Login");
+            loginConnection = new Connection(_viewModel.Server, _viewModel.Database, User.Username, User.Password);
 
-            await db.OpenAsync();
+            await loginConnection.OpenAsync();
 
             Thread.Sleep(500);
-            if (db.ConnectionState == 1)
+            if (loginConnection.ConnectionState == 1)
             {
-                db.Close();
+                await loginConnection.CloseAsync();
                 App.Current.MainWindow.DialogResult = true;
             }
             else

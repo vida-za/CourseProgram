@@ -6,42 +6,38 @@ namespace CourseProgram.Models
 {
     public class Order : IModel, IEquatable<Order>
     {
-        [DisplayName("Номер заказа")]
-        public int ID { get; } //КодЗаказа
-        [DisplayName("Номер сотрудника")]
-        public int WorkerID { get; } //КодСотрудника
-        [DisplayName("Номер заказчика")]
-        public int ClientID { get; } //КодЗаказчика
-        [DisplayName("Дата заказа")]
-        public DateTime TimeOrder { get; } //ДатаЗаказа
-        [DisplayName("Дата загрузки")]
-        public DateTime TimeLoad { get; } //ДатаЗагрузки
-        [DisplayName("Дата выгрузки")]
-        public DateTime TimeOnLoad { get; } //ДатаВыгрузки
+        [DisplayName("КодЗаказа")]
+        public int ID { get; }
+        [DisplayName("КодЗаявки")]
+        public int BudID { get; }
+        [DisplayName("ДатаЗаказа")]
+        public DateTime TimeOrder { get; }
+        [DisplayName("ДатаЗагрузки")]
+        public DateTime TimeLoad { get; }
+        [DisplayName("ДатаВыгрузки")]
+        public DateTime TimeOnLoad { get; }
         [DisplayName("Стоимость")]
-        public float Price { get; } //Стоимость
+        public float Price { get; }
         [DisplayName("Статус")]
-        public StatusOrderValues Status { get; } //Статус
+        public OrderStatusValues Status { get; }
         [DisplayName("Договор")]
-        public string File { get; } //Договор
+        public string File { get; }
 
         public Order()
         {
             ID = 0;
-            WorkerID = 0;
-            ClientID = 0;
+            BudID = 0;
             TimeOrder = DateTime.MinValue;
             TimeLoad = DateTime.MinValue;
             TimeOnLoad = DateTime.MinValue;
             Price = 0;
-            Status = StatusOrderValues.Null;
+            Status = OrderStatusValues.Null;
             File = string.Empty;
         }
 
         public Order(
             int id,
-            int workerID,
-            int clientID,
+            int budID,
             DateTime timeOrder,
             DateTime timeLoad,
             DateTime timeOnLoad,
@@ -50,8 +46,7 @@ namespace CourseProgram.Models
             string file)
         {
             ID = id;
-            WorkerID = workerID;
-            ClientID = clientID;
+            BudID = budID;
             TimeOrder = timeOrder;
             TimeLoad = timeLoad;
             TimeOnLoad = timeOnLoad;
@@ -60,28 +55,35 @@ namespace CourseProgram.Models
 
             Status = status switch
             {
-                "Выполнен" => StatusOrderValues.Completed,
-                "Отменен" => StatusOrderValues.Cancelled,
-                "В ожидании" => StatusOrderValues.Waiting,
-                "Выполняется" => StatusOrderValues.InProgress,
-                _ => StatusOrderValues.Null,
+                "Выполнен" => OrderStatusValues.Completed,
+                "Отменен" => OrderStatusValues.Cancelled,
+                "В ожидании" => OrderStatusValues.Waiting,
+                "Выполняется" => OrderStatusValues.InProgress,
+                _ => OrderStatusValues.Null,
             };
         }
 
-        public string GetSelectors() => "\"КодЗаказа\", \"КодСотрудника\", \"КодЗаказчика\", \"ДатаЗаказа\", \"ДатаЗагрузки\", \"ДатаВыгрузки\", \"Стоимость\", \"Статус\", \"Договор\"";
-        public string GetTable() => "\"Заказ\"";
-        public string GetSelectorID() => "\"КодЗаказа\"";
-        public string GetProcedureDelete() => "\"DeleteOrder\"";
-
-        public bool Equals(Order? other)
+        public static string GetTable() => "Заказ";
+        public static string GetSelectorID() => "КодЗаказа";
+        public static string[] GetFieldNames()
         {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
+            return new[]
+            {
+                "КодЗаказа",
+                "НомерЗаявки",
+                "ДатаЗаказа",
+                "ДатаЗагрузки",
+                "ДатаВыгрузки",
+                "Стоимость",
+                "Статус",
+                "Договор"
+            };
         }
+
+        public bool Equals(Order? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Order);
 
-        public override int GetHashCode() => HashCode.Combine(ID, WorkerID);
+        public override int GetHashCode() => HashCode.Combine(ID, BudID);
     }
 }

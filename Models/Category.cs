@@ -1,48 +1,44 @@
 ﻿using System;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Models
 {
-    public class Category : IModel, IEquatable<Category>
+    public class Category : IEquatable<Category>
     {
-        public int ID { get; }
+        public Categories EnumCategory { get; }
         public string Name { get; }
         public bool IsChecked { get; set; }
 
         public Category() 
         {
-            ID = 0;
+            EnumCategory = Categories.B;
             Name = String.Empty;
             IsChecked = false;
         }
 
-        public Category(int id, string name)
+        public Category(Categories enumCategory)
         {
-            ID = id;
-            Name = name;
+            EnumCategory = enumCategory;
+            Name = GetEnumDescription(enumCategory);
             IsChecked = false;
         }
 
-        public Category(int id, string name, bool check)
+        public Category(Categories enumCategory, bool check)
         {
-            ID = id;
-            Name = name;
+            EnumCategory = enumCategory;
+            Name = GetEnumDescription(enumCategory);
             IsChecked = check;
         }
-
-        public string GetSelectors() => "\"КодКатегории\", \"Наименование\"";
-        public string GetTable() => "\"Категория\"";
-        public string GetSelectorID() => "\"КодКатегории\"";
-        public string GetProcedureDelete() => "\"DeleteCategory\"";
 
         public bool Equals(Category? other)
         {
             if (other != null)
-                return ID == other.ID;
+                return Name == other.Name;
             else return false;
         }
 
         public override bool Equals(object obj) => Equals(obj as Category);
 
-        public override int GetHashCode() => HashCode.Combine(ID, Name);
+        public override int GetHashCode() => HashCode.Combine(Name);
     }
 }

@@ -6,47 +6,46 @@ namespace CourseProgram.Models
 {
     public class Machine : IModel, IEquatable<Machine>
     {
-        [DisplayName("Номер машины")]
-        public int ID { get; } //КодМашины
-        [DisplayName("Тип машины")]
-        public TypeMachineValues TypeMachine { get; } //ТипМашины
-        [DisplayName("Тип кузова")]
-        public TypeBodyworkValues TypeBodywork { get; } //ТипКузова
-        [DisplayName("Тип загрузки")]
-        public TypeLoadingValues TypeLoading { get; } //ТипЗагрузки
+        [DisplayName("КодМашины")]
+        public int ID { get; }
+        [DisplayName("ТипМашины")]
+        public MachineTypeValues TypeMachine { get; }
+        [DisplayName("ТипКузова")]
+        public MachineTypeBodyworkValues TypeBodywork { get; }
+        [DisplayName("ТипЗагрузки")]
+        public MachineTypeLoadingValues TypeLoading { get; }
         [DisplayName("Грузоподъёмность")]
-        public float LoadCapacity { get; } //Грузоподъёмность
+        public float LoadCapacity { get; }
         [DisplayName("Объём")]
-        public float Volume { get; } //Объём
+        public float Volume { get; }
         [DisplayName("Гидроборт")]
-        public bool HydroBoard { get; } //Гидроборт
-        [DisplayName("Длина кузова")]
-        public float LengthBodywork { get; } //ДлинаКузова
-        [DisplayName("Ширина кузова")]
-        public float WidthBodywork { get; } //ШиринаКузова
-        [DisplayName("Высота кузова")]
-        public float HeightBodywork { get; } //ВысотаКузова
+        public bool HydroBoard { get; }
+        [DisplayName("ДлинаКузова")]
+        public float LengthBodywork { get; }
+        [DisplayName("ШиринаКузова")]
+        public float WidthBodywork { get; }
+        [DisplayName("ВысотаКузова")]
+        public float HeightBodywork { get; }
         [DisplayName("Марка")]
-        public string Stamp { get; } //Марка
+        public string Stamp { get; }
         [DisplayName("Название")]
-        public string Name { get; } //Название
+        public string Name { get; }
         [DisplayName("ГосНомер")]
-        public string StateNumber { get; } //ГосНомер
+        public string StateNumber { get; }
         [DisplayName("Состояние")]
-        public StatusMachineValues Status { get; } //Состояние
-        [DisplayName("Получена")]
-        public DateTime TimeStart { get; } //ВремяПоступления
-        [DisplayName("Списана")]
-        public DateTime TimeEnd { get; } //ВремяОкончания
-        [DisplayName("Город")]
-        public string Town { get; } //Город
+        public MachineStatusValues Status { get; }
+        [DisplayName("ДатаВремяПоступления")]
+        public DateTime TimeStart { get; }
+        [DisplayName("ДатаВремяСписания")]
+        public DateTime TimeEnd { get; }
+        public string Town { get; }
 
         public Machine()
         {
             ID = 0;
-            TypeMachine = TypeMachineValues.Null;
-            TypeBodywork = TypeBodyworkValues.Null;
-            TypeLoading = TypeLoadingValues.Null;
+            TypeMachine = MachineTypeValues.Null;
+            TypeBodywork = MachineTypeBodyworkValues.Null;
+            TypeLoading = MachineTypeLoadingValues.Null;
             LoadCapacity = float.NaN;
             Volume = float.NaN;
             HydroBoard = false;
@@ -56,7 +55,7 @@ namespace CourseProgram.Models
             Stamp = string.Empty;
             Name = string.Empty;
             StateNumber = string.Empty;
-            Status = StatusMachineValues.Null;
+            Status = MachineStatusValues.Null;
             TimeStart = new DateTime();
             TimeEnd = new DateTime();
             Town = string.Empty;
@@ -97,53 +96,68 @@ namespace CourseProgram.Models
 
             TypeMachine = typeMachine switch
             {
-                "Микроавтобус" => TypeMachineValues.Minibus,
-                "Грузовик" => TypeMachineValues.Truck,
-                "Грузовик с прицепом" => TypeMachineValues.TruckWithTrailer,
-                "Полуприцеп" => TypeMachineValues.SemiTrailer,
-                _ => TypeMachineValues.Null,
+                "Микроавтобус" => MachineTypeValues.Minibus,
+                "Грузовик" => MachineTypeValues.Truck,
+                "Грузовик с прицепом" => MachineTypeValues.TruckWithTrailer,
+                "Полуприцеп" => MachineTypeValues.SemiTrailer,
+                _ => MachineTypeValues.Null,
             };
             TypeBodywork = typeBodywork switch
             {
-                "Борт" => TypeBodyworkValues.Board,
-                "Изотерм" => TypeBodyworkValues.Isotherm,
-                "Тент" => TypeBodyworkValues.Tent,
-                "Реф" => TypeBodyworkValues.Ref,
-                _ => TypeBodyworkValues.Null,
+                "Борт" => MachineTypeBodyworkValues.Board,
+                "Изотерм" => MachineTypeBodyworkValues.Isotherm,
+                "Тент" => MachineTypeBodyworkValues.Tent,
+                "Реф" => MachineTypeBodyworkValues.Ref,
+                _ => MachineTypeBodyworkValues.Null,
             };
             TypeLoading = typeLoading switch
             {
-                "Вверх" => TypeLoadingValues.Up,
-                "Зад" => TypeLoadingValues.Behind,
-                "Бок" => TypeLoadingValues.Side,
-                _ => TypeLoadingValues.Null,
+                "Вверх" => MachineTypeLoadingValues.Up,
+                "Зад" => MachineTypeLoadingValues.Behind,
+                "Бок" => MachineTypeLoadingValues.Side,
+                _ => MachineTypeLoadingValues.Null,
             };
             Status = status switch
             {
-                "В ожидании" => StatusMachineValues.Waiting,
-                "На стоянке" => StatusMachineValues.Parking,
-                "В пути" => StatusMachineValues.OnRoad,
-                "Ремонт" => StatusMachineValues.Repair,
-                _ => StatusMachineValues.Null,
+                "В ожидании" => MachineStatusValues.Waiting,
+                "На стоянке" => MachineStatusValues.Parking,
+                "В пути" => MachineStatusValues.OnRoad,
+                "Ремонт" => MachineStatusValues.Repair,
+                _ => MachineStatusValues.Null,
             };
         }
 
-        public string GetSelectors() => "\"КодМашины\", \"ТипМашины\", \"ТипКузова\", \"ТипЗагрузки\", \"Грузоподъёмность\", \"Объём\", \"Гидроборт\", \"ДлинаКузова\", \"ШиринаКузова\", \"ВысотаКузова\", \"Марка\", \"Название\", \"ГосНомер\", \"Состояние\", \"ВремяПоступления\", \"ВремяОкончания\"";
-        public string GetTable() => "\"Машина\"";
-        public string GetSelectorID() => "\"КодМашины\"";
-        public string GetProcedureDelete() => "\"DeleteMachine\"";
+        public static string GetTable() => "Машина";
+        public static string GetSelectorID() => "КодМашины";
+        public static string[] GetFieldNames()
+        {
+            return new[]
+            {
+                "КодМашины",
+                "ТипМашины",
+                "ТипКузова",
+                "ТипЗагрузки",
+                "Грузоподъёмность",
+                "Объём",
+                "Гидроборт",
+                "ДлинаКузова",
+                "ШиринаКузова",
+                "ВысотаКузова",
+                "Марка",
+                "Название",
+                "ГосНомер",
+                "Состояние",
+                "ДатаВремяПоступления",
+                "ДатаВремяСписания"
+            };
+        }
 
         public override string ToString()
         {
             return $"{TypeMachine}{TypeBodywork}{TypeLoading}{LoadCapacity}{Volume}{HydroBoard}{LengthBodywork}{WidthBodywork}{HeightBodywork}{Stamp}{Name}{StateNumber}{Status}{TimeStart}{TimeEnd}";
         }
 
-        public bool Equals(Machine? other)
-        {
-            if (other != null)
-                return ID == other.ID;
-            else return false;
-        }
+        public bool Equals(Machine? other) => other != null && ID == other.ID;
 
         public override bool Equals(object obj) => Equals(obj as Machine);
 

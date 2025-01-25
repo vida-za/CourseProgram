@@ -3,12 +3,8 @@ using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
@@ -41,11 +37,11 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
             foreach (Route route in temp)
             {
-                RouteViewModel routeViewModel = new(route, _servicesStore);
+                RouteViewModel routeViewModel = new RouteViewModel(route, _servicesStore);
                 _routes.Add(routeViewModel);
             }
 
-            StringCategories = await _servicesStore._categoryService.GetStringByDriverAsync(ID);
+            StringCategories = _driverViewModel.StringCategories;
         }
 
         public int ID => _driverViewModel.ID;

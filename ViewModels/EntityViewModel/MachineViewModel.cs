@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Models;
+using System;
 using System.ComponentModel;
 
 namespace CourseProgram.ViewModels.EntityViewModel
@@ -40,7 +41,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Время поступления")]
         public string TimeStart => _model.TimeStart.ToString("d");
         [DisplayName("Время списания")]
-        public string TimeEnd => _model.TimeEnd.ToString("d");
+        public string TimeEnd => _model.TimeEnd == DateTime.MinValue ? "-" : _model.TimeEnd.ToString("d");
         [DisplayName("Текущая дислокация")]
         public string Town => _model.Town;
 

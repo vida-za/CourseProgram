@@ -9,20 +9,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace CourseProgram.ViewModels.ListingViewModel
 {
     public class WorkerListingViewModel : BaseListingViewModel
     {
         #region fields
-        private readonly ServicesStore _servicesStore;
-        private readonly SelectedStore _selectedStore;
-
-        private readonly DispatcherTimer updateTimer;
-
         private readonly ObservableCollection<WorkerViewModel> _allWorkers;
         private readonly ObservableCollection<WorkerViewModel> _rdyWorkers;
         private readonly ObservableCollection<WorkerViewModel> _disWorkers;
@@ -48,7 +43,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             _disWorkers = new ObservableCollection<WorkerViewModel>();
 
             AddWorkerCommand = new NavigateCommand(addWorkerNavigationService);
-            DeleteWorkerCommand = new DeleteWorkerCommand(this, servicesStore._workerService);
+            DeleteWorkerCommand = new DeleteWorkerCommand(this, _servicesStore);
             DetailWorkerCommand = new NavigateDetailCommand(detailWorkerNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
             SwitchHandlerCommand = new SwitchHandlerCommand(this);
@@ -65,37 +60,50 @@ namespace CourseProgram.ViewModels.ListingViewModel
         }
 
         #region methods
-        private void UpdateTimer_Tick(object? sender, EventArgs e)
+        private async void UpdateTimer_Tick(object? sender, EventArgs e)
         {
-            UpdateData();
+            await UpdateDataAsync();
         }
 
         public override async void UpdateData()
         {
-            _allWorkers.Clear();
-            _rdyWorkers.Clear();
-            _disWorkers.Clear();
+            ObservableCollection<WorkerViewModel> _newAllWorkers = new ObservableCollection<WorkerViewModel>();
+            ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
+            ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
             IEnumerable<Worker> temp = await _servicesStore._workerService.GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 WorkerViewModel workerViewModel = new(worker);
-                _allWorkers.Add(workerViewModel);
-            }
-
-            temp = await _servicesStore._workerService.GetItemsAsync(true);
-            foreach (Worker worker in temp)
-            {
-                WorkerViewModel workerViewModel = new(worker);
-                _rdyWorkers.Add(workerViewModel);
+                _newAllWorkers.Add(workerViewModel);
             }
 
             temp = await _servicesStore._workerService.GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 WorkerViewModel workerViewModel = new(worker);
-                _disWorkers.Add(workerViewModel);
+                _newRdyWorkers.Add(workerViewModel);
             }
+
+            temp = await _servicesStore._workerService.GetItemsAsync();
+            foreach (Worker worker in temp)
+            {
+                WorkerViewModel workerViewModel = new(worker);
+                _newDisWorkers.Add(workerViewModel);
+            }
+
+            _allWorkers.Clear();
+            _rdyWorkers.Clear();
+            _disWorkers.Clear();
+
+            foreach (WorkerViewModel model in _newAllWorkers)
+                _allWorkers.Add(model);
+
+            foreach (WorkerViewModel model in _newRdyWorkers)
+                _rdyWorkers.Add(model);
+
+            foreach (WorkerViewModel model in _newDisWorkers)
+                _disWorkers.Add(model);
         }
 
         protected override void Find()
@@ -113,6 +121,47 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public override void SwitchHandler()
         {
             base.SwitchHandler();
+        }
+
+        public override async Task UpdateDataAsync()
+        {
+            ObservableCollection<WorkerViewModel> _newAllWorkers = new ObservableCollection<WorkerViewModel>();
+            ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
+            ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
+
+            IEnumerable<Worker> temp = await _servicesStore._workerService.GetItemsAsync();
+            foreach (Worker worker in temp)
+            {
+                WorkerViewModel workerViewModel = new(worker);
+                _newAllWorkers.Add(workerViewModel);
+            }
+
+            temp = await _servicesStore._workerService.GetItemsAsync();
+            foreach (Worker worker in temp)
+            {
+                WorkerViewModel workerViewModel = new(worker);
+                _newRdyWorkers.Add(workerViewModel);
+            }
+
+            temp = await _servicesStore._workerService.GetItemsAsync();
+            foreach (Worker worker in temp)
+            {
+                WorkerViewModel workerViewModel = new(worker);
+                _newDisWorkers.Add(workerViewModel);
+            }
+
+            _allWorkers.Clear();
+            _rdyWorkers.Clear();
+            _disWorkers.Clear();
+
+            foreach (WorkerViewModel model in _newAllWorkers)
+                _allWorkers.Add(model);
+
+            foreach (WorkerViewModel model in _newRdyWorkers)
+                _rdyWorkers.Add(model);
+
+            foreach (WorkerViewModel model in _newDisWorkers)
+                _disWorkers.Add(model);
         }
         #endregion
 

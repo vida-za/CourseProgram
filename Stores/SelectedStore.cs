@@ -71,6 +71,17 @@ namespace CourseProgram.Stores
             }
         }
 
+        private NomenclatureViewModel _currentNomenclature;
+        public NomenclatureViewModel CurrentNomenclature
+        {
+            get => _currentNomenclature;
+            set
+            {
+                _currentNomenclature = value;
+                OnCurrentModelChanged();
+            }
+        }
+
         private OrderViewModel _currentOrder;
         public OrderViewModel CurrentOrder
         {

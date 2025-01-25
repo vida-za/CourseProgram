@@ -28,7 +28,7 @@
                        Style="{StaticResource Header}" />
             <Button Grid.Column="1"
                     Margin="10 0 0 0"
-                    Content="Добавить"
+                    Content="Добавить заказчика"
                     Command="{Binding AddClientCommand}" />
             <Button Grid.Column="2"
                     Margin="10 0 0 0"

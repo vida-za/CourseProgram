@@ -28,9 +28,6 @@
                        Style="{StaticResource Header}" />
             <StackPanel Grid.Column="1"
                         Margin="10 0 0 0">
-                <CheckBox Content="Показать свободных"
-                          IsChecked="{Binding StateCheckedBusy}"
-                          Command="{Binding SwitchBusyDrivers}" />
                 <CheckBox Content="Показать уволенных"
                           IsChecked="{Binding StateCheckedWork}"
                           Command="{Binding SwitchBusyDrivers}" />

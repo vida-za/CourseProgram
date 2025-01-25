@@ -1,44 +1,68 @@
-﻿using CourseProgram.Services.DataServices;
+﻿using CourseProgram.Models;
+using CourseProgram.Services;
+using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
-    public class DeleteWorkerCommand : CommandBaseAsync
+    public class DeleteWorkerCommand : BaseDeleteCommand
     {
-        private readonly WorkerListingViewModel _listingViewModel;
-        private readonly WorkerDataService _dataService;
+        private readonly WorkerListingViewModel _viewModel;
 
-        public DeleteWorkerCommand(WorkerListingViewModel viewModel, WorkerDataService dataService)
+        public DeleteWorkerCommand(WorkerListingViewModel viewModel, ServicesStore servicesStore)
         {
-            _listingViewModel = viewModel;
-            _dataService = dataService;
+            _viewModel = viewModel;
+            _servicesStore = servicesStore;
 
-            _listingViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_listingViewModel.SelectedItem))
+            if (e.PropertyName == nameof(_viewModel.SelectedItem))
                 OnCanExecuteChanged();
         }
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null && _listingViewModel.SelectedItem.DateEnd == DateOnly.MinValue.ToString();
+            return base.CanExecute(parameter) && _viewModel.SelectedItem.DateEnd == DateOnly.MinValue.ToString();
         }
 
-        public override async Task ExecuteAsync(object? parameter) 
+        protected override bool IsItemSelected()
+        {
+            return _viewModel.SelectedItem != null;
+        }
+
+        protected override async Task ExecuteDeleteAsync(object? parameter) 
         {
             try
             {
-                await _dataService.DeleteItemAsync(_listingViewModel.SelectedItem.GetModel().ID);
+                Worker temp = _viewModel.SelectedItem.GetModel();
+                var newItem = new Worker(
+                    temp.ID,
+                    temp.FIO,
+                    temp.BirthDay,
+                    temp.Passport,
+                    temp.Phone,
+                    temp.DateStart,
+                    DateOnly.FromDateTime(DateTime.Now)
+                    );
 
-                _listingViewModel.UpdateData();
+                bool result = await _servicesStore._workerService.UpdateItemAsync(newItem);
+                if (result)
+                    MessageBox.Show("Сотрудник удален!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show("Не удалось удалить сотрудника", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _viewModel.UpdateDataAsync();
             }
-            catch (Exception ex) { Debug.WriteLine(ex); }
+            catch (Exception ex) 
+            {
+                await LogManager.Instance.WriteLogAsync($"ERROR {ex.Message}");
+            }
         }
     }
 }

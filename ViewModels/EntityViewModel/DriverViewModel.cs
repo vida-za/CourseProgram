@@ -11,6 +11,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public int ID => _model.ID;
         [DisplayName("ФИО")]
         public string FIO => _model.FIO;
+        [DisplayName("Список категорий")]
+        public string StringCategories => _model.StringCategories != "" ? _model.StringCategories : "Нет категорий";
         [DisplayName("Дата рождения")]
         public string BirthDay => _model.BirthDay.ToString("d");
         [DisplayName("Паспортные данные")]
@@ -26,6 +28,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         public DriverViewModel(Driver driver)
         {
+            driver.SetStringCategories();
             _model = driver;
         }
 

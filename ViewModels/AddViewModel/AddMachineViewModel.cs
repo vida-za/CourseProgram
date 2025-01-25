@@ -15,9 +15,9 @@ namespace CourseProgram.ViewModels.AddViewModel
             CancelCommand = new NavigateCommand(machineViewNavigationService);
         }
 
-        public ObservableCollection<string> TypeMachineArray => GetFullEnumDescription(typeof(TypeMachineValues));
-        public ObservableCollection<string> TypeBodyworkArray => GetFullEnumDescription(typeof(TypeBodyworkValues));
-        public ObservableCollection<string> TypeLoadingArray => GetFullEnumDescription(typeof(TypeLoadingValues));
+        public ObservableCollection<string> TypeMachineArray => GetFullEnumDescription(typeof(MachineTypeValues));
+        public ObservableCollection<string> TypeBodyworkArray => GetFullEnumDescription(typeof(MachineTypeBodyworkValues));
+        public ObservableCollection<string> TypeLoadingArray => GetFullEnumDescription(typeof(MachineTypeLoadingValues));
 
         #region don`t must have
         private string _typeBodywork;

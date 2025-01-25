@@ -1,28 +1,29 @@
-﻿using CourseProgram.Services.DataServices;
+﻿using CourseProgram.Models;
+using CourseProgram.Services;
+using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
-    public class DeleteMachineCommand : CommandBaseAsync
+    public class DeleteMachineCommand : BaseDeleteCommand
     {
-        private readonly MachineListingViewModel _listingViewModel;
-        private readonly MachineDataService _dataService;
+        private readonly MachineListingViewModel _viewModel;
 
-        public DeleteMachineCommand(MachineListingViewModel listingViewModel, MachineDataService dataService)
+        public DeleteMachineCommand(MachineListingViewModel listingViewModel, ServicesStore servicesStore)
         {
-            _listingViewModel = listingViewModel;
-            _dataService = dataService;
+            _viewModel = listingViewModel;
+            _servicesStore = servicesStore;
 
-            _listingViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_listingViewModel.SelectedItem))
+            if (e.PropertyName == nameof(_viewModel.SelectedItem))
             {
                 OnCanExecuteChanged();
             }
@@ -30,18 +31,51 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _listingViewModel.SelectedItem is not null && _listingViewModel.SelectedItem.TimeEnd == DateOnly.MinValue.ToString();
+            return base.CanExecute(parameter) && _viewModel.SelectedItem.TimeEnd == DateOnly.MinValue.ToString();
         }
 
-        public override async Task ExecuteAsync(object? parameter)
+        protected override bool IsItemSelected()
+        {
+            return _viewModel.SelectedItem != null;
+        }
+
+        protected override async Task ExecuteDeleteAsync(object? parameter)
         {
             try
             {
-                await _dataService.DeleteItemAsync(_listingViewModel.SelectedItem.GetModel().ID);
+                Machine temp = _viewModel.SelectedItem.GetModel();
+                var newItem = new Machine(
+                    temp.ID,
+                    temp.TypeMachine.ToString(),
+                    temp.TypeBodywork.ToString(),
+                    temp.TypeLoading.ToString(),
+                    temp.LoadCapacity,
+                    temp.Volume,
+                    temp.HydroBoard,
+                    temp.LengthBodywork,
+                    temp.WidthBodywork,
+                    temp.HeightBodywork,
+                    temp.Stamp,
+                    temp.Name,
+                    temp.StateNumber,
+                    temp.Status.ToString(),
+                    temp.TimeStart,
+                    DateTime.Now,
+                    temp.Town
+                    );
 
-                _listingViewModel.UpdateData();
+                bool result = await _servicesStore._machineService.UpdateItemAsync(newItem);
+                if (result)
+                    MessageBox.Show("Машина успешно удалена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show("Не удалось удалить машину", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await _viewModel.UpdateDataAsync();
             }
-            catch (Exception ex) { Debug.Write(ex.Message); }
+            catch (Exception ex) 
+            {
+                await LogManager.Instance.WriteLogAsync($"ERROR {ex.Message}");
+            }
         }
     }
 }

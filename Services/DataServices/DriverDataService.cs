@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Services.DBServices;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,198 +10,150 @@ namespace CourseProgram.Services.DataServices
 {
     public class DriverDataService : BaseService<Driver>
     {
-        public DriverDataService() 
-        {
-            cnn = new DBConnection(Server, Database, User.Username, User.Password, "DriverLoad");
-            temp = new Driver();
-        }
+        public DriverDataService() : base(User.Username, User.Password) { }
 
         public override async Task<bool> AddItemAsync(Driver item)
         {
-            query = $"Insert Into {temp.GetTable()} ({temp.GetSelectors()}) Values(@1, @2, @3, @4, @5, @6, @7);";
-
-            try
+            using (var query = new Query(CommandTypes.InsertQuery, Driver.GetTable()))
             {
-                await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, item.ID, item.FIO, item.BirthDay, item.Passport, item.Phone, item.DateStart, item.DateEnd);
-                if (res.HasAnswer) items.Add(item);
-            }
-            catch (Exception) { }
-            finally 
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(true);
-        }
+                FillInsertParams(query, item);
 
-        public override async Task<bool> DeleteItemAsync(int id)
-        {
-            var current = await GetItemAsync(id);
-            if (current == null) return false;
-            if (current.DateEnd != DateOnly.MinValue && current.DateEnd <= DateOnly.FromDateTime(DateTime.Now)) return false;
-
-            query = $"Update {temp.GetTable()} Set \"ДатаОкончания\" = current_timestamp Where \"КодВодителя\" = @1;";
-
-            try
-            {
-                await cnn.OpenAsync();
-                var res = await cnn.ExecParamAsync(query, id);
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(true);
-        }
-
-        public override async Task<Driver> GetItemAsync(int id)
-        {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where \"КодВодителя\" = @1;";
-
-            try
-            {
-                await cnn.OpenAsync();
-                DataRow row = cnn.GetDataTableParam(query, id);
-
-                foreach (Driver drv in items)
+                try
                 {
-                    if (drv.ID == DBConnection.GetIntOrNull(row["КодВодителя"], 0)) return drv;
+                    int res;
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        res = await con.ExecuteQueryAsync<int>(query);
+                    }
+                    if (res == 0)
+                    {
+                        await LogManager.Instance.WriteLogAsync($"ERROR Insert for {query.GetObjectName()}");
+                        return await Task.FromResult(false);
+                    }
+                    else
+                    {
+                        foreach (Category c in item.GetListCategories())
+                        {
+                            using (var queryExt = new Query(CommandTypes.InsertQuery, "Категории_водителя"))
+                            {
+                                queryExt.AddParameter(Driver.GetSelectorID(), FreeID);
+                                queryExt.AddParameter("КодКатегории", (int)c.EnumCategory);
+
+                                await using (var con = new Connection(connection))
+                                {
+                                    await con.OpenAsync();
+                                    res = await con.ExecuteQueryAsync<int>(queryExt);
+                                }
+                                if (res == 0)
+                                {
+                                    await LogManager.Instance.WriteLogAsync($"ERROR Insert for {queryExt.GetObjectName()}");
+                                    return await Task.FromResult(false);
+                                }
+                            }
+                        }
+                        return await Task.FromResult(true);
+                    }
                 }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return temp;
-        }
-
-        public override async Task<IEnumerable<Driver>> GetFullTableAsync(bool forceRefresh = false)
-        {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()};";
-
-            try
-            {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
+                catch (Exception) { }
+                finally
                 {
-                    items.Add(new Driver(
-                        DBConnection.GetIntOrNull(row["КодВодителя"], 0),
-                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
-                        string.Empty
-                        ));
+                    query?.Dispose();
                 }
+                return await Task.FromResult(true);
             }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
-        }
-
-        public override async Task<IEnumerable<Driver>> GetItemsAsync(bool forceRefresh = false)
-        {
-            query = $"Select {temp.GetSelectors()}, \"GetTownNowByDriver\"(\"КодВодителя\") as \"Город\" From {temp.GetTable()} Where \"ДатаОкончания\" is Null;";
-
-            try
-            {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
-                {
-                    items.Add(new Driver(
-                        DBConnection.GetIntOrNull(row["КодВодителя"], 0),
-                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["Город"], string.Empty)
-                    ));
-                }
-            }
-            catch(Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
-        }
-
-        public async Task<IEnumerable<Driver>> GetFreeDriversAsync(bool forceRefresh = false)
-        {
-            query = "Select * From \"GetFreeDrivers\"();";
-
-            try
-            {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
-                {
-                    items.Add(new Driver(
-                        DBConnection.GetIntOrNull(row["КодВодителя"], 0),
-                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["Город"], string.Empty)
-                        ));
-                }
-            }
-            catch (Exception) { }
-            finally
-            {
-                cnn.Close();
-                query = string.Empty;
-            }
-            return await Task.FromResult(items);
         }
 
         public async Task<IEnumerable<Driver>> GetDisDriversAsync(bool forceRefresh = false)
         {
-            query = $"Select {temp.GetSelectors()} From {temp.GetTable()} Where \"ДатаОкончания\" is not Null;";
-
-            try
+            using (var query = new Query(CommandTypes.SelectQuery, Driver.GetTable()))
             {
-                items.Clear();
-                await cnn.OpenAsync();
-                foreach (DataRow row in cnn.GetDataTable(query))
+                try
                 {
-                    items.Add(new Driver(
-                        DBConnection.GetIntOrNull(row["КодВодителя"], 0),
-                        DBConnection.GetStringOrNull(row["ФИО"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                        DBConnection.GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                        DBConnection.GetStringOrNull(row["Телефон"], string.Empty),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
-                        DBConnection.GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
-                        string.Empty
-                        ));
+                    items.Clear();
+
+                    query.AddFields(Driver.GetFieldNames());
+                    query.WhereClause.IsNotNull("ДатаОкончания");
+
+                    DataTable data;
+
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
+                    }
+
+                    if (data != null)
+                    {
+                        foreach (DataRow row in data.Rows)
+                        {
+                            CreateElement(row);
+                        }
+                    }
+
+                    return await Task.FromResult(items);
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemsAsync)}: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    query?.Dispose();
                 }
             }
-            catch (Exception) { }
-            finally
+        }
+
+        public override async void CreateElement(DataRow row)
+        {
+            using (var query = new Query(CommandTypes.SelectQuery, "Категории_водителя"))
             {
-                cnn.Close();
-                query = string.Empty;
+                try
+                {
+                    Driver newItem = new Driver(
+                        GetIntOrNull(row["КодВодителя"], 0),
+                        GetStringOrNull(row["ФИО"], string.Empty),
+                        GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
+                        GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
+                        GetStringOrNull(row["Телефон"], string.Empty),
+                        GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
+                        GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
+                        string.Empty);
+
+                    query.AddFields(Driver.GetSelectorID(), "КодКатегории");
+                    query.WhereClause.Equals(Driver.GetSelectorID(), GetIntOrNull(row["КодВодителя"], 0).ToString());
+
+                    DataTable data;
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
+                    }
+
+                    if (data != null)
+                    {
+
+                        var listCat = new List<Category>();
+                        foreach (DataRow temp in data.Rows)
+                        {
+                            listCat.Add(new Category((Categories)GetIntOrNull(temp["КодКатегории"], 0), true));
+                        }
+
+                        newItem.SetCategories(listCat.ToArray());
+                    }
+
+                    items.Add(newItem);
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Ошибка при созданиии объекта - {ex.Message}");
+                }
+                finally
+                {
+                    query?.Dispose();
+                }
             }
-            return await Task.FromResult(items);
         }
     }
 }

@@ -7,20 +7,16 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class OrderViewModel : BaseViewModel
     {
         private readonly ServicesStore _servicesStore;
+
         private readonly Order _model;
+        private Bud _budModel;
 
         public Order GetModel() => _model;
 
         [DisplayName("Номер заказа")]
         public int ID => _model.ID;
-        [DisplayName("Номер сотрудника")]
-        public int WorkerID => _model.WorkerID;
-        [DisplayName("ФИО Сотрудника")]
-        public string WorkerName { get; set; }
-        [DisplayName("Номер заказчика")]
-        public int ClientID => _model.ClientID;
-        [DisplayName("Название заказчика")]
-        public string ClientName { get; set; }
+        [DisplayName("Номер заявки")]
+        public int BudID => _model.BudID;
         [DisplayName("Время заказа")]
         public string TimeOrder => _model.TimeOrder.ToString();
         [DisplayName("Время загрузки")]
@@ -44,8 +40,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         private async void UpdateData()
         {
-            WorkerName = (await _servicesStore._workerService.GetItemAsync(WorkerID)).FIO;
-            ClientName = (await _servicesStore._clientService.GetItemAsync(ClientID)).Name;
+            _budModel = await _servicesStore._budService.GetItemAsync(BudID);
         }
     }
 }
