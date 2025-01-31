@@ -12,59 +12,46 @@ namespace CourseProgram.Services.DataServices
     {
         public DriverDataService() : base(User.Username, User.Password) { }
 
-        public override async Task<bool> AddItemAsync(Driver item)
+        public async Task<IEnumerable<Driver>> GetActDriversAsync()
         {
-            using (var query = new Query(CommandTypes.InsertQuery, Driver.GetTable()))
+            using (var query = new Query(CommandTypes.SelectQuery, Driver.GetTable()))
             {
-                FillInsertParams(query, item);
-
                 try
                 {
-                    int res;
+                    items.Clear();
+
+                    query.AddFields(Driver.GetFieldNames());
+                    query.WhereClause.IsNull("ДатаОкончания");
+
+                    DataTable data;
+
                     await using (var con = new Connection(connection))
                     {
                         await con.OpenAsync();
-                        res = await con.ExecuteQueryAsync<int>(query);
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
                     }
-                    if (res == 0)
-                    {
-                        await LogManager.Instance.WriteLogAsync($"ERROR Insert for {query.GetObjectName()}");
-                        return await Task.FromResult(false);
-                    }
-                    else
-                    {
-                        foreach (Category c in item.GetListCategories())
-                        {
-                            using (var queryExt = new Query(CommandTypes.InsertQuery, "Категории_водителя"))
-                            {
-                                queryExt.AddParameter(Driver.GetSelectorID(), FreeID);
-                                queryExt.AddParameter("КодКатегории", (int)c.EnumCategory);
 
-                                await using (var con = new Connection(connection))
-                                {
-                                    await con.OpenAsync();
-                                    res = await con.ExecuteQueryAsync<int>(queryExt);
-                                }
-                                if (res == 0)
-                                {
-                                    await LogManager.Instance.WriteLogAsync($"ERROR Insert for {queryExt.GetObjectName()}");
-                                    return await Task.FromResult(false);
-                                }
-                            }
-                        }
-                        return await Task.FromResult(true);
+                    if (data != null)
+                    {
+                        foreach (DataRow row in data.Rows)
+                            CreateElement(row);
                     }
+
+                    return await Task.FromResult(items);
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemsAsync)}: {ex.Message}");
+                    throw;
+                }
                 finally
                 {
                     query?.Dispose();
                 }
-                return await Task.FromResult(true);
             }
         }
 
-        public async Task<IEnumerable<Driver>> GetDisDriversAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<Driver>> GetDisDriversAsync()
         {
             using (var query = new Query(CommandTypes.SelectQuery, Driver.GetTable()))
             {
@@ -86,9 +73,7 @@ namespace CourseProgram.Services.DataServices
                     if (data != null)
                     {
                         foreach (DataRow row in data.Rows)
-                        {
                             CreateElement(row);
-                        }
                     }
 
                     return await Task.FromResult(items);
@@ -105,55 +90,17 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override async void CreateElement(DataRow row)
+        public override void CreateElement(DataRow row)
         {
-            using (var query = new Query(CommandTypes.SelectQuery, "Категории_водителя"))
-            {
-                try
-                {
-                    Driver newItem = new Driver(
-                        GetIntOrNull(row["КодВодителя"], 0),
-                        GetStringOrNull(row["ФИО"], string.Empty),
-                        GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                        GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                        GetStringOrNull(row["Телефон"], string.Empty),
-                        GetDateOnlyOrNull(row["ДатаНачала"], DateOnly.MinValue),
-                        GetDateOnlyOrNull(row["ДатаОкончания"], DateOnly.MinValue),
-                        string.Empty);
-
-                    query.AddFields(Driver.GetSelectorID(), "КодКатегории");
-                    query.WhereClause.Equals(Driver.GetSelectorID(), GetIntOrNull(row["КодВодителя"], 0).ToString());
-
-                    DataTable data;
-                    await using (var con = new Connection(connection))
-                    {
-                        await con.OpenAsync();
-                        data = await con.ExecuteQueryAsync<DataTable>(query);
-                    }
-
-                    if (data != null)
-                    {
-
-                        var listCat = new List<Category>();
-                        foreach (DataRow temp in data.Rows)
-                        {
-                            listCat.Add(new Category((Categories)GetIntOrNull(temp["КодКатегории"], 0), true));
-                        }
-
-                        newItem.SetCategories(listCat.ToArray());
-                    }
-
-                    items.Add(newItem);
-                }
-                catch (Exception ex)
-                {
-                    await LogManager.Instance.WriteLogAsync($"Ошибка при созданиии объекта - {ex.Message}");
-                }
-                finally
-                {
-                    query?.Dispose();
-                }
-            }
+            items.Add(new Driver(
+                GetInt(row["КодВодителя"], 0),
+                GetString(row["ФИО"], string.Empty),
+                GetDateOnlyOrNull(row["ДатаРождения"]),
+                GetString(row["ПаспортныеДанные"], string.Empty),
+                GetStringOrNull(row["Телефон"]),
+                GetDateOnly(row["ДатаНачала"], DateOnly.MinValue),
+                GetDateOnlyOrNull(row["ДатаОкончания"]),
+                null));
         }
     }
 }

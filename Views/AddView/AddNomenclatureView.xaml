@@ -140,10 +140,12 @@
                          Tag="Производитель"
                          Margin="5"
                          Text="{Binding Manufacturer}" />
-                <DatePicker Grid.Row="2"
-                            Grid.Column="2"
-                            Margin="5"
-                            SelectedDate="{Binding ExpiryDate, Converter={StaticResource DateConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="2"
+                         Margin="5"
+                         Style="{StaticResource PlaceholderTextBoxStyle}"
+                         Tag="Срок годности, дни"
+                         Text="{Binding ExpiryDate}" />
 
             </Grid>
 

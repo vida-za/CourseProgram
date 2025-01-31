@@ -10,9 +10,9 @@ namespace CourseProgram.Models
         [DisplayName("ДатаНачала")]
         public DateOnly DateStart { get; }
         [DisplayName("ДатаОкончания")]
-        public DateOnly DateEnd { get; }
+        public DateOnly? DateEnd { get; }
         [DisplayName("СуммарныйДоход")]
-        public float SumIncome { get; }
+        public float? SumIncome { get; }
 
         public Haul()
         {
@@ -22,7 +22,7 @@ namespace CourseProgram.Models
             SumIncome = 0;
         }
 
-        public Haul(int id, DateOnly dateStart, DateOnly dateEnd, float sumIncome)
+        public Haul(int id, DateOnly dateStart, DateOnly? dateEnd, float? sumIncome)
         {
             ID = id;
             DateStart = dateStart;

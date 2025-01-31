@@ -37,7 +37,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
             foreach (Route route in temp)
             {
-                RouteViewModel routeViewModel = new RouteViewModel(route, _servicesStore);
+                var routeViewModel = new RouteViewModel(route, _servicesStore);
                 _routes.Add(routeViewModel);
             }
 

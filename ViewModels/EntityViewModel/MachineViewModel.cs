@@ -7,11 +7,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class MachineViewModel : BaseViewModel
     {
         private readonly Machine _model;
+        public readonly int ID;
 
         public Machine GetModel() => _model;
 
-        [DisplayName("Номер машины")]
-        public int ID => _model.ID;
         [DisplayName("Тип машины")]
         public string TypeMachine => Constants.GetEnumDescription(_model.TypeMachine);
         [DisplayName("Тип кузова")]
@@ -19,17 +18,17 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Тип загрузки")]
         public string TypeLoading => Constants.GetEnumDescription(_model.TypeLoading);
         [DisplayName("Грузоподъёмность")]
-        public float LoadCapacity => _model.LoadCapacity;
+        public string LoadCapacity => _model.LoadCapacity.ToString();
         [DisplayName("Объём")]
-        public float Volume => _model.Volume;
+        public string Volume => _model.Volume != null ? ((float)_model.Volume).ToString() : "-";
         [DisplayName("Гидроборт")]
-        public bool HydroBoard => _model.HydroBoard;
+        public string HydroBoard => _model.HydroBoard ? "Да" : "Нет";
         [DisplayName("Длина кузова")]
-        public float LengthBodywork => _model.LengthBodywork;
+        public string LengthBodywork => _model.LengthBodywork != null ? ((float)_model.LengthBodywork).ToString() : "-";
         [DisplayName("Ширина кузова")]
-        public float WidthBodywork => _model.WidthBodywork;
+        public string WidthBodywork => _model.WidthBodywork != null ? ((float)_model.WidthBodywork).ToString() : "-";
         [DisplayName("Высота кузова")]
-        public float HeightBodywork => _model.HeightBodywork;
+        public string HeightBodywork => _model.HeightBodywork != null ? ((float)_model.HeightBodywork).ToString() : "-";
         [DisplayName("Марка")]
         public string Stamp => _model.Stamp;
         [DisplayName("Название")]
@@ -39,15 +38,17 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Статус")]
         public string Status => Constants.GetEnumDescription(_model.Status);
         [DisplayName("Время поступления")]
-        public string TimeStart => _model.TimeStart.ToString("d");
+        public string TimeStart => _model.TimeStart.ToString("g");
         [DisplayName("Время списания")]
-        public string TimeEnd => _model.TimeEnd == DateTime.MinValue ? "-" : _model.TimeEnd.ToString("d");
+        public string TimeEnd => _model.TimeEnd != null ? ((DateTime)_model.TimeEnd).ToString("g") : "-";
         [DisplayName("Текущая дислокация")]
-        public string Town => _model.Town;
+        public string Town => _model.Town ?? "Неизвестно";
 
         public MachineViewModel(Machine model)
         {
             _model = model;
+
+            ID = _model.ID;
         }
     }
 }

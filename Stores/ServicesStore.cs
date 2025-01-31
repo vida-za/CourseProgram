@@ -10,6 +10,7 @@ namespace CourseProgram.Stores
         public readonly CargoDataService _cargoService;
         public readonly ClientDataService _clientService;
         public readonly DriverDataService _driverService;
+        public readonly DriverCategoriesDataService _driverCategoriesService;
         public readonly HaulDataService _haulService;
         public readonly MachineDataService _machineService;
         public readonly NomenclatureDataService _nomenclatureService;
@@ -27,6 +28,7 @@ namespace CourseProgram.Stores
             _cargoService = new CargoDataService();
             _clientService = new ClientDataService();
             _driverService = new DriverDataService();
+            _driverCategoriesService = new DriverCategoriesDataService();
             _haulService = new HaulDataService();
             _machineService = new MachineDataService();
             _nomenclatureService = new NomenclatureDataService();

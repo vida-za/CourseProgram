@@ -58,6 +58,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async Task UpdateDataAsync()
         {
+            var currentSelected = SelectedItem;
+
             ObservableCollection<NomenclatureViewModel> _newAllNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
             IEnumerable<Nomenclature> temp = await _servicesStore._nomenclatureService.GetItemsAsync();
@@ -71,6 +73,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             foreach (NomenclatureViewModel model in _newAllNomenclatures)
                 _allNomenclatures.Add(model);
+
+            SelectedItem = Items.FirstOrDefault(i => i.ID == currentSelected?.ID);
         }
 
         protected override void Find()

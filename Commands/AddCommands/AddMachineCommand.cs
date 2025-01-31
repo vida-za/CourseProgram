@@ -61,24 +61,25 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.MachineTypeBodyworkValues.Null) : _viewModel.TypeBodywork,
                 _viewModel.TypeLoading,
                 float.Parse(_viewModel.LoadCapacity),
-                _viewModel.Volume == null ? float.MinValue : float.Parse(_viewModel.Volume),
+                _viewModel.Volume == null ? null : float.Parse(_viewModel.Volume),
                 _viewModel.HydroBoard,
-                _viewModel.LengthBodywork == null ? float.MinValue : float.Parse(_viewModel.LengthBodywork),
-                _viewModel.WidthBodywork == null ? float.MinValue : float.Parse(_viewModel.WidthBodywork),
-                _viewModel.HeightBodywork == null ? float.MinValue : float.Parse(_viewModel.HeightBodywork),
+                _viewModel.LengthBodywork == null ? null : float.Parse(_viewModel.LengthBodywork),
+                _viewModel.WidthBodywork == null ? null : float.Parse(_viewModel.WidthBodywork),
+                _viewModel.HeightBodywork == null ? null : float.Parse(_viewModel.HeightBodywork),
                 _viewModel.Stamp,
                 _viewModel.Name,
-                _viewModel.StateNumber == null ? string.Empty : _viewModel.StateNumber,
+                _viewModel.StateNumber,
                 Constants.GetEnumDescription(Constants.MachineStatusValues.Waiting),
                 DateTime.Now,
-                DateTime.MinValue,
-                string.Empty
+                null,
+                null
                 );
 
             try
             {
-                bool result = await _servicesStore._machineService.AddItemAsync(machine);
-                if (result)
+                await _servicesStore._machineService.FindMaxEmptyID();
+                int result = await _servicesStore._machineService.AddItemAsync(machine);
+                if (result > 0)
                     MessageBox.Show("Машина добавлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     MessageBox.Show("Не удалось добавить машину", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);

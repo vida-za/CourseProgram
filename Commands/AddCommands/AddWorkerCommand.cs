@@ -43,15 +43,16 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.Name,
                 _viewModel.BirthDay,
                 _viewModel.Passport,
-                _viewModel.Phone == null ? string.Empty : _viewModel.Phone,
+                _viewModel.Phone,
                 DateOnly.FromDateTime(DateTime.Now),
-                DateOnly.MinValue
+                null
                 );
 
             try
             {
-                bool result = await _servicesStore._workerService.AddItemAsync(worker);
-                if (result)
+                await _servicesStore._workerService.FindMaxEmptyID();
+                int result = await _servicesStore._workerService.AddItemAsync(worker);
+                if (result > 0)
                     MessageBox.Show("Сотрудник добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Не удалось добавить сотрудника", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

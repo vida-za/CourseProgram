@@ -7,6 +7,7 @@ namespace CourseProgram.Services
     public class LogManager
     {
         private readonly string _logFilePath;
+        private string lastMessage = string.Empty;
 
         public static LogManager Instance { get; private set; }
 
@@ -29,7 +30,9 @@ namespace CourseProgram.Services
         public async Task WriteLogAsync(string message)
         {
             string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
-            await File.AppendAllTextAsync(_logFilePath, logEntry + Environment.NewLine);
+            if (lastMessage != message)
+                await File.AppendAllTextAsync(_logFilePath, logEntry + Environment.NewLine);
+            lastMessage = message;
         }
     }
 }

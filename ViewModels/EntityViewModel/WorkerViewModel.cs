@@ -6,11 +6,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class WorkerViewModel : BaseViewModel
     {
         private readonly Worker _model;
+        public readonly int ID;
 
         public Worker GetModel() => _model;
 
-        [DisplayName("Номер сотрудника")]
-        public int ID => _model.ID;
         [DisplayName("ФИО")]
         public string FIO => _model.FIO;
         [DisplayName("Дата рождения")]
@@ -27,6 +26,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public WorkerViewModel(Worker model)
         {
             _model = model;
+
+            ID = model.ID;
         }
     }
 }

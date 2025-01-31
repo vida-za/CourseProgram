@@ -12,11 +12,11 @@ namespace CourseProgram.Models
         [DisplayName("Улица")]
         public string Street { get; }
         [DisplayName("Дом")]
-        public string House { get; }
+        public string? House { get; }
         [DisplayName("Строение")]
-        public string Structure { get; }
+        public string? Structure { get; }
         [DisplayName("Корпус")]
-        public string Frame { get; }
+        public string? Frame { get; }
         [DisplayName("Активен")]
         public bool Active { get; }
 
@@ -35,9 +35,9 @@ namespace CourseProgram.Models
             int id,
             string city,
             string street,
-            string house,
-            string structure,
-            string frame,
+            string? house,
+            string? structure,
+            string? frame,
             bool active)
         {
             ID = id;

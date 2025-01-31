@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="CourseProgram.Views.DetailView.BudDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CourseProgram.Views.DetailView"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:BudDetailViewModel}">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Заявка"
+                       Margin="0 5 0 0"
+                       Style="{StaticResource Header}"
+                       HorizontalAlignment="Center" />
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Название заказчика"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{Binding ClientName}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="ФИО Сотрудника"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding WorkerName}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="Время поступления"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding TimeBud}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="0"
+                           Text="Статус"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{Binding Status}"
+                           Margin="5 0 0 0" />
+
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Text="Описание"
+                           Margin="0 0 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           Text="{Binding Description}"
+                           Margin="5 0 0 0" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Margin="5"
+                        Content="Назад"
+                        Command="{Binding Back}" />
+
+                <Button Grid.Column="1"
+                        Margin="5"
+                        Content="Принять"
+                        Command="{Binding AcceptBud}" />
+
+                <Button Grid.Column="2"
+                        Margin="5"
+                        Content="Отклонить"
+                        Command="{Binding CancelBud}" />
+            </Grid>
+        </Grid>
+
+        <DataGrid Grid.Row="1"
+                  MaxHeight="150"
+                  ItemsSource="{Binding Cargos}"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  AutoGenerateColumns="True">
+            <i:Interaction.Behaviors>
+                <beh:ColumnHeaderBehaviour />
+            </i:Interaction.Behaviors>
+        </DataGrid>
+    </Grid>
+</UserControl>

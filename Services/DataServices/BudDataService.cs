@@ -11,12 +11,12 @@ namespace CourseProgram.Services.DataServices
 
         public override void CreateElement(DataRow row)
         {
-            items.Add(new Bud(GetIntOrNull(row["КодЗаявки"], 0),
-                GetIntOrNull(row["КодЗаказчика"], 0),
-                GetIntOrNull(row["КодСотрудника"], 0),
-                GetDateTimeOrNull(row["ДатаВремяЗаявки"], DateTime.MinValue),
-                GetStringOrNull(row["Статус"], string.Empty),
-                GetStringOrNull(row["Описание"], string.Empty)));
+            items.Add(new Bud(GetInt(row["КодЗаявки"], 0),
+                GetInt(row["КодЗаказчика"], 0),
+                GetInt(row["КодСотрудника"], 0),
+                GetDateTime(row["ДатаВремяЗаявки"], DateTime.MinValue),
+                GetString(row["Статус"], string.Empty),
+                GetStringOrNull(row["Описание"])));
         }
     }
 }

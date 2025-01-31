@@ -16,6 +16,17 @@ namespace CourseProgram.Stores
             }
         }
 
+        private BudViewModel _currentBud;
+        public BudViewModel CurrentBud
+        {
+            get => _currentBud;
+            set
+            {
+                _currentBud = value;
+                OnCurrentModelChanged();
+            }
+        }
+
         private CargoViewModel _currentCargo;
         public CargoViewModel CurrentCargo
         {

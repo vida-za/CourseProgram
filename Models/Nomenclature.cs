@@ -25,11 +25,11 @@ namespace CourseProgram.Models
         [DisplayName("ЕдиницаИзмерения")]
         public NomenclatureMeasureValues Unit { get; }
         [DisplayName("Упаковка")]
-        public NomenclaturePackingValues? Pack { get; }
+        public NomenclaturePackingValues Pack { get; }
         [DisplayName("ТребованияКТемпературе")]
         public string? NeedTemperature { get; }
         [DisplayName("Опасность")]
-        public NomenclatureDangerousValues? DangerousClass { get; }
+        public NomenclatureDangerousValues DangerousClass { get; }
         [DisplayName("Производитель")]
         public string? Manufacturer { get; }
         [DisplayName("СрокГодности")]
@@ -45,10 +45,10 @@ namespace CourseProgram.Models
             Width = 0;
             Height = 0;
             Weight = 0;
-            Unit = NomenclatureMeasureValues.Null;
-            Pack = NomenclaturePackingValues.Null;
+            Unit = NomenclatureMeasureValues.sht;
+            Pack = NomenclaturePackingValues.None;
             NeedTemperature = string.Empty;
-            DangerousClass = NomenclatureDangerousValues.Null;
+            DangerousClass = NomenclatureDangerousValues.None;
             Manufacturer = string.Empty;
             ExpiryDate = 0;
         }
@@ -58,16 +58,16 @@ namespace CourseProgram.Models
             string name,
             string type,
             string categoryCargo,
-            float length,
-            float width,
-            float height,
-            float weight,
+            float? length,
+            float? width,
+            float? height,
+            float? weight,
             string unit,
             string pack,
-            string needTemperature,
+            string? needTemperature,
             string dangerousClass,
-            string manufacturer,
-            int expiryDate)
+            string? manufacturer,
+            int? expiryDate)
         {
             ID = iD;
             Name = name;
@@ -87,7 +87,7 @@ namespace CourseProgram.Models
                 "Химия" => NomenclatureTypeValues.Chemistry,
                 "Мебель" => NomenclatureTypeValues.Furniture,
                 "Другое" => NomenclatureTypeValues.Other,
-                _ => NomenclatureTypeValues.Null
+                _ => throw new NotImplementedException()
             };
             CategoryCargo = categoryCargo switch
             {
@@ -96,14 +96,14 @@ namespace CourseProgram.Models
                 "Стандартные" => NomenclatureCategoriesValues.Standard,
                 "Тяжелые" => NomenclatureCategoriesValues.Heavy,
                 "Габаритные" => NomenclatureCategoriesValues.Oversize,
-                _ => NomenclatureCategoriesValues.Null
+                _ => throw new NotImplementedException()
             };
             Unit = unit switch
             {
                 "шт" => NomenclatureMeasureValues.sht,
                 "кг" => NomenclatureMeasureValues.kg,
                 "м" => NomenclatureMeasureValues.m,
-                _ => NomenclatureMeasureValues.Null
+                _ => throw new NotImplementedException()
             };
             DangerousClass = dangerousClass switch
             {
@@ -125,6 +125,37 @@ namespace CourseProgram.Models
             };
         }
 
+        public Nomenclature(
+            int iD,
+            string name,
+            NomenclatureTypeValues type,
+            NomenclatureCategoriesValues categoryCargo,
+            float? length,
+            float? width,
+            float? height,
+            float? weight,
+            NomenclatureMeasureValues unit,
+            NomenclaturePackingValues pack,
+            string? needTemperature,
+            NomenclatureDangerousValues dangerousClass,
+            string? manufacturer,
+            int? expiryDate)
+        {
+            ID = iD;
+            Name = name;
+            Type = type;
+            CategoryCargo = categoryCargo;
+            Length = length;
+            Width = width;
+            Height = height;
+            Weight = weight;
+            Unit = unit;
+            Pack = pack;
+            NeedTemperature = needTemperature;
+            DangerousClass = dangerousClass;
+            Manufacturer = manufacturer;
+            ExpiryDate = expiryDate;
+        }
 
         public static string GetTable() => "Номенклатура";
         public static string GetSelectorID() => "КодНоменклатуры";
@@ -132,7 +163,7 @@ namespace CourseProgram.Models
         {
             return new[]
             {
-                "НомерНоменклатуры",
+                "КодНоменклатуры",
                 "Наименование",
                 "Тип",
                 "Категория",
@@ -140,10 +171,10 @@ namespace CourseProgram.Models
                 "Ширина",
                 "Высота",
                 "Вес",
-                "ЕдИзм",
+                "ЕдиницаИзмерения",
                 "Упаковка",
                 "ТребованияКТемпературе",
-                "КлассОпасности",
+                "Опасность",
                 "Производитель",
                 "СрокГодности"
             };

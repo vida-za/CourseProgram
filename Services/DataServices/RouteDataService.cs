@@ -14,15 +14,15 @@ namespace CourseProgram.Services.DataServices
 
         public override void CreateElement(DataRow row)
         {
-            items.Add(new Route(GetIntOrNull(row["КодМаршрута"], 0),
-                GetIntOrNull(row["КодМашины"], 0),
-                GetIntOrNull(row["КодВодителя"], 0),
-                GetStringOrNull(row["Тип"], string.Empty),
-                GetFloatOrNull(row["Расстояние"], 0),
-                GetStringOrNull(row["Статус"], string.Empty),
-                GetDateTimeOrNull(row["ВремяВыполнения"], DateTime.MinValue),
-                GetIntOrNull(row["КодАдресаНачала"], 0),
-                GetIntOrNull(row["КодАдресаОкончания"], 0)
+            items.Add(new Route(GetInt(row["КодМаршрута"], 0),
+                GetIntOrNull(row["КодМашины"]),
+                GetIntOrNull(row["КодВодителя"]),
+                GetString(row["Тип"], string.Empty),
+                GetFloatOrNull(row["Расстояние"]),
+                GetString(row["Статус"], string.Empty),
+                GetDateTimeOrNull(row["ВремяВыполнения"]),
+                GetIntOrNull(row["КодАдресаНачала"]),
+                GetIntOrNull(row["КодАдресаОкончания"])
                 ));
         }
 
@@ -34,9 +34,9 @@ namespace CourseProgram.Services.DataServices
                 {
                     items.Clear();
 
-                    query.AddFields(Worker.GetFieldNames());
+                    query.AddFields(Route.GetFieldNames());
                     query.WhereClause.Equals("КодВодителя", id.ToString());
-                    query.WhereClause.NotEquals("Статус", "Отменен");
+                    query.WhereClause.NotEquals("Статус", "\'Отменен\'");
 
                     DataTable data;
 
@@ -75,9 +75,9 @@ namespace CourseProgram.Services.DataServices
                 {
                     items.Clear();
 
-                    query.AddFields(Worker.GetFieldNames());
+                    query.AddFields(Route.GetFieldNames());
                     query.WhereClause.Equals("КодМашины", id.ToString());
-                    query.WhereClause.NotEquals("Статус", "Отменен");
+                    query.WhereClause.NotEquals("Статус", "\'Отменен\'");
 
                     DataTable data;
 

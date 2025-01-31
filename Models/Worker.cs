@@ -10,15 +10,15 @@ namespace CourseProgram.Models
         [DisplayName("ФИО")]
         public string FIO { get; }
         [DisplayName("ДатаРождения")]
-        public DateOnly BirthDay { get; }
+        public DateOnly? BirthDay { get; }
         [DisplayName("ПаспортныеДанные")]
         public string Passport { get; }
         [DisplayName("Телефон")]
-        public string Phone { get; }
+        public string? Phone { get; }
         [DisplayName("ДатаНачалаРаботы")]
         public DateOnly DateStart { get; }
         [DisplayName("ДатаОкончанияРаботы")]
-        public DateOnly DateEnd { get; }
+        public DateOnly? DateEnd { get; }
 
         public Worker()
         {
@@ -31,7 +31,7 @@ namespace CourseProgram.Models
             DateEnd = DateOnly.MinValue;
         }
 
-        public Worker(int id, string fio, DateOnly birthDay, string passport, string phone, DateOnly dateStart, DateOnly dateEnd)
+        public Worker(int id, string fio, DateOnly? birthDay, string passport, string? phone, DateOnly dateStart, DateOnly? dateEnd)
         {
             ID = id;
             FIO = fio;

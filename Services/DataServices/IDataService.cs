@@ -9,7 +9,7 @@ namespace CourseProgram.Services.DataServices
     public interface IDataService<T> where T : IModel
     {
         Task FindMaxEmptyID();
-        Task<bool> AddItemAsync(T item);
+        Task<int> AddItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);
         Task<bool> DeleteItemAsync(int id);
         Task<T> GetItemAsync(int id);

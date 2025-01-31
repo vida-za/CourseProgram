@@ -6,9 +6,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class AddressViewModel : BaseViewModel
     {
         private readonly Address _model;
+        public readonly int ID;
 
-        [DisplayName("Номер адреса")]
-        public int ID => _model.ID;
         [DisplayName("Город")]
         public string City => _model.City;
         [DisplayName("Улица")]
@@ -21,6 +20,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public AddressViewModel(Address address)
         {
             _model = address;
+
+            ID = _model.ID;
         }
 
         public Address GetModel() => _model;

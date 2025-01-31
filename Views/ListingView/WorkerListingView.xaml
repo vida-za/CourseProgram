@@ -6,9 +6,12 @@
              xmlns:local="clr-namespace:CourseProgram.Views.ListingView"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             xmlns:controls="clr-namespace:CourseProgram.Components"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.ListingViewModel"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:WorkerListingViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -58,24 +61,10 @@
             </i:Interaction.Behaviors>
         </DataGrid>
 
-        <Grid Grid.Row="2"
-              Margin="10 10 0 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox Grid.Column="0"
-                     Margin="10 0 0 0"
-                     MinWidth="200"
-                     IsEnabled="{Binding StateFilter}"
-                     Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}" />
-
-            <CheckBox Grid.Column="1"
-                      Margin="10 0 0 0"
-                      VerticalAlignment="Center"
-                      Content=""
-                      IsChecked="{Binding StateFilter}" />
-        </Grid>
+        <controls:SearchControl Grid.Row="2"
+                                Margin="10 10 0 0"
+                                SearchText="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                IsSearchEnabled="{Binding StateFilter}"
+                                CheckBoxText="Поиск (по ФИО)" />
     </Grid>
 </UserControl>

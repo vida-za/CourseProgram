@@ -105,6 +105,7 @@ namespace CourseProgram.Services.DBServices
                 query.CollectQuery();
 
                 using NpgsqlCommand command = new NpgsqlCommand(query.ToString(), cnn);
+                await LogManager.Instance.WriteLogAsync($"Выполняется запрос {command.CommandText}");
 
                 switch (query.GetType())
                 {
@@ -113,7 +114,6 @@ namespace CourseProgram.Services.DBServices
                     case CommandTypes.TableFunction:
                         {
                             command.CommandType = CommandType.Text;
-                            await LogManager.Instance.WriteLogAsync($"Выполняется запрос {command.CommandText}");
                             using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
                             {
                                 if (typeof(T) == typeof(DataTable))

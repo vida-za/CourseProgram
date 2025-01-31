@@ -11,13 +11,13 @@ namespace CourseProgram.Services.DataServices
 
         public override void CreateElement(DataRow row)
         {
-            items.Add(new Worker(GetIntOrNull(row["КодСотрудника"], 0),
-                GetStringOrNull(row["ФИО"], string.Empty),
-                GetDateOnlyOrNull(row["ДатаРождения"], DateOnly.MinValue),
-                GetStringOrNull(row["ПаспортныеДанные"], string.Empty),
-                GetStringOrNull(row["Телефон"], string.Empty),
-                GetDateOnlyOrNull(row["ДатаНачалаРаботы"], DateOnly.MinValue),
-                GetDateOnlyOrNull(row["ДатаОкончанияРаботы"], DateOnly.MinValue)
+            items.Add(new Worker(GetInt(row["КодСотрудника"], 0),
+                GetString(row["ФИО"], string.Empty),
+                GetDateOnlyOrNull(row["ДатаРождения"]),
+                GetString(row["ПаспортныеДанные"], string.Empty),
+                GetStringOrNull(row["Телефон"]),
+                GetDateOnly(row["ДатаНачалаРаботы"], DateOnly.MinValue),
+                GetDateOnlyOrNull(row["ДатаОкончанияРаботы"])
                 ));
         }
     }

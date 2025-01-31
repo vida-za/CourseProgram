@@ -17,10 +17,10 @@ namespace CourseProgram.Services.DataServices
             {
                 DataTable data;
 
-                using (var query = new Query(CommandTypes.SelectQuery, ""))
+                using (var query = new Query(CommandTypes.SelectQuery, "Заявка"))
                 {
                     query.AddFields("Count(1)");
-                    query.AddParameter(Client.GetSelectorID(), id.ToString());
+                    query.WhereClause.Equals(Client.GetSelectorID(), id.ToString());
 
                     await using (var con = new Connection(connection))
                     {
@@ -47,19 +47,19 @@ namespace CourseProgram.Services.DataServices
         public override void CreateElement(DataRow row)
         {
             items.Add(new Client(
-                        GetIntOrNull(row["КодЗаказчика"], 0),
-                        GetStringOrNull(row["Название"], string.Empty),
-                        GetStringOrNull(row["ТипЗаказчика"], string.Empty),
-                        GetStringOrNull(row["ИНН"], string.Empty),
-                        GetStringOrNull(row["КПП"], string.Empty),
-                        GetStringOrNull(row["ОГРН"], string.Empty),
-                        GetStringOrNull(row["Телефон"], string.Empty),
-                        GetStringOrNull(row["РасчётныйСчёт"], string.Empty),
-                        GetStringOrNull(row["БИК"], string.Empty),
-                        GetStringOrNull(row["КорреспондентскийСчёт"], string.Empty),
-                        GetStringOrNull(row["Банк"], string.Empty),
-                        GetStringOrNull(row["КонтактЗагрузки"], string.Empty),
-                        GetStringOrNull(row["КонтактВыгрузки"], string.Empty)
+                        GetInt(row["КодЗаказчика"], 0),
+                        GetString(row["Название"], string.Empty),
+                        GetString(row["ТипЗаказчика"], string.Empty),
+                        GetString(row["ИНН"], string.Empty),
+                        GetString(row["КПП"], string.Empty),
+                        GetString(row["ОГРН"], string.Empty),
+                        GetString(row["Телефон"], string.Empty),
+                        GetString(row["РасчётныйСчёт"], string.Empty),
+                        GetStringOrNull(row["БИК"]),
+                        GetStringOrNull(row["КорреспондентскийСчёт"]),
+                        GetStringOrNull(row["Банк"]),
+                        GetString(row["КонтактЗагрузки"], string.Empty),
+                        GetString(row["КонтактВыгрузки"], string.Empty)
                         ));
         }
     }

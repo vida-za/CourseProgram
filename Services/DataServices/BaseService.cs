@@ -87,6 +87,8 @@ namespace CourseProgram.Services.DataServices
 
                 try
                 {
+                    await GetItemsAsync();
+
                     var oldItem = items.FirstOrDefault(d => d.Equals(item));
                     if (oldItem == null)
                         return await Task.FromResult(false);
@@ -130,7 +132,7 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public virtual async Task<bool> AddItemAsync(T item)
+        public virtual async Task<int> AddItemAsync(T item)
         {
             using (var queryIns = new Query(CommandTypes.InsertQuery, T.GetTable()))
             {
@@ -142,7 +144,10 @@ namespace CourseProgram.Services.DataServices
                     {
                         await con.OpenAsync();
                         int res = await con.ExecuteQueryAsync<int>(queryIns);
-                        return res > 0;
+                        if (res > 0)
+                            return FreeID;
+                        else 
+                            return 0;
                     }
                 }
                 catch (Exception ex)
@@ -182,7 +187,7 @@ namespace CourseProgram.Services.DataServices
 
                         foreach (T item in items)
                         {
-                            if (item.ID == GetIntOrNull(dataRow[T.GetSelectorID()], 0))
+                            if (item.ID == GetInt(dataRow[T.GetSelectorID()], 0))
                                 return item;
                         }
                         throw new Exception($"Not found item in collection with id: {id}");
@@ -244,22 +249,39 @@ namespace CourseProgram.Services.DataServices
 
         public abstract void CreateElement(DataRow row);
 
-        public virtual async void FillInsertParams(Query query, T item)
+        public async void FillInsertParams(Query query, T item)
         {
-            if (T.GetSelectorID() != "")
+            try
             {
-                await FindMaxEmptyID();
-                query.AddParameter(T.GetSelectorID(), FreeID);
+                string SelectorID = T.GetSelectorID();
+
+                if (SelectorID != "")
+                {
+                    query.AddParameter(SelectorID, FreeID);
+                }
+
+                PropertyInfo[] properties = typeof(T).GetProperties();
+                foreach (var property in properties)
+                {
+                    string columnName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                    var columnValue = property.GetValue(item);
+                    if (property.PropertyType.BaseType.Name == "Enum")
+                        columnValue = GetEnumDescription(property.GetValue(item));
+
+                    if (columnName != null && columnName != SelectorID)
+                        query.AddParameter(columnName, columnValue);
+                }
+
+                if (query.GetCountParametres() == 0)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error, method {nameof(FillInsertParams)} added zero parametres");
+                    throw new InvalidOperationException();
+                }
             }
-
-            PropertyInfo[] properties = typeof(T).GetProperties();
-            foreach (var property in properties)
+            catch (Exception ex)
             {
-                string columnName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
-                var columnValue = property.GetValue(item);
-
-                if (columnName != null && columnName != T.GetSelectorID())
-                    query.AddParameter(columnName, columnValue);
+                await LogManager.Instance.WriteLogAsync($"ERROR In {nameof(FillInsertParams)}: {ex.Message}");
+                throw;
             }
         }
     }

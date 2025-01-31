@@ -54,22 +54,30 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async void UpdateData()
         {
-            _disMachines.Clear();
-            _rdyMachines.Clear();
+            ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
+            ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
             IEnumerable<Machine> temp = await _servicesStore._machineService.GetItemsAsync();
             foreach (Machine machine in temp)
             {
-                MachineViewModel machineViewModel = new(machine);
-                _rdyMachines.Add(machineViewModel);
+                var machineViewModel = new MachineViewModel(machine);
+                _newRdyMachines.Add(machineViewModel);
             }
 
             temp = await _servicesStore._machineService.GetDisMachinesAsync();
             foreach (Machine machine in temp)
             {
-                MachineViewModel machineViewModel = new(machine);
-                _disMachines.Add(machineViewModel);
+                var machineViewModel = new MachineViewModel(machine);
+                _newDisMachines.Add(machineViewModel);
             }
+
+            _disMachines.Clear();
+            _rdyMachines.Clear();
+
+            foreach (MachineViewModel model in _newDisMachines)
+                _disMachines.Add(model);
+            foreach (MachineViewModel model in _newRdyMachines)
+                _rdyMachines.Add(model);
         }
 
         private readonly ObservableCollection<MachineViewModel> _disMachines;
@@ -138,20 +146,22 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async Task UpdateDataAsync()
         {
+            var currentSelected = SelectedItem;
+
             ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
             ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
-            IEnumerable<Machine> temp = await _servicesStore._machineService.GetItemsAsync();
+            IEnumerable<Machine> temp = await _servicesStore._machineService.GetRdyMachinesAsync();
             foreach (Machine machine in temp)
             {
-                MachineViewModel machineViewModel = new(machine);
+                var machineViewModel = new MachineViewModel(machine);
                 _newRdyMachines.Add(machineViewModel);
             }
 
             temp = await _servicesStore._machineService.GetDisMachinesAsync();
             foreach (Machine machine in temp)
             {
-                MachineViewModel machineViewModel = new(machine);
+                var machineViewModel = new MachineViewModel(machine);
                 _newDisMachines.Add(machineViewModel);
             }
 
@@ -163,6 +173,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             foreach (MachineViewModel model in _newRdyMachines)
                 _rdyMachines.Add(model);
+
+            SelectedItem = Items.FirstOrDefault(i => i.ID == currentSelected?.ID);
         }
     }
 }

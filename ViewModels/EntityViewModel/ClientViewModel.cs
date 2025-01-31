@@ -6,11 +6,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class ClientViewModel : BaseViewModel
     {
         private readonly Client _model;
+        public readonly int ID;
 
         public Client GetModel() => _model;
 
-        [DisplayName("Номер заказчика")] 
-        public int ID => _model.ID;
         [DisplayName("Название")]
         public string Name => _model.Name;
         [DisplayName("Тип")]
@@ -39,6 +38,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public ClientViewModel(Client client)
         {
             _model = client;
+
+            ID = _model.ID;
         }
     }
 }

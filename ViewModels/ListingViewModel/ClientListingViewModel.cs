@@ -105,6 +105,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async Task UpdateDataAsync()
         {
+            var currentSelected = SelectedItem;
+
             ObservableCollection<ClientViewModel> _newAllClients = new ObservableCollection<ClientViewModel>();
             ObservableCollection<ClientViewModel> _newDisClients = new ObservableCollection<ClientViewModel>();
 
@@ -129,6 +131,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _allClients.Add(model);
             foreach (ClientViewModel model in _newDisClients)
                 _disClients.Add(model);
+
+            SelectedItem = Items.FirstOrDefault(i => i.ID == currentSelected?.ID);
         }
         #endregion
 

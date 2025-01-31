@@ -49,22 +49,23 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.Name,
                 _viewModel.Type,
                 _viewModel.CategoryCargo,
-                _viewModel.Length == null ? float.MinValue : float.Parse(_viewModel.Length),
-                _viewModel.Width == null ? float.MinValue : float.Parse(_viewModel.Width),
-                _viewModel.Height == null ? float.MinValue : float.Parse(_viewModel.Height),
-                _viewModel.Weight == null ? float.MinValue : float.Parse(_viewModel.Weight),
+                _viewModel.Length == null ? null : float.Parse(_viewModel.Length),
+                _viewModel.Width == null ? null : float.Parse(_viewModel.Width),
+                _viewModel.Height == null ? null : float.Parse(_viewModel.Height),
+                _viewModel.Weight == null ? null : float.Parse(_viewModel.Weight),
                 _viewModel.Unit,
                 _viewModel.Pack == null ? Constants.GetEnumDescription(Constants.NomenclaturePackingValues.Null) : _viewModel.Pack,
-                _viewModel.NeedTemperature == null ? string.Empty : _viewModel.NeedTemperature,
+                _viewModel.NeedTemperature,
                 _viewModel.DangerousClass == null ? Constants.GetEnumDescription(Constants.NomenclatureDangerousValues.Null) : _viewModel.DangerousClass,
-                _viewModel.Manufacturer, // test  == null ? string.Empty : _viewModel.Manufacturer,
-                _viewModel.ExpiryDate == null ? int.MinValue : int.Parse(_viewModel.ExpiryDate)
+                _viewModel.Manufacturer,
+                _viewModel.ExpiryDate == null ? null : int.Parse(_viewModel.ExpiryDate)
                 );
 
             try
             {
-                bool result = await _servicesStore._nomenclatureService.AddItemAsync(nomenclature);
-                if (result)
+                await _servicesStore._nomenclatureService.FindMaxEmptyID();
+                int result = await _servicesStore._nomenclatureService.AddItemAsync(nomenclature);
+                if (result > 0)
                     MessageBox.Show("Элемент добавлен!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     MessageBox.Show("Не удалось добавить номенклатуру", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);

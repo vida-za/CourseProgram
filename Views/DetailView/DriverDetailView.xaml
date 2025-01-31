@@ -42,7 +42,7 @@
 
                 <TextBlock Grid.Row="0"
                            Grid.Column="0"
-                           Text="Category"
+                           Text="Категории"
                            Margin="0 0 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="0"
@@ -52,7 +52,7 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
-                           Text="BirthDay"
+                           Text="День рождения"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="1"
@@ -62,7 +62,7 @@
 
                 <TextBlock Grid.Row="2"
                            Grid.Column="0"
-                           Text="Passport"
+                           Text="Пасспортные данные"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="2"
@@ -72,7 +72,7 @@
 
                 <TextBlock Grid.Row="3"
                            Grid.Column="0"
-                           Text="Phone"
+                           Text="Номер телефона"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="3"
@@ -82,7 +82,7 @@
 
                 <TextBlock Grid.Row="4"
                            Grid.Column="0"
-                           Text="DateStart"
+                           Text="Дата принятия на работу"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="4"
@@ -92,7 +92,7 @@
 
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
-                           Text="DateEnd"
+                           Text="Дата увольнения"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="5"
@@ -102,7 +102,7 @@
 
                 <TextBlock Grid.Row="6"
                            Grid.Column="0"
-                           Text="Town"
+                           Text="Город"
                            Margin="0 5 5 0"
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="6"

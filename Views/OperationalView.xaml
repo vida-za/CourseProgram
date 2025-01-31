@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CourseProgram.Views.OperationalView"
+﻿    <UserControl x:Class="CourseProgram.Views.OperationalView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,120 +6,102 @@
              xmlns:local="clr-namespace:CourseProgram.Views"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels"
+             xmlns:controls="clr-namespace:CourseProgram.Components"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:OperationalViewModel}">
 
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    Margin="0 0 0 20">
 
-            <TextBlock Grid.Row="0"
-                       Text="Текущие рейсы"
-                       Style="{StaticResource Header}" />
+            <TextBlock Text="{Binding Title, Mode=TwoWay}"
+                       Style="{StaticResource Header}"
+                       VerticalAlignment="Center"
+                       Margin="0 0 10 0" />
 
-            <DataGrid Grid.Row="1"
-                      x:Name="dataGridHauls"
-                      Margin="0 25 0 0"
-                      MaxHeight="150"
-                      ItemsSource="{Binding}"
-                      SelectedItem="{Binding}"
-                      AutoGenerateColumns="True"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      IsReadOnly="True">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
-                                               CommandParameter="{Binding ElementName=dataGridHauls}" />
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding}"
-                                               CommandParameter="{Binding}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </DataGrid>
+            <Button Content="Начать рейс"
+                    Command="{Binding StartHaulCommand}"
+                    Visibility="{Binding StateButtonHaul, Converter={StaticResource BoolToVisibleConverter}}"
+                    Width="100" />
 
-            <Grid Grid.Row="2"
-                  Margin="10 10 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
+            <Button Content="Завершить рейс"
+                    Command="{Binding CompleteHaulCommand}"
+                    Visibility="{Binding StateButtonHaul, Converter={StaticResource InverseBoolToVisibleConverter}}"
+                    Width="100" />
+        </StackPanel>
 
-                <TextBox Grid.Column="0"
-                         Margin="10 0 0 0"
-                         MinWidth="200"
-                         IsEnabled="{Binding}"
-                         Text="{Binding}" />
+        <GroupBox Grid.Row="1"
+                  Header="Заказы текущего рейса"
+                  Visibility="{Binding StateButtonHaul, Converter={StaticResource InverseBoolToVisibleConverter}}"
+                  Margin="0 0 0 15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-                <CheckBox Grid.Column="1"
-                          Margin="10 5 0 0"
-                          Content="Поиск (по городу)"
-                          IsChecked="{Binding}" />
+                <DataGrid Grid.Row="0"
+                          ItemsSource="{Binding Orders}"
+                          SelectedItem="{Binding SelectedOrder}"
+                          AutoGenerateColumns="True"
+                          IsReadOnly="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding DetailOrderCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <i:Interaction.Behaviors>
+                        <beh:ColumnHeaderBehaviour />
+                    </i:Interaction.Behaviors>
+                </DataGrid>
+
+                <controls:SearchControl Grid.Row="1"
+                                        Margin="10 10 10 10"
+                                        SearchText="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        IsSearchEnabled="{Binding StateFilter}"
+                                        CheckBoxText="Поиск (по клиенту)" />
             </Grid>
-        </Grid>
+        </GroupBox>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+        <GroupBox Grid.Row="2"
+                  Header="Доступные заявки">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       Text="Текущие заявки"
-                       Style="{StaticResource Header}" />
+                <DataGrid Grid.Row="0"
+                          ItemsSource="{Binding Buds}"
+                          SelectedItem="{Binding SelectedBud}"
+                          AutoGenerateColumns="true"
+                          IsReadOnly="true">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding DetailBudCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <i:Interaction.Behaviors>
+                        <beh:ColumnHeaderBehaviour />
+                    </i:Interaction.Behaviors>
+                </DataGrid>
 
-            <DataGrid Grid.Row="1"
-                      x:Name="dataGridBids"
-                      Margin="0 25 0 0"
-                      MaxHeight="150"
-                      ItemsSource="{Binding}"
-                      SelectedItem="{Binding}"
-                      AutoGenerateColumns="True"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      IsReadOnly="True">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
-                                               CommandParameter="{Binding ElementName=dataGridBids}" />
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding}"
-                                               CommandParameter="{Binding}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </DataGrid>
-
-            <Grid Grid.Row="2"
-                  Margin="10 10 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Column="0"
-                         Margin="10 0 0 0"
-                         MinWidth="200"
-                         IsEnabled="{Binding}"
-                         Text="{Binding}" />
-
-                <CheckBox Grid.Column="1"
-                          Margin="10 5 0 0"
-                          Content="Поиск (по городу)"
-                          IsChecked="{Binding}" />
+                <Button Grid.Row="1"
+                        Content="Добавить заявку"
+                        Command="{Binding AddBudCommand}"
+                        Width="140"
+                        Margin="0 10 0 0" />
             </Grid>
-        </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

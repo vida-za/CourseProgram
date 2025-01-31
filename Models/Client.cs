@@ -23,11 +23,11 @@ namespace CourseProgram.Models
         [DisplayName("РасчётныйСчёт")]
         public string Checking { get; }
         [DisplayName("БИК")]
-        public string BIK { get; }
+        public string? BIK { get; }
         [DisplayName("КорреспондентскийСчёт")]
-        public string Correspondent { get; }
+        public string? Correspondent { get; }
         [DisplayName("Банк")]
-        public string Bank { get; }
+        public string? Bank { get; }
         [DisplayName("КонтактЗагрузки")]
         public string PhoneLoad { get; }
         [DisplayName("КонтактВыгрузки")]
@@ -37,7 +37,7 @@ namespace CourseProgram.Models
         {
             ID = 0;
             Name = string.Empty;
-            Type = ClientTypeValues.Null;
+            Type = ClientTypeValues.Physical;
             INN = string.Empty;
             KPP = string.Empty;
             OGRN = string.Empty;
@@ -59,9 +59,9 @@ namespace CourseProgram.Models
             string ogrn,
             string phone,
             string checking,
-            string bik,
-            string correspondent,
-            string bank,
+            string? bik,
+            string? correspondent,
+            string? bank,
             string phoneLoad,
             string phoneOnLoad)
         {
@@ -82,8 +82,25 @@ namespace CourseProgram.Models
             {
                 "Физлицо" => ClientTypeValues.Physical,
                 "Юрлицо" => ClientTypeValues.Legal,
-                _ => ClientTypeValues.Null,
+                _ => throw new NotImplementedException()
             };
+        }
+
+        public Client(int iD, string name, ClientTypeValues type, string iNN, string kPP, string oGRN, string phone, string checking, string? bIK, string? correspondent, string? bank, string phoneLoad, string phoneOnLoad)
+        {
+            ID = iD;
+            Name = name;
+            Type = type;
+            INN = iNN;
+            KPP = kPP;
+            OGRN = oGRN;
+            Phone = phone;
+            Checking = checking;
+            BIK = bIK;
+            Correspondent = correspondent;
+            Bank = bank;
+            PhoneLoad = phoneLoad;
+            PhoneOnLoad = phoneOnLoad;
         }
 
         public static string GetTable() => "Заказчик";

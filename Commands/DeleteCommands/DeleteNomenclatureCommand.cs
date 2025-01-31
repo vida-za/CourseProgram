@@ -3,6 +3,7 @@ using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
@@ -33,7 +34,20 @@ namespace CourseProgram.Commands.DeleteCommands
         {
             try
             {
-                // TO DO
+                bool check = await _servicesStore._nomenclatureService.CheckCanDelete(_viewModel.SelectedItem.ID);
+
+                if (!check)
+                    MessageBox.Show("Нельзя удалить номенклатуру так как она уже используется", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                {
+                    bool result = await _servicesStore._nomenclatureService.DeleteItemAsync(_viewModel.SelectedItem.ID);
+                    if (result)
+                        MessageBox.Show("Номенклатура удалена", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        MessageBox.Show("Не удалось удалить номенклатура", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                await _viewModel.UpdateDataAsync();
             }
             catch (Exception ex)
             {

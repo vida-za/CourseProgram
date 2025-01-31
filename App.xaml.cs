@@ -71,6 +71,15 @@ namespace CourseProgram
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
 
+            services.AddTransient(s => new OrderDetailViewModel());
+            services.AddTransient(s => new BudDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient(s => new AddBudViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
             //Layout
             services.AddTransient(s => new DriverListingViewModel(
                 s.GetRequiredService<ServicesStore>(),
@@ -98,7 +107,10 @@ namespace CourseProgram
                 CreateClientDetailNavigationService(s)));
             services.AddTransient(s => new OperationalViewModel(
                 s.GetRequiredService<ServicesStore>(),
-                s.GetRequiredService<SelectedStore>()));
+                s.GetRequiredService<SelectedStore>(),
+                CreateOrderDetailNavigationService(s),
+                CreateBudDetailNavigationService(s),
+                CreateAddBudNavigationService(s)));
             services.AddTransient(s => new NomenclatureListingViewModel(
                 s.GetRequiredService<ServicesStore>(), 
                 s.GetRequiredService<SelectedStore>(),
@@ -209,6 +221,22 @@ namespace CourseProgram
         private static INavigationService CreateAddNomenclatureNavigationService(IServiceProvider serviceProvider)
         {
             return CreateModalNavigationService<AddNomenclatureViewModel>(serviceProvider);
+        }
+
+        //Operational
+        private static INavigationService CreateOrderDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<OrderDetailViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateBudDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<BudDetailViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateAddBudNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddBudViewModel>(serviceProvider);
         }
         #endregion
 

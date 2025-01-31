@@ -41,13 +41,21 @@ namespace CourseProgram.Services.DBServices
             {
                 parameterValue = boolValue ? "true" : "false";
             }
+            else if (value is DateOnly dateOnlyValue)
+            {
+                parameterValue = dateOnlyValue == DateOnly.MinValue ? "Null" : $"'{dateOnlyValue:yyyy-MM-dd}'";
+            }
             else if (value is DateTime dateTimeValue)
             {
-                parameterValue = $"'{dateTimeValue:yyyy-MM-dd HH:mm:ss}'";
+                parameterValue = dateTimeValue == DateTime.MinValue ? "Null" : $"'{dateTimeValue:yyyy-MM-dd HH:mm:ss}'";
             }
             else if (value is string stringValue)
             {
                 parameterValue = string.IsNullOrWhiteSpace(stringValue) ? "Null" : $"'{stringValue}'";
+            }
+            else if (value is float floatValue)
+            {
+                parameterValue = value.ToString().Replace(',', '.');
             }
             else
             {
@@ -55,6 +63,11 @@ namespace CourseProgram.Services.DBServices
             }
 
             Parameters[name] = parameterValue;
+        }
+
+        public int GetCountParametres()
+        {
+            return Parameters.Count;
         }
 
         public void AddFields(params string[] args)
@@ -65,7 +78,7 @@ namespace CourseProgram.Services.DBServices
                     continue;
                     
                 var field = arg.Trim();
-                field = $"\"{arg}\"";
+                if (!field.Contains("Count")) field = $"\"{arg}\"";
 
                 if (!Fields.Contains(field))
                     Fields.Add(field);

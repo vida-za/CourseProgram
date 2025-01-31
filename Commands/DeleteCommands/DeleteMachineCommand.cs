@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Commands.DeleteCommands
 {
@@ -31,7 +32,7 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _viewModel.SelectedItem.TimeEnd == DateOnly.MinValue.ToString();
+            return base.CanExecute(parameter) && (_viewModel.SelectedItem.GetModel()).TimeEnd == DateTime.MinValue;
         }
 
         protected override bool IsItemSelected()
@@ -46,9 +47,9 @@ namespace CourseProgram.Commands.DeleteCommands
                 Machine temp = _viewModel.SelectedItem.GetModel();
                 var newItem = new Machine(
                     temp.ID,
-                    temp.TypeMachine.ToString(),
-                    temp.TypeBodywork.ToString(),
-                    temp.TypeLoading.ToString(),
+                    temp.TypeMachine,
+                    temp.TypeBodywork,
+                    temp.TypeLoading,
                     temp.LoadCapacity,
                     temp.Volume,
                     temp.HydroBoard,
@@ -58,7 +59,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     temp.Stamp,
                     temp.Name,
                     temp.StateNumber,
-                    temp.Status.ToString(),
+                    temp.Status,
                     temp.TimeStart,
                     DateTime.Now,
                     temp.Town

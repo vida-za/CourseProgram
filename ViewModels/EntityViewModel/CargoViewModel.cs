@@ -7,38 +7,99 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class CargoViewModel : BaseViewModel
     {
         private readonly ServicesStore _servicesStore;
-
-        private readonly Cargo _model;
-        private Order _orderModel;
         private Nomenclature _nomenclatureModel;
 
-        public Cargo GetModel() => _model;
+        private int _nomenclatureID;
+        private float? _volume;
+        private float _weight;
+        private int _count;
 
-        [DisplayName("Номер груза")]
-        public int ID => _model.ID;
-        [DisplayName("Номер заявки")]
-        public int OrderID => _model.BudID;
-        [DisplayName("Номер номенклатуры")]
-        public int NomenclatureID => _model.NomenclatureID;
+        public int ID { get; }
+
+        public int NomenclatureID
+        {
+            get => _nomenclatureID;
+            set
+            {
+                if (_nomenclatureID != value)
+                {
+                    _nomenclatureID = value;
+                    UpdateNomenclature();
+                    OnPropertyChanged(nameof(NomenclatureID));
+                }
+            }
+        }
+
+        [DisplayName("Название номенклатуры")]
+        public string NomenclatureName => _nomenclatureModel?.Name ?? "Не указано";
         [DisplayName("Объём")]
-        public string Volume => _model.Volume.ToString();
+        public string Volume 
+        { 
+            get => _volume?.ToString() ?? "Не указано";
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    _volume = null;
+                }
+                else if (float.TryParse(value, out float fValue))
+                {
+                    _volume = fValue;
+                }
+                OnPropertyChanged(nameof(Volume));
+            }
+        }
         [DisplayName("Вес")]
-        public string Weight => _model.Weight.ToString();
+        public string Weight
+        {
+            get => _weight.ToString();
+            set
+            {
+                if (float.TryParse(value, out float fValue))
+                {
+                    _weight = fValue;
+                    OnPropertyChanged(nameof(Weight));
+                }
+            }
+        }
         [DisplayName("Количество")]
-        public string Count => _model.Count.ToString();
+        public string Count
+        {
+            get => _count.ToString();
+            set
+            {
+                if (int.TryParse(value, out int iValue))
+                {
+                    _count = iValue;
+                    OnPropertyChanged(nameof(Count));
+                }
+            }
+        }
 
         public CargoViewModel(Cargo cargo, ServicesStore servicesStore)
         {
-            _model = cargo;
-            _servicesStore = servicesStore;
+            ID = cargo.ID;
+            _nomenclatureID = cargo.NomenclatureID;
+            _volume = cargo.Volume;
+            _weight = cargo.Weight;
+            _count = cargo.Count;
 
-            UpdateData();
+            _servicesStore = servicesStore;
+            UpdateNomenclature();
         }
 
-        private async void UpdateData()
+        private async void UpdateNomenclature()
         {
-            _orderModel = await _servicesStore._orderService.GetItemAsync(OrderID);
-            _nomenclatureModel = await _servicesStore._nomenclatureService.GetItemAsync(NomenclatureID);
+            if (NomenclatureID > 0)
+            {
+                _nomenclatureModel = await _servicesStore._nomenclatureService.GetItemAsync(NomenclatureID);
+                OnPropertyChanged(nameof(NomenclatureName));
+            }
+        }
+
+        public Cargo ToCargo(int BudID)
+        {
+            return new Cargo(ID, BudID, NomenclatureID, _volume, _weight, _count);
         }
     }
 }

@@ -13,15 +13,15 @@ namespace CourseProgram.Models
         [DisplayName("ДатаЗаказа")]
         public DateTime TimeOrder { get; }
         [DisplayName("ДатаЗагрузки")]
-        public DateTime TimeLoad { get; }
+        public DateTime? TimeLoad { get; }
         [DisplayName("ДатаВыгрузки")]
-        public DateTime TimeOnLoad { get; }
+        public DateTime? TimeOnLoad { get; }
         [DisplayName("Стоимость")]
-        public float Price { get; }
+        public float? Price { get; }
         [DisplayName("Статус")]
         public OrderStatusValues Status { get; }
         [DisplayName("Договор")]
-        public string File { get; }
+        public string? File { get; }
 
         public Order()
         {
@@ -31,7 +31,7 @@ namespace CourseProgram.Models
             TimeLoad = DateTime.MinValue;
             TimeOnLoad = DateTime.MinValue;
             Price = 0;
-            Status = OrderStatusValues.Null;
+            Status = OrderStatusValues.Waiting;
             File = string.Empty;
         }
 
@@ -39,11 +39,11 @@ namespace CourseProgram.Models
             int id,
             int budID,
             DateTime timeOrder,
-            DateTime timeLoad,
-            DateTime timeOnLoad,
-            float price,
+            DateTime? timeLoad,
+            DateTime? timeOnLoad,
+            float? price,
             string status,
-            string file)
+            string? file)
         {
             ID = id;
             BudID = budID;
@@ -55,12 +55,24 @@ namespace CourseProgram.Models
 
             Status = status switch
             {
-                "Выполнен" => OrderStatusValues.Completed,
-                "Отменен" => OrderStatusValues.Cancelled,
-                "В ожидании" => OrderStatusValues.Waiting,
-                "Выполняется" => OrderStatusValues.InProgress,
-                _ => OrderStatusValues.Null,
+                "Завершён" => OrderStatusValues.Completed,
+                "Отменён" => OrderStatusValues.Cancelled,
+                "Создан" => OrderStatusValues.Waiting,
+                "В процессе" => OrderStatusValues.InProgress,
+                _ => throw new NotImplementedException(),
             };
+        }
+
+        public Order(int iD, int budID, DateTime timeOrder, DateTime? timeLoad, DateTime? timeOnLoad, float? price, OrderStatusValues status, string? file)
+        {
+            ID = iD;
+            BudID = budID;
+            TimeOrder = timeOrder;
+            TimeLoad = timeLoad;
+            TimeOnLoad = timeOnLoad;
+            Price = price;
+            Status = status;
+            File = file;
         }
 
         public static string GetTable() => "Заказ";

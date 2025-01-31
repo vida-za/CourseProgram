@@ -12,6 +12,33 @@ namespace CourseProgram.Services.DataServices
     {
         public DriverCategoriesDataService() : base(User.Username, User.Password) { }
 
+        public override async Task<int> AddItemAsync(DriverCategories item)
+        {
+            using (var query = new Query(CommandTypes.InsertQuery, DriverCategories.GetTable()))
+            {
+                FillInsertParams(query, item);
+
+                try
+                {
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        int res = await con.ExecuteQueryAsync<int>(query);
+                        return res;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(AddItemAsync)}: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    query?.Dispose();
+                }
+            }
+        }
+
         public async Task<IEnumerable<DriverCategories>> GetListForDriverAsync(int id)
         {
             using (var query = new Query(CommandTypes.SelectQuery, DriverCategories.GetTable()))
@@ -21,7 +48,7 @@ namespace CourseProgram.Services.DataServices
                     items.Clear();
 
                     query.AddFields(DriverCategories.GetFieldNames());
-                    query.AddParameter("КодВодителя", id.ToString());
+                    query.WhereClause.Equals("КодВодителя", id.ToString());
 
                     DataTable data;
 
@@ -54,8 +81,8 @@ namespace CourseProgram.Services.DataServices
         public override void CreateElement(DataRow row)
         {
             items.Add(new DriverCategories(
-                GetIntOrNull(row["КодВодителя"], 0),
-                GetIntOrNull(row["КодКатегории"], 0)));
+                GetInt(row["КодВодителя"], 0),
+                GetInt(row["КодКатегории"], 0)));
         }
     }
 }

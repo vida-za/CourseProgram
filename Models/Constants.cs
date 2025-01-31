@@ -1,5 +1,4 @@
-﻿using CourseProgram.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -25,8 +24,7 @@ namespace CourseProgram.Models
             [Description("Электроника")] Electronics,
             [Description("Химия")] Chemistry,
             [Description("Мебель")] Furniture,
-            [Description("Другое")] Other,
-            [Description("Неизвестно")] Null
+            [Description("Другое")] Other
         }
 
         public enum NomenclatureCategoriesValues
@@ -35,16 +33,14 @@ namespace CourseProgram.Models
             [Description("Скоропортящиеся")] Perishable,
             [Description("Стандартные")] Standard,
             [Description("Тяжелые")] Heavy,
-            [Description("Габаритные")] Oversize,
-            [Description("Неизвестно")] Null
+            [Description("Габаритные")] Oversize
         }
 
         public enum NomenclatureMeasureValues
         {
             [Description("шт")] sht,
             [Description("кг")] kg,
-            [Description("м")] m,
-            [Description("")] Null
+            [Description("м")] m
         }
 
         public enum NomenclatureDangerousValues
@@ -53,7 +49,7 @@ namespace CourseProgram.Models
             [Description("Класс 2")] Two,
             [Description("Класс 3")] Three,
             [Description("Не опасный")] None,
-            [Description("Неизвестно")] Null
+            [Description("Null")] Null
         }
 
         public enum NomenclaturePackingValues
@@ -64,18 +60,17 @@ namespace CourseProgram.Models
             [Description("Бочки")] Barrel,
             [Description("Мешки")] Bag,
             [Description("Без упаковки")] None,
-            [Description("Неизвестно")] Null
+            [Description("Null")] Null
         }
         #endregion
 
         #region Order enums
         public enum OrderStatusValues
         {
-            [Description("Выполняется")] InProgress,
-            [Description("Выполнен")] Completed,
-            [Description("Отменен")] Cancelled,
-            [Description("В ожидании")] Waiting,
-            [Description("Ошибка!")] Null
+            [Description("В процессе")] InProgress,
+            [Description("Завершён")] Completed,
+            [Description("Отменён")] Cancelled,
+            [Description("Создан")] Waiting
         }
         #endregion
 
@@ -83,8 +78,7 @@ namespace CourseProgram.Models
         public enum ClientTypeValues
         {
             [Description("Физлицо")] Physical,
-            [Description("Юрлицо")] Legal,
-            [Description("Ошибка!")] Null
+            [Description("Юрлицо")] Legal
         }
         #endregion
 
@@ -94,16 +88,14 @@ namespace CourseProgram.Models
             [Description("Выполняется")] InProgress,
             [Description("Выполнен")] Completed,
             [Description("Отменен")] Cancelled,
-            [Description("В ожидании")] Waiting,
-            [Description("Ошибка!")] Null
+            [Description("В очереди")] Waiting
         }
 
         public enum RouteTypeValues
         {
             [Description("Общий")] General,
             [Description("Обособленный")] Isolated,
-            [Description("Пустой")] Empty,
-            [Description("Ошибка!")] Null
+            [Description("Пустой")] Empty
         }
         #endregion
 
@@ -113,8 +105,7 @@ namespace CourseProgram.Models
             [Description("Грузовик")] Truck,
             [Description("Грузовик с прицепом")] TruckWithTrailer,
             [Description("Полуприцеп")] SemiTrailer,
-            [Description("Микроавтобус")] Minibus,
-            [Description("Ошибка!")] Null
+            [Description("Микроавтобус")] Minibus
         }
 
         public enum MachineTypeBodyworkValues 
@@ -123,15 +114,14 @@ namespace CourseProgram.Models
             [Description("Реф")] Ref,
             [Description("Изотерм")] Isotherm,
             [Description("Борт")] Board,
-            [Description("Неизвестно")] Null
+            [Description("Null")] Null
         }
 
         public enum MachineTypeLoadingValues
         {
             [Description("Бок")] Side,
             [Description("Вверх")] Up,
-            [Description("Зад")] Behind,
-            [Description("Ошибка!")] Null
+            [Description("Зад")] Behind
         }
 
         public enum MachineStatusValues
@@ -139,8 +129,7 @@ namespace CourseProgram.Models
             [Description("Ремонт")] Repair,
             [Description("В ожидании")] Waiting,
             [Description("На стоянке")] Parking,
-            [Description("В пути")] OnRoad,
-            [Description("Ошибка!")] Null
+            [Description("В пути")] OnRoad
         }
         #endregion
 
@@ -149,8 +138,7 @@ namespace CourseProgram.Models
         {
             [Description("В ожидании")] Waiting,
             [Description("Принята")] Accepted,
-            [Description("Отклонена")] Cancelled,
-            [Description("Неизвестно")] Null
+            [Description("Отклонена")] Cancelled
         }
         #endregion
 
@@ -182,6 +170,17 @@ namespace CourseProgram.Models
             var field = value.GetType().GetField(value.ToString());
             var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
             return attribute?.Description ?? value.ToString();
+        }
+
+        public static string GetEnumDescription(object? value)
+        {
+            if (value != null && value is Enum)
+            {
+                var field = value.GetType().GetField(value.ToString());
+                var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+                return attribute?.Description ?? value.ToString();
+            }
+            return null;
         }
 
         public static ObservableCollection<string> GetFullEnumDescription(Type enums)
@@ -219,76 +218,104 @@ namespace CourseProgram.Models
         }
 
         #region Object to
-        public static byte GetByteOrNull(object value, byte nullvalue)
-        {
-            if (Convert.DBNull != value && value != null)
-                return Convert.ToByte(value);
-            else return nullvalue;
-        }
-
-        public static int GetIntOrNull(object value, int nullvalue)
+        public static int GetInt(object value, int nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return Convert.ToInt32(value);
             else return nullvalue;
         }
 
-        public static Int64 GetInt64OrNull(object value, Int64 nullvalue)
+        public static Int64 GetInt64(object value, Int64 nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return Convert.ToInt64(value);
             else return nullvalue;
         }
 
-        public static string? GetStringOrNull(object value, string nullvalue)
+        public static string GetString(object value, string nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return Convert.ToString(value);
             else return nullvalue;
         }
 
-        public static bool GetBoolOrNull(object value, bool nullvalue)
+        public static bool GetBool(object value, bool nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return Convert.ToBoolean(value);
             else return nullvalue;
         }
 
-        public static DateTimeOffset GetDateTimeOffset(object value) => DateTimeOffset.Parse(input: Convert.ToString(value));
-
-        public static DateTimeOffset GetDateTimeOffsetOrNull(object value, DateTimeOffset nullvalue)
-        {
-            if (Convert.DBNull != value && value != null)
-                return DateTimeOffset.Parse(input: Convert.ToString(value));
-            else return nullvalue;
-        }
-
-        public static double GetDoubleOrNull(object value, double nullvalue)
-        {
-            if (Convert.DBNull != value && value != null)
-                return Convert.ToDouble(value);
-            else return nullvalue;
-        }
-
-        public static float GetFloatOrNull(object value, float nullvalue)
+        public static float GetFloat(object value, float nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return (float)Convert.ToDouble(value);
             else return nullvalue;
         }
 
-        public static DateTime GetDateTimeOrNull(object value, DateTime nullvalue)
+        public static DateTime GetDateTime(object value, DateTime nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return Convert.ToDateTime(value);
             else return nullvalue;
         }
 
-        public static DateOnly GetDateOnlyOrNull(object value, DateOnly nullvalue)
+        public static DateOnly GetDateOnly(object value, DateOnly nullvalue)
         {
             if (Convert.DBNull != value && value != null)
                 return DateOnly.FromDateTime(Convert.ToDateTime(value));
             else return nullvalue;
+        }
+
+        //
+
+        public static int? GetIntOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return Convert.ToInt32(value);
+            else return null;
+        }
+
+        public static Int64? GetInt64OrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return Convert.ToInt64(value);
+            else return null;
+        }
+
+        public static string? GetStringOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return Convert.ToString(value);
+            else return null;
+        }
+
+        public static bool? GetBoolOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return Convert.ToBoolean(value);
+            else return null;
+        }
+
+        public static float? GetFloatOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return (float)Convert.ToDouble(value);
+            else return null;
+        }
+
+        public static DateTime? GetDateTimeOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return Convert.ToDateTime(value);
+            else return null;
+        }
+
+        public static DateOnly? GetDateOnlyOrNull(object value)
+        {
+            if (Convert.DBNull != value && value != null)
+                return DateOnly.FromDateTime(Convert.ToDateTime(value));
+            else return null;
         }
         #endregion
     }

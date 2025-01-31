@@ -67,28 +67,28 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async void UpdateData()
         {
-            ObservableCollection<WorkerViewModel> _newAllWorkers = new ObservableCollection<WorkerViewModel>();
-            ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
-            ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
+            var _newAllWorkers = new ObservableCollection<WorkerViewModel>();
+            var _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
+            var _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
             IEnumerable<Worker> temp = await _servicesStore._workerService.GetItemsAsync();
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newAllWorkers.Add(workerViewModel);
             }
 
             temp = await _servicesStore._workerService.GetItemsAsync();
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newRdyWorkers.Add(workerViewModel);
             }
 
             temp = await _servicesStore._workerService.GetItemsAsync();
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newDisWorkers.Add(workerViewModel);
             }
 
@@ -125,6 +125,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async Task UpdateDataAsync()
         {
+            var currentSelected = SelectedItem;
+
             ObservableCollection<WorkerViewModel> _newAllWorkers = new ObservableCollection<WorkerViewModel>();
             ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
             ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
@@ -162,6 +164,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             foreach (WorkerViewModel model in _newDisWorkers)
                 _disWorkers.Add(model);
+
+            SelectedItem = Items.FirstOrDefault(i => i.ID == currentSelected?.ID);
         }
         #endregion
 

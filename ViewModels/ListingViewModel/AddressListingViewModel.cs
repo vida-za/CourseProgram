@@ -59,6 +59,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async void UpdateData()
         {
+
+
             ObservableCollection<AddressViewModel> _newAllAddresses = new ObservableCollection<AddressViewModel>();
 
             IEnumerable<Address> temp = await _servicesStore._addressService.GetItemsAsync();

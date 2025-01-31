@@ -17,35 +17,35 @@ namespace CourseProgram.Models
         [DisplayName("Грузоподъёмность")]
         public float LoadCapacity { get; }
         [DisplayName("Объём")]
-        public float Volume { get; }
+        public float? Volume { get; }
         [DisplayName("Гидроборт")]
         public bool HydroBoard { get; }
         [DisplayName("ДлинаКузова")]
-        public float LengthBodywork { get; }
+        public float? LengthBodywork { get; }
         [DisplayName("ШиринаКузова")]
-        public float WidthBodywork { get; }
+        public float? WidthBodywork { get; }
         [DisplayName("ВысотаКузова")]
-        public float HeightBodywork { get; }
+        public float? HeightBodywork { get; }
         [DisplayName("Марка")]
         public string Stamp { get; }
         [DisplayName("Название")]
         public string Name { get; }
         [DisplayName("ГосНомер")]
-        public string StateNumber { get; }
+        public string? StateNumber { get; }
         [DisplayName("Состояние")]
         public MachineStatusValues Status { get; }
         [DisplayName("ДатаВремяПоступления")]
         public DateTime TimeStart { get; }
         [DisplayName("ДатаВремяСписания")]
-        public DateTime TimeEnd { get; }
-        public string Town { get; }
+        public DateTime? TimeEnd { get; }
+        public string? Town { get; }
 
         public Machine()
         {
             ID = 0;
-            TypeMachine = MachineTypeValues.Null;
+            TypeMachine = MachineTypeValues.Truck;
             TypeBodywork = MachineTypeBodyworkValues.Null;
-            TypeLoading = MachineTypeLoadingValues.Null;
+            TypeLoading = MachineTypeLoadingValues.Behind;
             LoadCapacity = float.NaN;
             Volume = float.NaN;
             HydroBoard = false;
@@ -55,7 +55,7 @@ namespace CourseProgram.Models
             Stamp = string.Empty;
             Name = string.Empty;
             StateNumber = string.Empty;
-            Status = MachineStatusValues.Null;
+            Status = MachineStatusValues.Waiting;
             TimeStart = new DateTime();
             TimeEnd = new DateTime();
             Town = string.Empty;
@@ -67,18 +67,18 @@ namespace CourseProgram.Models
             string typeBodywork,
             string typeLoading,
             float loadCapacity,
-            float volume,
+            float? volume,
             bool hydroBoard,
-            float lengthBodywork,
-            float widthBodywork,
-            float heightBodywork,
+            float? lengthBodywork,
+            float? widthBodywork,
+            float? heightBodywork,
             string stamp,
             string name,
-            string stateNumber,
+            string? stateNumber,
             string status,
             DateTime timeStart,
-            DateTime timeEnd,
-            string town)
+            DateTime? timeEnd,
+            string? town)
         {
             ID = id;
             LoadCapacity = loadCapacity;
@@ -100,7 +100,7 @@ namespace CourseProgram.Models
                 "Грузовик" => MachineTypeValues.Truck,
                 "Грузовик с прицепом" => MachineTypeValues.TruckWithTrailer,
                 "Полуприцеп" => MachineTypeValues.SemiTrailer,
-                _ => MachineTypeValues.Null,
+                _ => throw new NotImplementedException(),
             };
             TypeBodywork = typeBodywork switch
             {
@@ -115,7 +115,7 @@ namespace CourseProgram.Models
                 "Вверх" => MachineTypeLoadingValues.Up,
                 "Зад" => MachineTypeLoadingValues.Behind,
                 "Бок" => MachineTypeLoadingValues.Side,
-                _ => MachineTypeLoadingValues.Null,
+                _ => throw new NotImplementedException(),
             };
             Status = status switch
             {
@@ -123,8 +123,46 @@ namespace CourseProgram.Models
                 "На стоянке" => MachineStatusValues.Parking,
                 "В пути" => MachineStatusValues.OnRoad,
                 "Ремонт" => MachineStatusValues.Repair,
-                _ => MachineStatusValues.Null,
+                _ => throw new NotImplementedException(),
             };
+        }
+
+        public Machine(
+            int iD,
+            MachineTypeValues typeMachine,
+            MachineTypeBodyworkValues typeBodywork,
+            MachineTypeLoadingValues typeLoading,
+            float loadCapacity,
+            float? volume,
+            bool hydroBoard,
+            float? lengthBodywork,
+            float? widthBodywork,
+            float? heightBodywork,
+            string stamp,
+            string name,
+            string? stateNumber,
+            MachineStatusValues status,
+            DateTime timeStart,
+            DateTime? timeEnd,
+            string? town)
+        {
+            ID = iD;
+            TypeMachine = typeMachine;
+            TypeBodywork = typeBodywork;
+            TypeLoading = typeLoading;
+            LoadCapacity = loadCapacity;
+            Volume = volume;
+            HydroBoard = hydroBoard;
+            LengthBodywork = lengthBodywork;
+            WidthBodywork = widthBodywork;
+            HeightBodywork = heightBodywork;
+            Stamp = stamp;
+            Name = name;
+            StateNumber = stateNumber;
+            Status = status;
+            TimeStart = timeStart;
+            TimeEnd = timeEnd;
+            Town = town;
         }
 
         public static string GetTable() => "Машина";

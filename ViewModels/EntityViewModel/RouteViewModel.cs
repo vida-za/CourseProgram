@@ -10,39 +10,49 @@ namespace CourseProgram.ViewModels.EntityViewModel
     {
         private readonly ServicesStore _servicesStore;
         private readonly Route _model;
+        public readonly int ID;
+        public readonly int? MachineID;
+        public readonly int? DriverID;
+
         public RouteViewModel(Route route, ServicesStore servicesStore)
         {
             _model = route;
             _servicesStore = servicesStore;
+
+            ID = _model.ID;
+            MachineID = _model.MachineID;
+            DriverID = _model.DriverID;
 
             UpdateData();
         }
 
         public Route GetModel() => _model;
 
-        [DisplayName("Номер маршрута")]
-        public int ID => _model.ID;
-        [DisplayName("Номер машины")]
-        public int MachineID => _model.MachineID;
+
         [DisplayName("Название машины")]
         public string MachineName { get; set; }
-        [DisplayName("Номер водителя")]
-        public int DriverID => _model.DriverID;
         [DisplayName("ФИО водителя")]
         public string DriverName { get; set; }
         [DisplayName("Тип")]
         public string Type => GetEnumDescription(_model.Type);
         [DisplayName("Дистанция")]
-        public float Distance => _model.Distance;
+        public string Distance => _model.Distance != null ? ((float)_model.Distance).ToString() : "-";
         [DisplayName("Статус")]
         public string Status => GetEnumDescription(_model.Status);
         [DisplayName("Время выполнения")]
-        public DateTime CompleteTime => _model.CompleteTime;
+        public string CompleteTime => _model.CompleteTime != null ? ((DateTime)_model.CompleteTime).ToString("d") : "-";
 
         private async void UpdateData()
         {
-            MachineName = (await _servicesStore._machineService.GetItemAsync(MachineID)).Name;
-            DriverName = (await _servicesStore._driverService.GetItemAsync(DriverID)).FIO;
+            if (MachineID != null)
+                MachineName = (await _servicesStore._machineService.GetItemAsync((int)MachineID)).Name;
+            else
+                MachineName = "Не указана";
+
+            if (DriverID != null)
+                DriverName = (await _servicesStore._driverService.GetItemAsync((int)DriverID)).FIO;
+            else
+                DriverName = "Не указана";
         }
     }
 }

@@ -67,17 +67,18 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.OGRN,
                 _viewModel.Phone,
                 _viewModel.Checking,
-                _viewModel.BIK == null ? string.Empty : _viewModel.BIK,
-                _viewModel.Correspondent == null ? string.Empty : _viewModel.Correspondent,
-                _viewModel.Bank == null ? string.Empty : _viewModel.Bank,
+                _viewModel.BIK,
+                _viewModel.Correspondent,
+                _viewModel.Bank,
                 _viewModel.PhoneLoad,
                 _viewModel.PhoneOnLoad
                 );
 
             try
             {
-                bool result = await _servicesStore._clientService.AddItemAsync(client);
-                if (result)
+                await _servicesStore._clientService.FindMaxEmptyID();
+                int result = await _servicesStore._clientService.AddItemAsync(client);
+                if (result > 0)
                     MessageBox.Show("Заказчик добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Не удалось добавить заказчика", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

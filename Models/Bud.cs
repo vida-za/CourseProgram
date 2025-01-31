@@ -17,7 +17,7 @@ namespace CourseProgram.Models
         [DisplayName("Статус")]
         public BudStatusValues Status { get; }
         [DisplayName("Описание")]
-        public string Description { get; }
+        public string? Description { get; }
 
         public Bud() 
         {
@@ -29,7 +29,7 @@ namespace CourseProgram.Models
             Description = string.Empty;
         }
 
-        public Bud(int id, int clientID, int workerID, DateTime timeBud, string status, string description)
+        public Bud(int id, int clientID, int workerID, DateTime timeBud, string status, string? description)
         {
             ID = id;
             ClientID = clientID;
@@ -42,10 +42,19 @@ namespace CourseProgram.Models
                 "В ожидании" => BudStatusValues.Waiting,
                 "Принята" => BudStatusValues.Accepted,
                 "Отклонена" => BudStatusValues.Cancelled,
-                _ => BudStatusValues.Null
+                _ => throw new NotImplementedException()
             };
         }
 
+        public Bud(int iD, int clientID, int workerID, DateTime timeBud, BudStatusValues status, string? description)
+        {
+            ID = iD;
+            ClientID = clientID;
+            WorkerID = workerID;
+            TimeBud = timeBud;
+            Status = status;
+            Description = description;
+        }
 
         public static string GetTable() => "Заявка";
         public static string GetSelectorID() => "КодЗаявки";

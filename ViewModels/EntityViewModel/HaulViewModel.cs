@@ -6,11 +6,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class HaulViewModel : BaseViewModel
     {
         private readonly Haul _model;
+        public readonly int ID;
 
         public Haul GetModel() => _model;
 
-        [DisplayName("Номер рейса")]
-        public int ID => _model.ID;
         [DisplayName("Дата начала")]
         public string DateStart => _model.DateStart.ToString();
         [DisplayName("Дата окончания")]
@@ -21,6 +20,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public HaulViewModel(Haul haul)
         {
             _model = haul;
+
+            ID = _model.ID;
         }
     }
 }

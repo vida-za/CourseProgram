@@ -53,25 +53,66 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
+        public async Task<IEnumerable<Machine>> GetRdyMachinesAsync()
+        {
+            using (var query = new Query(CommandTypes.SelectQuery, Machine.GetTable()))
+            {
+                try
+                {
+                    items.Clear();
+
+                    query.AddFields(Machine.GetFieldNames());
+                    query.WhereClause.IsNull("ДатаВремяСписания");
+
+                    DataTable data;
+
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
+                    }
+
+                    if (data != null)
+                    {
+                        foreach (DataRow row in data.Rows)
+                        {
+                            CreateElement(row);
+                        }
+                    }
+
+                    return await Task.FromResult(items);
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetRdyMachinesAsync)}: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    query?.Dispose();
+                }
+            }
+        }
+
         public override void CreateElement(DataRow row)
         {
-            items.Add(new Machine(GetIntOrNull(row["КодМашины"], 0),
-                GetStringOrNull(row["ТипМашины"], string.Empty),
-                GetStringOrNull(row["ТипКузова"], string.Empty),
-                GetStringOrNull(row["ТипЗагрузки"], string.Empty),
-                GetFloatOrNull(row["Грузоподъёмность"], 0),
-                GetFloatOrNull(row["Объём"], 0),
-                GetStringOrNull(row["Гидроборт"], string.Empty) == "Да",
-                GetFloatOrNull(row["ДлинаКузова"], 0),
-                GetFloatOrNull(row["ШиринаКузова"], 0),
-                GetFloatOrNull(row["ВысотаКузова"], 0),
-                GetStringOrNull(row["Марка"], string.Empty),
-                GetStringOrNull(row["Название"], string.Empty),
-                GetStringOrNull(row["ГосНомер"], string.Empty),
-                GetStringOrNull(row["Состояние"], string.Empty),
-                GetDateTimeOrNull(row["ДатаВремяПоступления"], DateTime.MinValue),
-                GetDateTimeOrNull(row["ДатаВремяСписания"], DateTime.MinValue),
-                string.Empty //TO DO
+            items.Add(new Machine(GetInt(row["КодМашины"], 0),
+                GetString(row["ТипМашины"], string.Empty),
+                GetStringOrNull(row["ТипКузова"]),
+                GetString(row["ТипЗагрузки"], string.Empty),
+                GetFloat(row["Грузоподъёмность"], 0),
+                GetFloatOrNull(row["Объём"]),
+                GetBool(row["Гидроборт"], false),
+                GetFloatOrNull(row["ДлинаКузова"]),
+                GetFloatOrNull(row["ШиринаКузова"]),
+                GetFloatOrNull(row["ВысотаКузова"]),
+                GetString(row["Марка"], string.Empty),
+                GetString(row["Название"], string.Empty),
+                GetStringOrNull(row["ГосНомер"]),
+                GetString(row["Состояние"], string.Empty),
+                GetDateTime(row["ДатаВремяПоступления"], DateTime.MinValue),
+                GetDateTimeOrNull(row["ДатаВремяСписания"]),
+                null //TO DO
                 ));
         }
     }

@@ -38,7 +38,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
             foreach (Route route in temp)
             {
-                RouteViewModel routeViewModel = new(route, _servicesStore);
+                 var routeViewModel = new RouteViewModel(route, _servicesStore);
                 _routes.Add(routeViewModel);
             }
         }
@@ -49,7 +49,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string TypeLoading => _machineViewModel.TypeLoading;
         public string LoadCapacity => _machineViewModel.LoadCapacity.ToString();
         public string Volume => _machineViewModel.Volume.ToString();
-        public string HydroBoard => _machineViewModel.HydroBoard ? "Да" : "Нет";
+        public string HydroBoard => _machineViewModel.HydroBoard;
         public string LengthBodywork => _machineViewModel.LengthBodywork.ToString();
         public string WidthBodywork => _machineViewModel.WidthBodywork.ToString();
         public string HeightBodywork => _machineViewModel.HeightBodywork.ToString();

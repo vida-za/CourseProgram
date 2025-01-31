@@ -18,7 +18,6 @@ namespace CourseProgram.ViewModels.DetailViewModel
         
         public ICommand BackCommand { get; }
         #endregion
-
         public ClientDetailViewModel(
             ServicesStore servicesStore, 
             SelectedStore selectedStore,

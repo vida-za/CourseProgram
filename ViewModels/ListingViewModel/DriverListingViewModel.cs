@@ -56,17 +56,33 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            IEnumerable<Driver> temp = await _servicesStore._driverService.GetItemsAsync();
+            List<Driver> temp = (await _servicesStore._driverService.GetActDriversAsync()).ToList();
             foreach (Driver itemTemp in temp)
             {
-                DriverViewModel driverViewModel = new(itemTemp);
+                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                var tempCats = new List<Category>();
+                foreach (var drvCat in tempDrvCats)
+                {
+                    tempCats.Add(new Category(drvCat));
+                }
+
+                itemTemp.SetCategories(tempCats.ToArray());
+                var driverViewModel = new DriverViewModel(itemTemp);
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            temp = await _servicesStore._driverService.GetDisDriversAsync();
+            temp = (await _servicesStore._driverService.GetDisDriversAsync()).ToList();
             foreach (Driver itemTemp in temp)
             {
-                DriverViewModel driverViewModel = new(itemTemp);
+                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                var tempCats = new List<Category>();
+                foreach (var drvCat in tempDrvCats)
+                {
+                    tempCats.Add(new Category(drvCat));
+                }
+
+                itemTemp.SetCategories(tempCats.ToArray());
+                var driverViewModel = new DriverViewModel(itemTemp);
                 _newDisDrivers.Add(driverViewModel);
             }
 
@@ -125,11 +141,9 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public override void SwitchHandler()
         {
             if (StateCheckedWork)
-            {
-                foreach (DriverViewModel dvm in _disDrivers)
-                    Items.Add(dvm);
-                OnPropertyChanged(nameof(Items));
-            }
+                Items = new ObservableCollection<DriverViewModel>(_disDrivers);
+            else 
+                Items = new ObservableCollection<DriverViewModel>(_allDrivers);
         }
 
         protected override void Find()
@@ -151,17 +165,33 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            IEnumerable<Driver> temp = await _servicesStore._driverService.GetItemsAsync();
-            foreach (Driver itemTemp in temp)
+            List<Driver> tempAll = (await _servicesStore._driverService.GetActDriversAsync()).ToList();
+            foreach (Driver itemTemp in tempAll)
             {
-                DriverViewModel driverViewModel = new(itemTemp);
+                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                var tempCats = new List<Category>();
+                foreach (var drvCat in tempDrvCats)
+                {
+                    tempCats.Add(new Category(drvCat));
+                }
+
+                itemTemp.SetCategories(tempCats.ToArray());
+                var driverViewModel = new DriverViewModel(itemTemp);
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            temp = await _servicesStore._driverService.GetDisDriversAsync();
-            foreach (Driver itemTemp in temp)
+            List<Driver> tempDis = (await _servicesStore._driverService.GetDisDriversAsync()).ToList();
+            foreach (Driver itemTemp in tempDis)
             {
-                DriverViewModel driverViewModel = new(itemTemp);
+                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                var tempCats = new List<Category>();
+                foreach (var drvCat in tempDrvCats)
+                {
+                    tempCats.Add(new Category(drvCat));
+                }
+
+                itemTemp.SetCategories(tempCats.ToArray());
+                var driverViewModel = new DriverViewModel(itemTemp);
                 _newDisDrivers.Add(driverViewModel);
             }
 
@@ -173,7 +203,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
             foreach (DriverViewModel model in _newDisDrivers)
                 _disDrivers.Add(model);
 
-            SelectedItem = Items.FirstOrDefault(d => d.ID == currentSelected?.ID);
+            SelectedItem = Items.FirstOrDefault(i => i.ID == currentSelected?.ID);
         }
     }
 }

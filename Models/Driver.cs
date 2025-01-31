@@ -11,7 +11,7 @@ namespace CourseProgram.Models
         [DisplayName("ФИО")]
         public string FIO { get; }
         [DisplayName("ДатаРождения")]
-        public DateOnly BirthDay { get; }
+        public DateOnly? BirthDay { get; }
         [DisplayName("ПаспортныеДанные")]
         public string Passport { get; }
         [DisplayName("Телефон")]
@@ -19,8 +19,8 @@ namespace CourseProgram.Models
         [DisplayName("ДатаНачала")]
         public DateOnly DateStart { get; }
         [DisplayName("ДатаОкончания")]
-        public DateOnly DateEnd { get; }
-        public string Town { get; }
+        public DateOnly? DateEnd { get; }
+        public string? Town { get; }
         public string StringCategories { get; private set; }
 
         private readonly List<Category> ListCategories = new List<Category>();
@@ -41,12 +41,12 @@ namespace CourseProgram.Models
         public Driver(
             int id,
             string fio,
-            DateOnly birthDay,
+            DateOnly? birthDay,
             string passport,
-            string phone,
+            string? phone,
             DateOnly dateStart,
-            DateOnly dateEnd,
-            string town)
+            DateOnly? dateEnd,
+            string? town)
         {
             ID = id;
             FIO = fio;
@@ -61,12 +61,12 @@ namespace CourseProgram.Models
         public Driver(
             int id,
             string fio,
-            DateOnly birthDay,
+            DateOnly? birthDay,
             string passport,
-            string phone,
+            string? phone,
             DateOnly dateStart,
-            DateOnly dateEnd,
-            string town,
+            DateOnly? dateEnd,
+            string? town,
             params Category[] args)
         {
             ID = id;

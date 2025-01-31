@@ -12,7 +12,7 @@ namespace CourseProgram.Models
         [DisplayName("КодНоменклатуры")]
         public int NomenclatureID { get; }
         [DisplayName("Объём")]
-        public float Volume { get; }
+        public float? Volume { get; }
         [DisplayName("Вес")]
         public float Weight { get; }
         [DisplayName("Количество")]
@@ -23,7 +23,7 @@ namespace CourseProgram.Models
             ID = 0;
             BudID = 0;
             NomenclatureID = 0;
-            Volume = 0;
+            Volume = null;
             Weight = 0;
             Count = 0;
         }
@@ -32,7 +32,7 @@ namespace CourseProgram.Models
             int id,
             int budID,
             int nomenclatureID,
-            float volume,
+            float? volume,
             float weight,
             int count)
         {

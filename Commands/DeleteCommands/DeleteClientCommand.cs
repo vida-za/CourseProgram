@@ -37,7 +37,7 @@ namespace CourseProgram.Commands.DeleteCommands
                 bool check = await _servicesStore._clientService.CheckCanDelete(_viewModel.SelectedItem.ID);
 
                 if (!check)
-                    MessageBox.Show("Нельзя удалить клиента так как он уже используется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Нельзя удалить клиента так как он уже используется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 else
                 {
                     bool result = await _servicesStore._clientService.DeleteItemAsync(_viewModel.SelectedItem.ID);

@@ -9,36 +9,36 @@ namespace CourseProgram.Models
         [DisplayName("КодМаршрута")]
         public int ID { get; }
         [DisplayName("КодМашины")]
-        public int MachineID { get; }
+        public int? MachineID { get; }
         [DisplayName("КодВодителя")]
-        public int DriverID { get; }
+        public int? DriverID { get; }
         [DisplayName("Тип")]
         public RouteTypeValues Type { get; }
         [DisplayName("Расстояние")]
-        public float Distance { get; }
+        public float? Distance { get; }
         [DisplayName("Статус")]
         public RouteStatusValues Status { get; }
         [DisplayName("ВремяВыполнения")]
-        public DateTime CompleteTime { get; }
+        public DateTime? CompleteTime { get; }
         [DisplayName("КодАдресаНачала")]
-        public int AddressStartID { get; }
+        public int? AddressStartID { get; }
         [DisplayName("КодАдресаОкончания")]
-        public int AddressEndID { get; }
+        public int? AddressEndID { get; }
 
         public Route()
         {
             ID = 0;
             MachineID = 0;
             DriverID = 0;
-            Type = RouteTypeValues.Null;
+            Type = RouteTypeValues.General;
             Distance = float.NaN;
-            Status = RouteStatusValues.Null;
+            Status = RouteStatusValues.Waiting;
             CompleteTime = DateTime.MinValue;
             AddressStartID = 0;
             AddressEndID = 0;
         }
 
-        public Route(int id, int machine, int driver, string type, float distance, string status, DateTime completeTime, int addressStartID, int addressEndID)
+        public Route(int id, int? machine, int? driver, string type, float? distance, string status, DateTime? completeTime, int? addressStartID, int? addressEndID)
         {
             ID = id;
             MachineID = machine;
@@ -53,16 +53,29 @@ namespace CourseProgram.Models
                 "Общий" => RouteTypeValues.General,
                 "Обособленный" => RouteTypeValues.Isolated,
                 "Пустой" => RouteTypeValues.Empty,
-                _ => RouteTypeValues.Null,
+                _ => throw new NotImplementedException()
             };
             Status = status switch
             {
                 "Выполнен" => RouteStatusValues.Completed,
-                "В ожидании" => RouteStatusValues.Waiting,
+                "В очереди" => RouteStatusValues.Waiting,
                 "Выполняется" => RouteStatusValues.InProgress,
                 "Отменен" => RouteStatusValues.Cancelled,
-                _ => RouteStatusValues.Null,
+                _ => throw new NotImplementedException()
             };
+        }
+
+        public Route(int iD, int? machineID, int? driverID, RouteTypeValues type, float? distance, RouteStatusValues status, DateTime? completeTime, int? addressStartID, int? addressEndID)
+        {
+            ID = iD;
+            MachineID = machineID;
+            DriverID = driverID;
+            Type = type;
+            Distance = distance;
+            Status = status;
+            CompleteTime = completeTime;
+            AddressStartID = addressStartID;
+            AddressEndID = addressEndID;
         }
 
         public static string GetTable() => "Маршрут";
