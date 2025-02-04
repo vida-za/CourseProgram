@@ -112,8 +112,7 @@ namespace CourseProgram.Services.DataServices
                 GetString(row["Состояние"], string.Empty),
                 GetDateTime(row["ДатаВремяПоступления"], DateTime.MinValue),
                 GetDateTimeOrNull(row["ДатаВремяСписания"]),
-                null //TO DO
-                ));
+                GetIntOrNull(row["КодАдреса"])));
         }
     }
 }

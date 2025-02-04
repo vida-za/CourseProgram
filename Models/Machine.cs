@@ -38,7 +38,8 @@ namespace CourseProgram.Models
         public DateTime TimeStart { get; }
         [DisplayName("ДатаВремяСписания")]
         public DateTime? TimeEnd { get; }
-        public string? Town { get; }
+        [DisplayName("КодАдреса")]
+        public int? AddressID { get; }
 
         public Machine()
         {
@@ -46,19 +47,19 @@ namespace CourseProgram.Models
             TypeMachine = MachineTypeValues.Truck;
             TypeBodywork = MachineTypeBodyworkValues.Null;
             TypeLoading = MachineTypeLoadingValues.Behind;
-            LoadCapacity = float.NaN;
-            Volume = float.NaN;
+            LoadCapacity = 0;
+            Volume = null;
             HydroBoard = false;
-            LengthBodywork = float.NaN;
-            WidthBodywork = float.NaN;
-            HeightBodywork = float.NaN;
+            LengthBodywork = null;
+            WidthBodywork = null;
+            HeightBodywork = null;
             Stamp = string.Empty;
             Name = string.Empty;
-            StateNumber = string.Empty;
+            StateNumber = null;
             Status = MachineStatusValues.Waiting;
             TimeStart = new DateTime();
-            TimeEnd = new DateTime();
-            Town = string.Empty;
+            TimeEnd = null;
+            AddressID = null;
         }
 
         public Machine(
@@ -78,7 +79,7 @@ namespace CourseProgram.Models
             string status,
             DateTime timeStart,
             DateTime? timeEnd,
-            string? town)
+            int? addressID)
         {
             ID = id;
             LoadCapacity = loadCapacity;
@@ -92,7 +93,7 @@ namespace CourseProgram.Models
             StateNumber = stateNumber;
             TimeStart = timeStart;
             TimeEnd = timeEnd;
-            Town = town;
+            AddressID = addressID;
 
             TypeMachine = typeMachine switch
             {
@@ -144,7 +145,7 @@ namespace CourseProgram.Models
             MachineStatusValues status,
             DateTime timeStart,
             DateTime? timeEnd,
-            string? town)
+            int? addressID)
         {
             ID = iD;
             TypeMachine = typeMachine;
@@ -162,7 +163,7 @@ namespace CourseProgram.Models
             Status = status;
             TimeStart = timeStart;
             TimeEnd = timeEnd;
-            Town = town;
+            AddressID = addressID;
         }
 
         public static string GetTable() => "Машина";
@@ -186,7 +187,8 @@ namespace CourseProgram.Models
                 "ГосНомер",
                 "Состояние",
                 "ДатаВремяПоступления",
-                "ДатаВремяСписания"
+                "ДатаВремяСписания",
+                "КодАдреса"
             };
         }
 

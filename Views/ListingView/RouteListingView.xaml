@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="CourseProgram.Views.ListingView.RouteListingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CourseProgram.Views.ListingView"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.ListingViewModel"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:RouteListingViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0"
+                  Header="Выполняемые маршруты"
+                  Padding="5"
+                  Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0"
+                        Margin="10 0 0 0"
+                        MaxWidth="120"
+                        Content="Завершить"
+                        Command="{Binding CompleteRoute}" />
+
+                <DataGrid Grid.Row="1"
+                          Margin="0 25 0 0"
+                          MaxHeight="250"
+                          ItemsSource="{Binding ProgRoutes}"
+                          SelectedItem="{Binding SelectedProgRoute}"
+                          AutoGenerateColumns="True"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
+                          IsReadOnly="True">
+                    <i:Interaction.Behaviors>
+                        <beh:ColumnHeaderBehaviour />
+                    </i:Interaction.Behaviors>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1"
+                  Header="Маршруты в ожидании"
+                  Padding="5"
+                  Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
+                            Margin="5">
+                    <Button Margin="10 0 0 0"
+                            Content="Начать"
+                            Command="{Binding StartRoute}" />
+
+                    <Button Margin="10 0 0 0"
+                            Content="Отменить"
+                            Command="{Binding CancelRoute}" />
+                </StackPanel>
+                
+                <DataGrid Grid.Row="1"
+                          Margin="0 25 0 0"
+                          MaxHeight="250"
+                          ItemsSource="{Binding WaitRoutes}"
+                          SelectedItem="{Binding SelectedWaitRoute}"
+                          AutoGenerateColumns="True"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
+                          IsReadOnly="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding DetailRoute}"
+                                                   CommandParameter="{Binding SelectedWaitRoute, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <i:Interaction.Behaviors>
+                        <beh:ColumnHeaderBehaviour />
+                    </i:Interaction.Behaviors>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

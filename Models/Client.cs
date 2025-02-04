@@ -43,9 +43,9 @@ namespace CourseProgram.Models
             OGRN = string.Empty;
             Phone = string.Empty;
             Checking = string.Empty;
-            BIK = string.Empty;
-            Correspondent = string.Empty;
-            Bank = string.Empty;
+            BIK = null;
+            Correspondent = null;
+            Bank = null;
             PhoneLoad = string.Empty;
             PhoneOnLoad = string.Empty;
         }

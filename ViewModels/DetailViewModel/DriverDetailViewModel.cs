@@ -51,7 +51,6 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string Phone => _driverViewModel.Phone;
         public string DateStart => _driverViewModel.DateStart;
         public string DateEnd => _driverViewModel.DateEnd;
-        public string Town => _driverViewModel.Town;
 
         private string _stringCategories;
         public string StringCategories

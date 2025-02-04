@@ -28,11 +28,11 @@ namespace CourseProgram.Models
             ID = 0;
             BudID = 0;
             TimeOrder = DateTime.MinValue;
-            TimeLoad = DateTime.MinValue;
-            TimeOnLoad = DateTime.MinValue;
-            Price = 0;
+            TimeLoad = null;
+            TimeOnLoad = null;
+            Price = null;
             Status = OrderStatusValues.Waiting;
-            File = string.Empty;
+            File = null;
         }
 
         public Order(
@@ -82,7 +82,7 @@ namespace CourseProgram.Models
             return new[]
             {
                 "КодЗаказа",
-                "НомерЗаявки",
+                "КодЗаявки",
                 "ДатаЗаказа",
                 "ДатаЗагрузки",
                 "ДатаВыгрузки",

@@ -99,8 +99,7 @@ namespace CourseProgram.Services.DataServices
                 GetString(row["ПаспортныеДанные"], string.Empty),
                 GetStringOrNull(row["Телефон"]),
                 GetDateOnly(row["ДатаНачала"], DateOnly.MinValue),
-                GetDateOnlyOrNull(row["ДатаОкончания"]),
-                null));
+                GetDateOnlyOrNull(row["ДатаОкончания"])));
         }
     }
 }

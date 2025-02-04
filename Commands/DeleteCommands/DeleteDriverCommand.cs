@@ -51,8 +51,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     temp.Passport,
                     temp.Phone,
                     temp.DateStart,
-                    DateOnly.FromDateTime(DateTime.Now),
-                    temp.Town
+                    DateOnly.FromDateTime(DateTime.Now)
                     );
 
                 bool result = await _servicesStore._driverService.UpdateItemAsync(newItem);

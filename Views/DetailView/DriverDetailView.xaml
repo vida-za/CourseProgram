@@ -99,16 +99,6 @@
                            Grid.Column="1"
                            Text="{Binding DateEnd}"
                            Margin="5 5 0 0" />
-
-                <TextBlock Grid.Row="6"
-                           Grid.Column="0"
-                           Text="Город"
-                           Margin="0 5 5 0"
-                           FontWeight="Bold" />
-                <TextBlock Grid.Row="6"
-                           Grid.Column="1"
-                           Text="{Binding Town}"
-                           Margin="5 5 0 0" />
             </Grid>
 
             <Button Grid.Row="2"

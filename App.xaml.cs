@@ -71,12 +71,23 @@ namespace CourseProgram
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
 
-            services.AddTransient(s => new OrderDetailViewModel());
+            services.AddTransient(s => new OrderDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
             services.AddTransient(s => new BudDetailViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<SelectedStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
             services.AddTransient(s => new AddBudViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+
+            services.AddTransient(s => new RouteDetailViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                s.GetRequiredService<CloseModalNavigationService>()));
+            services.AddTransient(s => new AddRouteViewModel(
                 s.GetRequiredService<ServicesStore>(),
                 s.GetRequiredService<CloseModalNavigationService>()));
 
@@ -110,11 +121,16 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 CreateOrderDetailNavigationService(s),
                 CreateBudDetailNavigationService(s),
-                CreateAddBudNavigationService(s)));
+                CreateAddBudNavigationService(s),
+                CreateAddRouteNavigationService(s)));
             services.AddTransient(s => new NomenclatureListingViewModel(
                 s.GetRequiredService<ServicesStore>(), 
                 s.GetRequiredService<SelectedStore>(),
                 CreateAddNomenclatureNavigationService(s)));
+            services.AddTransient(s => new RouteListingViewModel(
+                s.GetRequiredService<ServicesStore>(),
+                s.GetRequiredService<SelectedStore>(),
+                CreateRouteDetailNavigationService(s)));
 
             services.AddSingleton(s => new HomeViewModel());
 
@@ -238,6 +254,17 @@ namespace CourseProgram
         {
             return CreateModalNavigationService<AddBudViewModel>(serviceProvider);
         }
+
+        private static INavigationService CreateAddRouteNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<AddRouteViewModel>(serviceProvider);
+        }
+
+        //Route
+        private static INavigationService CreateRouteDetailNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateModalNavigationService<RouteDetailViewModel>(serviceProvider);
+        }
         #endregion
 
         #region layout
@@ -284,9 +311,14 @@ namespace CourseProgram
             return CreateLayoutNavigationService<OperationalViewModel>(serviceProvider);
         }
 
-        private static INavigationService CreateNomenclatureNavigationService(IServiceProvider serviceProvider)
+        private static INavigationService CreateNomenclatureListingNavigationService(IServiceProvider serviceProvider)
         {
             return CreateLayoutNavigationService<NomenclatureListingViewModel>(serviceProvider);
+        }
+
+        private static INavigationService CreateRouteListingNavigationService(IServiceProvider serviceProvider)
+        {
+            return CreateLayoutNavigationService<RouteListingViewModel>(serviceProvider);
         }
         #endregion
 
@@ -297,10 +329,11 @@ namespace CourseProgram
                 CreateClientListingNavigationService(serviceProvider),
                 CreateDriverListingNavigationService(serviceProvider),
                 CreateMachineListingNavigationService(serviceProvider),
-                CreateNomenclatureNavigationService(serviceProvider),
+                CreateNomenclatureListingNavigationService(serviceProvider),
                 CreateWorkerListingNavigationService(serviceProvider),
                 CreateHomeNavigationService(serviceProvider),
-                CreateOperationalNavigationService(serviceProvider));
+                CreateOperationalNavigationService(serviceProvider),
+                CreateRouteListingNavigationService(serviceProvider));
         }
     }
 }

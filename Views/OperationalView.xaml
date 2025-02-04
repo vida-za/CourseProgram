@@ -16,8 +16,9 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
@@ -103,5 +104,11 @@
                         Margin="0 10 0 0" />
             </Grid>
         </GroupBox>
+
+        <Button Grid.Row="3"
+                Margin="15"
+                MaxWidth="150"
+                Content="Добавить маршрут"
+                Command="{Binding AddRouteCommand}" />
     </Grid>
 </UserControl>

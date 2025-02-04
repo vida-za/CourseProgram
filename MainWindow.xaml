@@ -86,8 +86,24 @@
             <DataTemplate DataType="{x:Type vm:OperationalViewModel}">
                 <v:OperationalView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type dvm:OrderDetailViewModel}">
+                <dv:OrderDetailView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dvm:BudDetailViewModel}">
+                <dv:BudDetailView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type avm:AddBudViewModel}">
                 <av:AddBudView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type avm:AddRouteViewModel}">
+                <av:AddRouteView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type lvm:RouteListingViewModel}">
+                <lv:RouteListingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type dvm:RouteDetailViewModel}">
+                <dv:RouteDetailView />
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type vm:LayoutViewModel}">

@@ -20,7 +20,6 @@ namespace CourseProgram.Models
         public DateOnly DateStart { get; }
         [DisplayName("ДатаОкончания")]
         public DateOnly? DateEnd { get; }
-        public string? Town { get; }
         public string StringCategories { get; private set; }
 
         private readonly List<Category> ListCategories = new List<Category>();
@@ -29,13 +28,11 @@ namespace CourseProgram.Models
         {
             ID = 0;
             FIO = string.Empty;
-            BirthDay = DateOnly.MinValue;
+            BirthDay = null;
             Passport = string.Empty;
-            Phone = string.Empty;
+            Phone = null;
             DateStart = DateOnly.MinValue;
-            DateEnd = DateOnly.MinValue;
-            Town = string.Empty;
-
+            DateEnd = null;
         }
 
         public Driver(
@@ -45,8 +42,7 @@ namespace CourseProgram.Models
             string passport,
             string? phone,
             DateOnly dateStart,
-            DateOnly? dateEnd,
-            string? town)
+            DateOnly? dateEnd)
         {
             ID = id;
             FIO = fio;
@@ -55,7 +51,6 @@ namespace CourseProgram.Models
             Phone = phone;
             DateStart = dateStart;
             DateEnd = dateEnd;
-            Town = town;
         }
 
         public Driver(
@@ -66,7 +61,6 @@ namespace CourseProgram.Models
             string? phone,
             DateOnly dateStart,
             DateOnly? dateEnd,
-            string? town,
             params Category[] args)
         {
             ID = id;
@@ -76,7 +70,6 @@ namespace CourseProgram.Models
             Phone = phone;
             DateStart = dateStart;
             DateEnd = dateEnd;
-            Town = town;
 
             SetCategories(args);
         }

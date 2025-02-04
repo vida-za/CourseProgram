@@ -59,6 +59,6 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string Status => _machineViewModel.Status;
         public string TimeStart => _machineViewModel.TimeStart.ToString();
         public string TimeEnd => _machineViewModel.TimeEnd;
-        public string Town => _machineViewModel.Town;
+        public string FullAddress => _machineViewModel.FullAddress;
     }
 }

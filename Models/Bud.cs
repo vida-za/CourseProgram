@@ -24,9 +24,9 @@ namespace CourseProgram.Models
             ID = 0;
             ClientID = 0;
             WorkerID = 0;
-            TimeBud = DateTime.MinValue;
+            TimeBud = DateTime.Now;
             Status = BudStatusValues.Waiting;
-            Description = string.Empty;
+            Description = null;
         }
 
         public Bud(int id, int clientID, int workerID, DateTime timeBud, string status, string? description)

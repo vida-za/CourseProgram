@@ -4,9 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:CourseProgram.Views.DetailView"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
              mc:Ignorable="d"
              d:DesignHeight="950"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:MachineDetailViewModel}">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -200,7 +202,7 @@
                            FontWeight="Bold" />
                 <TextBlock Grid.Row="14"
                            Grid.Column="1"
-                           Text="{Binding Town}"
+                           Text="{Binding FullAddress}"
                            Margin="5 5 0 0" />
             </Grid>
 

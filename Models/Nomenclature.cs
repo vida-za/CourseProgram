@@ -41,16 +41,16 @@ namespace CourseProgram.Models
             Name = string.Empty;
             Type = NomenclatureTypeValues.Other;
             CategoryCargo = NomenclatureCategoriesValues.Standard;
-            Length = 0;
-            Width = 0;
-            Height = 0;
-            Weight = 0;
+            Length = null;
+            Width = null;
+            Height = null;
+            Weight = null;
             Unit = NomenclatureMeasureValues.sht;
             Pack = NomenclaturePackingValues.None;
-            NeedTemperature = string.Empty;
+            NeedTemperature = null;
             DangerousClass = NomenclatureDangerousValues.None;
-            Manufacturer = string.Empty;
-            ExpiryDate = 0;
+            Manufacturer = null;
+            ExpiryDate = null;
         }
 
         public Nomenclature(

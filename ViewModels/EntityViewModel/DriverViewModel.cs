@@ -23,8 +23,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string DateStart => _model.DateStart.ToString("d");
         [DisplayName("Уволен")]
         public string DateEnd => _model.DateEnd != null ? ((DateOnly)_model.DateEnd).ToString("d") : "-";
-        [DisplayName("Текущая дислокация")]
-        public string Town => _model.Town ?? "Неизвестно";
 
         public DriverViewModel(Driver driver)
         {

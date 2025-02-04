@@ -15,7 +15,7 @@ namespace CourseProgram.ViewModels
         public ICommand NavigateMachinesCommand { get; }
         public ICommand NavigateNomenclaturesCommand { get; }
         //public ICommand NavigateOrdersCommand { get; }
-        //public ICommand NavigateRoutesCommand { get; }
+        public ICommand NavigateRoutesCommand { get; }
         public ICommand NavigateWorkersCommand { get; }
 
         public ICommand NavigateHomeCommand { get; }
@@ -30,7 +30,8 @@ namespace CourseProgram.ViewModels
             INavigationService nomenclaturesNavigationService,
             INavigationService workersNavigationService,
             INavigationService homeNavigationService,
-            INavigationService operationalNavigationService) 
+            INavigationService operationalNavigationService,
+            INavigationService routesNavigationService) 
         {
             NavigateAddressesCommand = new NavigateCommand(addressesNavigationService);
             //NavigateCargoesCommand = new NavigateCommand(cargoesNavigationService); 
@@ -40,7 +41,7 @@ namespace CourseProgram.ViewModels
             NavigateMachinesCommand = new NavigateCommand(machinesNavigationService);
             NavigateNomenclaturesCommand = new NavigateCommand(nomenclaturesNavigationService);
             //NavigateOrdersCommand = new NavigateCommand(ordersNavigationService);
-            //NavigateRoutesCommand = new NavigateCommand(routesNavigationService);
+            NavigateRoutesCommand = new NavigateCommand(routesNavigationService);
             NavigateWorkersCommand = new NavigateCommand(workersNavigationService);
 
             NavigateHomeCommand = new NavigateCommand(homeNavigationService);

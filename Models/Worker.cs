@@ -24,11 +24,11 @@ namespace CourseProgram.Models
         {
             ID = 0;
             FIO = string.Empty;
-            BirthDay = DateOnly.MinValue;
+            BirthDay = null;
             Passport = string.Empty;
-            Phone = string.Empty;
+            Phone = null;
             DateStart = DateOnly.MinValue;
-            DateEnd = DateOnly.MinValue;
+            DateEnd = null;
         }
 
         public Worker(int id, string fio, DateOnly? birthDay, string passport, string? phone, DateOnly dateStart, DateOnly? dateEnd)

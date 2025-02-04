@@ -51,6 +51,46 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
+        public async Task<IEnumerable<Cargo>> GetCargosByOrderAsync(int OrderID)
+        {
+            using (var query = new Query(CommandTypes.TableFunction, "GetCargosByOrder"))
+            {
+                try
+                {
+                    items.Clear();
+
+                    query.AddFields(Cargo.GetFieldNames());
+                    query.AddParameter("OrderID", OrderID);
+
+                    DataTable data;
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        data = await con.ExecuteQueryAsync<DataTable>(query);
+                    }
+
+                    if (data != null)
+                    {
+                        foreach (DataRow row in data.Rows)
+                        {
+                            CreateElement(row);
+                        }
+                    }
+
+                    return await Task.FromResult(items);
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetCargosByOrderAsync)}: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    query?.Dispose();
+                }
+            }
+        }
+
         public override void CreateElement(DataRow row)
         {
             items.Add(new Cargo(GetInt(row["КодГруза"], 0),

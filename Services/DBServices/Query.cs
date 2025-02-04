@@ -210,7 +210,7 @@ namespace CourseProgram.Services.DBServices
                 case CommandTypes.DeleteQuery: CommandText = $"Delete From {ObjectName} {WhereClause};"; break;
                 case CommandTypes.UpdateQuery: BuildUpdateQuery(); break;
                 case CommandTypes.Procedure: CommandText = $"Call({string.Join(", ", Parameters.Values)});"; break;
-                case CommandTypes.ScalarFunction: CommandText = $"{ObjectName}({string.Join(", ", Parameters.Values)});"; break;
+                case CommandTypes.ScalarFunction: CommandText = $"Select {ObjectName}({string.Join(", ", Parameters.Values)});"; break;
                 case CommandTypes.TableFunction: CommandText = $"Select {string.Join(", ", Fields)} From {ObjectName}({string.Join(", ", Parameters.Values)});"; break;
                 default: break;
             }

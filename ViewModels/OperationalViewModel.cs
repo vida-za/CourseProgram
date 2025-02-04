@@ -24,6 +24,7 @@ namespace CourseProgram.ViewModels
         public ICommand StartHaulCommand { get; }
         public ICommand CompleteHaulCommand { get; }
         public ICommand AddBudCommand { get; }
+        public ICommand AddRouteCommand { get; }
         #endregion
 
         public OperationalViewModel(
@@ -31,7 +32,8 @@ namespace CourseProgram.ViewModels
             SelectedStore selectedStore,
             INavigationService detailOrderNavigationService,
             INavigationService detailBudNavigationService,
-            INavigationService addBudNavigationService) 
+            INavigationService addBudNavigationService,
+            INavigationService addRouteNavigationService) 
         {
             _servicesStore = servicesStore;
             _selectedStore = selectedStore;
@@ -45,6 +47,7 @@ namespace CourseProgram.ViewModels
             StartHaulCommand = new StartHaulCommand(this, _servicesStore);
             CompleteHaulCommand = new CompleteHaulCommand(this, _servicesStore);
             AddBudCommand = new NavigateCommand(addBudNavigationService);
+            AddRouteCommand = new NavigateCommand(addRouteNavigationService);
 
             UpdateData();
 

@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="CourseProgram.Views.DetailView.OrderDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:CourseProgram.Views.DetailView"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:OrderDetailViewModel}">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"
+              Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Название клиента"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="0"
+                       Grid.Column="1"
+                       Text="{Binding ClientName}"
+                       Margin="0 5 0 0" />
+            
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Время заказа"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding TimeOrder}"
+                       Margin="0 5 0 0" />
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Время погрузки"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="2"
+                       Grid.Column="1"
+                       Text="{Binding TimeLoad}"
+                       Margin="0 5 0 0" />
+
+            <TextBlock Grid.Row="3"
+                       Grid.Column="0"
+                       Text="Время разгрузки"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="3"
+                       Grid.Column="1"
+                       Text="{Binding TimeOnLoad}"
+                       Margin="0 5 0 0" />
+
+            <TextBlock Grid.Row="4"
+                       Grid.Column="0"
+                       Text="Стоимость"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="4"
+                       Grid.Column="1"
+                       Text="{Binding Price}"
+                       Margin="0 5 0 0" />
+
+            <TextBlock Grid.Row="5"
+                       Grid.Column="0"
+                       Text="Статус"
+                       Margin="0 0 5 0"
+                       FontWeight="Bold" />
+            <TextBlock Grid.Row="5"
+                       Grid.Column="1"
+                       Text="{Binding Status}"
+                       Margin="0 5 0 0" />
+        </Grid>
+
+        <Button Grid.Row="1"
+                Margin="5"
+                Content="Назад"
+                Command="{Binding Back}" />
+
+        <DataGrid Grid.Row="2"
+                  MaxHeight="150"
+                  ItemsSource="{Binding Routes}"
+                  AutoGenerateColumns="True"
+                  IsReadOnly="True">
+            <i:Interaction.Behaviors>
+                <beh:ColumnHeaderBehaviour />
+            </i:Interaction.Behaviors>
+        </DataGrid>
+
+        <DataGrid Grid.Row="3"
+                  MaxHeight="150"
+                  ItemsSource="{Binding Cargos}"
+                  AutoGenerateColumns="True"
+                  IsReadOnly="True">
+            <i:Interaction.Behaviors>
+                <beh:ColumnHeaderBehaviour />
+            </i:Interaction.Behaviors>
+        </DataGrid>
+    </Grid>
+</UserControl>

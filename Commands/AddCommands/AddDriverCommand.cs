@@ -50,7 +50,6 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.Passport,
                 _viewModel.Phone,
                 DateOnly.FromDateTime(DateTime.Now),
-                null,
                 null
                 );
 

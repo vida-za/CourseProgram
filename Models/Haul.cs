@@ -18,8 +18,8 @@ namespace CourseProgram.Models
         {
             ID = 0;
             DateStart = new DateOnly();
-            DateEnd = new DateOnly();
-            SumIncome = 0;
+            DateEnd = null;
+            SumIncome = null;
         }
 
         public Haul(int id, DateOnly dateStart, DateOnly? dateEnd, float? sumIncome)

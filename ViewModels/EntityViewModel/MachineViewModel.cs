@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Stores;
 using System;
 using System.ComponentModel;
 
@@ -7,7 +8,11 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class MachineViewModel : BaseViewModel
     {
         private readonly Machine _model;
+        private readonly ServicesStore _servicesStore;
+
+        private Address _modelAddress;
         public readonly int ID;
+        public readonly int? AddressID;
 
         public Machine GetModel() => _model;
 
@@ -42,13 +47,20 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Время списания")]
         public string TimeEnd => _model.TimeEnd != null ? ((DateTime)_model.TimeEnd).ToString("g") : "-";
         [DisplayName("Текущая дислокация")]
-        public string Town => _model.Town ?? "Неизвестно";
+        public string FullAddress => _modelAddress?.FullAddress ?? "Неизвестно";
 
-        public MachineViewModel(Machine model)
+        public MachineViewModel(Machine model, ServicesStore servicesStore)
         {
             _model = model;
+            _servicesStore = servicesStore;
 
             ID = _model.ID;
+            AddressID = _model.AddressID;
+        }
+
+        private async void UpdateData()
+        {
+            _modelAddress = AddressID != null ? await _servicesStore._addressService.GetItemAsync((int)AddressID) : null;
         }
     }
 }

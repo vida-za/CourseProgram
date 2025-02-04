@@ -62,7 +62,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     temp.Status,
                     temp.TimeStart,
                     DateTime.Now,
-                    temp.Town
+                    temp.AddressID
                     );
 
                 bool result = await _servicesStore._machineService.UpdateItemAsync(newItem);

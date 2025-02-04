@@ -14,8 +14,6 @@ namespace CourseProgram.Models
         public int? DriverID { get; }
         [DisplayName("Тип")]
         public RouteTypeValues Type { get; }
-        [DisplayName("Расстояние")]
-        public float? Distance { get; }
         [DisplayName("Статус")]
         public RouteStatusValues Status { get; }
         [DisplayName("ВремяВыполнения")]
@@ -28,22 +26,20 @@ namespace CourseProgram.Models
         public Route()
         {
             ID = 0;
-            MachineID = 0;
-            DriverID = 0;
+            MachineID = null;
+            DriverID = null;
             Type = RouteTypeValues.General;
-            Distance = float.NaN;
             Status = RouteStatusValues.Waiting;
-            CompleteTime = DateTime.MinValue;
-            AddressStartID = 0;
-            AddressEndID = 0;
+            CompleteTime = null;
+            AddressStartID = null;
+            AddressEndID = null;
         }
 
-        public Route(int id, int? machine, int? driver, string type, float? distance, string status, DateTime? completeTime, int? addressStartID, int? addressEndID)
+        public Route(int id, int? machine, int? driver, string type, string status, DateTime? completeTime, int? addressStartID, int? addressEndID)
         {
             ID = id;
             MachineID = machine;
             DriverID = driver;
-            Distance = distance;
             CompleteTime = completeTime;
             AddressStartID = addressStartID;
             AddressEndID = addressEndID;
@@ -65,13 +61,12 @@ namespace CourseProgram.Models
             };
         }
 
-        public Route(int iD, int? machineID, int? driverID, RouteTypeValues type, float? distance, RouteStatusValues status, DateTime? completeTime, int? addressStartID, int? addressEndID)
+        public Route(int iD, int? machineID, int? driverID, RouteTypeValues type, RouteStatusValues status, DateTime? completeTime, int? addressStartID, int? addressEndID)
         {
             ID = iD;
             MachineID = machineID;
             DriverID = driverID;
             Type = type;
-            Distance = distance;
             Status = status;
             CompleteTime = completeTime;
             AddressStartID = addressStartID;
@@ -88,7 +83,6 @@ namespace CourseProgram.Models
                 "КодМашины",
                 "КодВодителя",
                 "Тип",
-                "Расстояние",
                 "Статус",
                 "ВремяВыполнения",
                 "КодАдресаНачала",

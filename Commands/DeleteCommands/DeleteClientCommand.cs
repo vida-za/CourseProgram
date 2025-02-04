@@ -51,6 +51,7 @@ namespace CourseProgram.Commands.DeleteCommands
             }
             catch(Exception) 
             {
+                MessageBox.Show("Неизвестная ошибка!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

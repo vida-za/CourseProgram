@@ -42,7 +42,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
             foreach (Order order in temp)
             {
-                OrderViewModel orderViewModel = new(order, _servicesStore);
+                var orderViewModel = new OrderViewModel(order, _servicesStore);
                 _orders.Add(orderViewModel);
             }
         }

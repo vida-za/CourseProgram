@@ -55,7 +55,7 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            Machine machine = new(
+            var machine = new Machine(
                 -1,
                 _viewModel.TypeMachine,
                 _viewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.MachineTypeBodyworkValues.Null) : _viewModel.TypeBodywork,

@@ -1,0 +1,61 @@
+﻿using CourseProgram.Models;
+using CourseProgram.Stores;
+using CourseProgram.ViewModels.ListingViewModel;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace CourseProgram.Commands
+{
+    public class CompleteRouteCommand : CommandBaseAsync
+    {
+        private readonly ServicesStore _servicesStore;
+        private readonly RouteListingViewModel _routeListingViewModel;
+
+        public CompleteRouteCommand(ServicesStore servicesStore, RouteListingViewModel routeListingViewModel)
+        {
+            _servicesStore = servicesStore;
+            _routeListingViewModel = routeListingViewModel;
+        }
+
+        public override async Task ExecuteAsync(object? parameter)
+        {
+            MessageBoxResult message = MessageBox.Show("Вы уверены что хотите завершить маршрут?", "Подтверждение закрытия маршрута", MessageBoxButton.YesNo);
+            if (message == MessageBoxResult.Yes && _routeListingViewModel.SelectedProgRoute != null)
+            {
+                IsExecuting = true;
+
+                try
+                {
+                    Route tempRoute = _routeListingViewModel.SelectedProgRoute.GetModel();
+                    var newItem = new Route(
+                        tempRoute.ID,
+                        tempRoute.MachineID,
+                        tempRoute.DriverID,
+                        tempRoute.Type,
+                        Constants.RouteStatusValues.Completed,
+                        tempRoute.CompleteTime,
+                        tempRoute.AddressStartID,
+                        tempRoute.AddressEndID);
+
+                    bool result = await _servicesStore._routeService.UpdateItemAsync(newItem);
+                    if (result)
+                    {
+                        await _routeListingViewModel.UpdateDataAsync();
+                        MessageBox.Show("Маршрут завершен!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                        MessageBox.Show("Не удалось завершить маршрут", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Неизвестная ошибка!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    IsExecuting = false;
+                }
+            }
+        }
+    }
+}

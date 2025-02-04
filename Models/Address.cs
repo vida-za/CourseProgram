@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CourseProgram.Models
@@ -19,16 +20,19 @@ namespace CourseProgram.Models
         public string? Frame { get; }
         [DisplayName("Активен")]
         public bool Active { get; }
+        public string FullAddress { get; }
 
         public Address()
         {
             ID = 0;
             City = string.Empty;
             Street = string.Empty;
-            House = string.Empty;
-            Structure = string.Empty;
-            Frame = string.Empty;
+            House = null;
+            Structure = null;
+            Frame = null;
             Active = true;
+
+            FullAddress = SetFullAddress();
         }
 
         public Address(
@@ -47,6 +51,28 @@ namespace CourseProgram.Models
             Structure = structure;
             Frame = frame;
             Active = active;
+
+            FullAddress = SetFullAddress();
+        }
+
+        public string SetFullAddress()
+        {
+            var parts = new List<string>
+            {
+                $"г.{City}",
+                $"ул.{Street}"
+            };
+
+            if (!string.IsNullOrWhiteSpace(House))
+                parts.Add($"д.{House}");
+
+            if (!string.IsNullOrWhiteSpace(Structure))
+                parts.Add($"стр.{Structure}");
+
+            if (!string.IsNullOrWhiteSpace(Frame))
+                parts.Add($"корп.{Frame}");
+
+            return string.Join(", ", parts);
         }
 
         public static string GetTable() => "Адрес";
