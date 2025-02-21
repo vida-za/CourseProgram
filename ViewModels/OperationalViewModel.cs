@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using CourseProgram.ViewModels.ListingViewModel;
@@ -67,15 +68,14 @@ namespace CourseProgram.ViewModels
 
         public override async void UpdateData()
         {
-            await _servicesStore._haulService.GetItemsAsync();
-            Haul? temp = await _servicesStore._haulService.GetCurrentHaul();
+            Haul? temp = await ((HaulDataService)_servicesStore.GetService<Haul>()).GetCurrentHaul();
             if (temp == null)
                 Item = null;
             else
                 Item = new HaulViewModel(temp);
 
             ObservableCollection<BudViewModel> _newBuds = new ObservableCollection<BudViewModel>();
-            IEnumerable<Bud> tempBuds = await _servicesStore._budService.GetItemsAsync();
+            IEnumerable<Bud> tempBuds = await _servicesStore.GetService<Bud>().GetItemsAsync();
             foreach (Bud bud in tempBuds)
             {
                 if (bud.Status == Constants.BudStatusValues.Waiting)
@@ -96,7 +96,7 @@ namespace CourseProgram.ViewModels
 
                 ObservableCollection<OrderViewModel> _newOrders = new ObservableCollection<OrderViewModel>();
 
-                IEnumerable<Order> tempOrders = await _servicesStore._orderService.GetOrdersByHaulAsync(temp.ID);
+                IEnumerable<Order> tempOrders = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrdersByHaulAsync(temp.ID);
                 foreach (Order order in tempOrders)
                 {
                     var orderViewModel = new OrderViewModel(order, _servicesStore);
@@ -118,14 +118,14 @@ namespace CourseProgram.ViewModels
 
         public override async Task UpdateDataAsync()
         {
-            Haul? temp = await _servicesStore._haulService.GetCurrentHaul();
+            Haul? temp = await ((HaulDataService)_servicesStore.GetService<Haul>()).GetCurrentHaul();
             if (temp == null)
                 Item = null;
             else
                 Item = new HaulViewModel(temp);
 
             ObservableCollection<BudViewModel> _newBuds = new ObservableCollection<BudViewModel>();
-            IEnumerable<Bud> tempBuds = await _servicesStore._budService.GetItemsAsync();
+            IEnumerable<Bud> tempBuds = await _servicesStore.GetService<Bud>().GetItemsAsync();
             foreach (Bud bud in tempBuds)
             {
                 if (bud.Status == Constants.BudStatusValues.Waiting)
@@ -145,7 +145,7 @@ namespace CourseProgram.ViewModels
                 var currentSelected = SelectedOrder;
 
                 ObservableCollection<OrderViewModel> _newOrders = new ObservableCollection<OrderViewModel>();
-                IEnumerable<Order> tempOrders = await _servicesStore._orderService.GetOrdersByHaulAsync(temp.ID);
+                IEnumerable<Order> tempOrders = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrdersByHaulAsync(temp.ID);
                 foreach (Order order in tempOrders)
                 {
                     var orderViewModel = new OrderViewModel(order, _servicesStore);

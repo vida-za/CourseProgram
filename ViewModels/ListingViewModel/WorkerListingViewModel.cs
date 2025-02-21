@@ -71,21 +71,21 @@ namespace CourseProgram.ViewModels.ListingViewModel
             var _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
             var _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
-            IEnumerable<Worker> temp = await _servicesStore._workerService.GetItemsAsync();
+            IEnumerable<Worker> temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
                 _newAllWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore._workerService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
                 _newRdyWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore._workerService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
@@ -131,21 +131,21 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
             ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
-            IEnumerable<Worker> temp = await _servicesStore._workerService.GetItemsAsync();
+            IEnumerable<Worker> temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 WorkerViewModel workerViewModel = new(worker);
                 _newAllWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore._workerService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 WorkerViewModel workerViewModel = new(worker);
                 _newRdyWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore._workerService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (Worker worker in temp)
             {
                 WorkerViewModel workerViewModel = new(worker);

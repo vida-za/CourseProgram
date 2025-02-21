@@ -77,8 +77,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._machineService.FindMaxEmptyID();
-                int result = await _servicesStore._machineService.AddItemAsync(machine);
+                await _servicesStore.GetService<Machine>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Machine>().AddItemAsync(machine);
                 if (result > 0)
                     MessageBox.Show("Машина добавлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

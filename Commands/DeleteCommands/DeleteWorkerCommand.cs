@@ -51,7 +51,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     DateOnly.FromDateTime(DateTime.Now)
                     );
 
-                bool result = await _servicesStore._workerService.UpdateItemAsync(newItem);
+                bool result = await _servicesStore.GetService<Worker>().UpdateItemAsync(newItem);
                 if (result)
                     MessageBox.Show("Сотрудник удален!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

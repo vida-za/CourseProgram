@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -8,10 +9,11 @@ using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
 {
-    public class RouteDetailViewModel : BaseViewModel
+    public class RouteDetailViewModel : BaseDetailViewModel
     {
         private readonly RouteViewModel _routeViewModel;
         private readonly ServicesStore _servicesStore;
+        private readonly Route _base;
 
         public IEnumerable<Machine> Machines { get; set; }
         public IEnumerable<Driver> Drivers { get; set; }
@@ -23,13 +25,22 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public RouteDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
         {
             _routeViewModel = selectedStore.CurrentRoute;
+            _base = _routeViewModel.GetModel();
             _servicesStore = servicesStore;
 
+            SelectedMachine = _routeViewModel.GetMachine();
+            SelectedDriver = _routeViewModel.GetDriver();
+            SelectedAddressStart = _routeViewModel.GetAddressStart();
+            SelectedAddressEnd = _routeViewModel.GetAddressEnd();
+            IsDirty = false;
+
             Back = new NavigateCommand(closeNavigationService);
-            //Save = new ..();
+            Save = new UpdateEntityCommand<Route>(this, _servicesStore.GetService<Route>(), GetUpdatedRoute, closeNavigationService, () => IsDirty, () => IsDirty = false);
 
             UpdateData();
         }
+
+        private Route GetUpdatedRoute() => new Route(_base.ID, SelectedMachine.ID, SelectedDriver.ID, _base.Type, _base.Status, _base.CompleteTime, SelectedAddressStart.ID, SelectedAddressEnd.ID);
 
         private Machine _selectedMachine;
         public Machine SelectedMachine
@@ -38,6 +49,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
             set
             {
                 _selectedMachine = value;
+                IsDirty = true;
                 OnPropertyChanged(nameof(SelectedMachine));
             }
         }
@@ -49,6 +61,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
             set
             {
                 _selectedDriver = value;
+                IsDirty = true;
                 OnPropertyChanged(nameof(SelectedDriver));
             }
         }
@@ -60,6 +73,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
             set
             {
                 _selectedAddressStart = value;
+                IsDirty = true;
                 OnPropertyChanged(nameof(SelectedAddressStart));
             }
         }
@@ -71,15 +85,16 @@ namespace CourseProgram.ViewModels.DetailViewModel
             set
             {
                 _selectedAddressEnd = value;
+                IsDirty = true;
                 OnPropertyChanged(nameof(SelectedAddressEnd));
             }
         }
 
         private async void UpdateData()
         {
-            Machines = await _servicesStore._machineService.GetRdyMachinesAsync();
-            Drivers = await _servicesStore._driverService.GetActDriversAsync();
-            Addresses = await _servicesStore._addressService.GetActAddressesAsync();
+            Machines = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
+            Drivers = await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync();
+            Addresses = await ((AddressDataService)_servicesStore.GetService<Address>()).GetActAddressesAsync();
 
             OnPropertyChanged(nameof(Machines));
             OnPropertyChanged(nameof(Drivers));

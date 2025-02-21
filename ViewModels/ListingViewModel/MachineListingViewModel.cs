@@ -2,6 +2,7 @@
 using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
@@ -57,14 +58,14 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
             ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
-            IEnumerable<Machine> temp = await _servicesStore._machineService.GetRdyMachinesAsync();
+            IEnumerable<Machine> temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
             foreach (Machine machine in temp)
             {
                 var machineViewModel = new MachineViewModel(machine, _servicesStore);
                 _newRdyMachines.Add(machineViewModel);
             }
 
-            temp = await _servicesStore._machineService.GetDisMachinesAsync();
+            temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetDisMachinesAsync();
             foreach (Machine machine in temp)
             {
                 var machineViewModel = new MachineViewModel(machine, _servicesStore);
@@ -151,14 +152,14 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
             ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
-            IEnumerable<Machine> temp = await _servicesStore._machineService.GetRdyMachinesAsync();
+            IEnumerable<Machine> temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
             foreach (Machine machine in temp)
             {
                 var machineViewModel = new MachineViewModel(machine, _servicesStore);
                 _newRdyMachines.Add(machineViewModel);
             }
 
-            temp = await _servicesStore._machineService.GetDisMachinesAsync();
+            temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetDisMachinesAsync();
             foreach (Machine machine in temp)
             {
                 var machineViewModel = new MachineViewModel(machine, _servicesStore);

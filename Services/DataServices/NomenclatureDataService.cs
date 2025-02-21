@@ -44,9 +44,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Nomenclature> CreateElement(DataRow row)
         {
-            items.Add(new Nomenclature(GetInt(row["КодНоменклатуры"], 0),
+            return Task.FromResult(new Nomenclature(GetInt(row["КодНоменклатуры"], 0),
                 GetString(row["Наименование"], string.Empty),
                 GetString(row["Тип"], string.Empty),
                 GetString(row["Категория"], string.Empty),

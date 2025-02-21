@@ -71,8 +71,8 @@
                                     Binding="{Binding FIO}" />
                 <DataGridTextColumn Header="Номер телефона"
                                     Binding="{Binding Phone}" />
-                <DataGridTextColumn Header="Город"
-                                    Binding="{Binding Town}" />
+                <DataGridTextColumn Header="Категории"
+                                    Binding="{Binding StringCategories}" />
             </DataGrid.Columns>
         </DataGrid>
 

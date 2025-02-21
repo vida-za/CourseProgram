@@ -2,6 +2,7 @@
 using CourseProgram.Commands.AddCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
@@ -22,6 +23,8 @@ namespace CourseProgram.ViewModels.AddViewModel
         {
             _servicesStore = servicesStore;
 
+            _orders = new ObservableCollection<OrderViewModel>();
+
             SubmitCommand = new AddRouteCommand(this, _servicesStore, closeNavigationService);
             CancelCommand = new NavigateCommand(closeNavigationService);
             SelectionChangedCommand = new RelayCommand<object>(UpdateSelectedOrders);
@@ -32,19 +35,31 @@ namespace CourseProgram.ViewModels.AddViewModel
         public IEnumerable<Machine> Machines { get; set; }
         public IEnumerable<Driver> Drivers { get; set; }
         public IEnumerable<Address> Addresses { get; set; }
-        public ObservableCollection<OrderViewModel> Orders { get; set; }
+        private ObservableCollection<OrderViewModel> _orders;
+        public ObservableCollection<OrderViewModel> Orders 
+        { 
+            get => _orders;
+            set
+            {
+                _orders = value;
+                OnPropertyChanged(nameof(Orders));
+            } 
+        }
 
         private async void UpdateData()
         {
-            Machines = await _servicesStore._machineService.GetRdyMachinesAsync();
-            Drivers = await _servicesStore._driverService.GetActDriversAsync();
-            Addresses = await _servicesStore._addressService.GetActAddressesAsync();
+            Machines = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
+            Drivers = await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync();
+            Addresses = await ((AddressDataService)_servicesStore.GetService<Address>()).GetActAddressesAsync();
 
-            IEnumerable<Order> temp = await _servicesStore._orderService.GetItemsAsync();
+            IEnumerable<Order> temp = await _servicesStore.GetService<Order>().GetItemsAsync();
             foreach (var ord in temp)
             {
-                var orderViewModel = new OrderViewModel(ord, _servicesStore);
-                Orders.Add(orderViewModel);
+                if (ord.Status == Constants.OrderStatusValues.InProgress || ord.Status == Constants.OrderStatusValues.Waiting)
+                {
+                    var orderViewModel = new OrderViewModel(ord, _servicesStore);
+                    Orders.Add(orderViewModel);
+                }
             }
 
             OnPropertyChanged(nameof(Machines));
@@ -56,7 +71,7 @@ namespace CourseProgram.ViewModels.AddViewModel
         {
             if (parameter is IList items)
             {
-                SelectedOrders = new ObservableCollection<Order>(items.OfType<Order>().ToList());
+                SelectedOrders = new ObservableCollection<OrderViewModel>(items.OfType<OrderViewModel>().ToList());
             }
         }
 
@@ -104,8 +119,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             }
         }
 
-        private ObservableCollection<Order> _selectedOrders;
-        public ObservableCollection<Order> SelectedOrders
+        private ObservableCollection<OrderViewModel> _selectedOrders;
+        public ObservableCollection<OrderViewModel> SelectedOrders
         {
             get => _selectedOrders;
             set

@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:CourseProgram.Views.AddView"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -88,19 +90,31 @@
                          Style="{StaticResource PlaceholderTextBoxStyle}"
                          Tag="Контакт заказчика"
                          Margin="5"
-                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <beh:PhoneNumberMaskBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
                 <TextBox Grid.Row="2"
                          Grid.Column="1"
                          Style="{StaticResource PlaceholderTextBoxStyle}"
                          Tag="Контакт погрузки"
                          Margin="5"
-                         Text="{Binding PhoneLoad, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding PhoneLoad, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <beh:PhoneNumberMaskBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
                 <TextBox Grid.Row="2"
                          Grid.Column="2"
                          Style="{StaticResource PlaceholderTextBoxStyle}"
                          Tag="Контакт разгрузки"
                          Margin="5"
-                         Text="{Binding PhoneOnLoad, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding PhoneOnLoad, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <beh:PhoneNumberMaskBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
             </Grid>
         </GroupBox>
 

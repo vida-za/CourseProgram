@@ -46,8 +46,20 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string TimeStart => _model.TimeStart.ToString("g");
         [DisplayName("Время списания")]
         public string TimeEnd => _model.TimeEnd != null ? ((DateTime)_model.TimeEnd).ToString("g") : "-";
+        private string? _fullAddress;
         [DisplayName("Текущая дислокация")]
-        public string FullAddress => _modelAddress?.FullAddress ?? "Неизвестно";
+        public string FullAddress
+        {
+            get => _fullAddress ?? "Неизвестно";
+            set
+            {
+                if (_fullAddress != value)
+                {
+                    _fullAddress = value;
+                    OnPropertyChanged(nameof(FullAddress));
+                }
+            }
+        }
 
         public MachineViewModel(Machine model, ServicesStore servicesStore)
         {
@@ -56,11 +68,15 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
             ID = _model.ID;
             AddressID = _model.AddressID;
+
+            UpdateData();
         }
 
         private async void UpdateData()
         {
-            _modelAddress = AddressID != null ? await _servicesStore._addressService.GetItemAsync((int)AddressID) : null;
+            _modelAddress = AddressID != null ? await _servicesStore.GetService<Address>().GetItemAsync((int)AddressID) : null;
+
+            FullAddress = _modelAddress?.FullAddress;
         }
     }
 }

@@ -3,7 +3,6 @@ using CourseProgram.Commands.AddCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
-using static CourseProgram.Models.Constants;
 using System;
 using System.Collections.Generic;
 using CourseProgram.Services.DataServices.ExtDataService;
@@ -61,11 +60,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _passport;
             set
             {
-                if (value.Length < 31)
-                {
-                    _passport = value;
-                    OnPropertyChanged(nameof(Passport));
-                }
+                _passport = value;
+                OnPropertyChanged(nameof(Passport));
             }
         }
 
@@ -75,11 +71,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phone;
             set
             {
-                if (value.Length < 21)
-                {
-                    _phone = value;
-                    OnPropertyChanged(nameof(Phone));
-                }
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
             }
         }
 

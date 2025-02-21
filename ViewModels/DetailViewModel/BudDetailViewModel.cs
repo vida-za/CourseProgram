@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -9,10 +10,12 @@ using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
 {
-    public class BudDetailViewModel : BaseViewModel
+    public class BudDetailViewModel : BaseDetailViewModel
     {
         private readonly BudViewModel _budViewModel;
         private readonly ServicesStore _servicesStore;
+        private Client _clientModel;
+        private Worker _workerModel;
 
         public ICommand AcceptBud { get; }
         public ICommand CancelBud { get; }
@@ -36,6 +39,8 @@ namespace CourseProgram.ViewModels.DetailViewModel
             _budViewModel = selectedStore.CurrentBud;
             _servicesStore = servicesStore;
 
+            _cargos = new ObservableCollection<CargoViewModel>();
+
             AcceptBud = new UpdateBudCommand(_servicesStore, _budViewModel, true, closeNavigationService);
             CancelBud = new UpdateBudCommand(_servicesStore, _budViewModel, false, closeNavigationService);
             Back = new NavigateCommand(closeNavigationService);
@@ -45,9 +50,15 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
         private async void UpdateData()
         {
+            _clientModel = await _servicesStore.GetService<Client>().GetItemAsync(_budViewModel.ClientID);
+            _workerModel = await _servicesStore.GetService<Worker>().GetItemAsync(_budViewModel.WorkerID);
+
+            ClientName = _clientModel != null ? _clientModel.Name : "Не указан";
+            WorkerName = _workerModel != null ? _workerModel.FIO : "Не указан";
+
             _cargos.Clear();
 
-            IEnumerable<Cargo> temp = await _servicesStore._cargoService.GetCargosByBudAsync(ID);
+            IEnumerable<Cargo> temp = await ((CargoDataService)_servicesStore.GetService<Cargo>()).GetCargosByBudAsync(ID);
             foreach (var cargo in temp)
             {
                 var cargoViewModel = new CargoViewModel(cargo, _servicesStore);
@@ -55,8 +66,26 @@ namespace CourseProgram.ViewModels.DetailViewModel
             }
         }
 
-        public string ClientName => _budViewModel.ClientName;
-        public string WorkerName => _budViewModel.WorkerName;
+        private string _clientName;
+        public string ClientName
+        {
+            get => _clientName;
+            set
+            {
+                _clientName = value;
+                OnPropertyChanged(nameof(ClientName));
+            }
+        }
+        private string _workerName;
+        public string WorkerName
+        {
+            get => _workerName;
+            set
+            {
+                _workerName = value;
+                OnPropertyChanged(nameof(WorkerName));
+            }
+        }
         public string TimeBud => _budViewModel.TimeBud;
         public string Status => _budViewModel.Status;
         public string Description => _budViewModel.Description;

@@ -55,8 +55,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._addressService.FindMaxEmptyID();
-                int result = await _servicesStore._addressService.AddItemAsync(address);
+                await _servicesStore.GetService<Address>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Address>().AddItemAsync(address);
                 if (result > 0)
                     MessageBox.Show("Адрес добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

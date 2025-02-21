@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.AddViewModel;
 using System;
@@ -20,29 +21,45 @@ namespace CourseProgram.Commands.AddCommands
             _navigationService = closeNavigationService;
         }
 
-        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e) { }
+        protected override void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e) 
+        {
+        }
 
         public override async Task ExecuteAsync(object? parameter)
         {
             var route = new Route(
                 -1,
-                _viewModel.SelectedMachine.ID,
-                _viewModel.SelectedDriver.ID,
+                _viewModel.SelectedMachine?.ID,
+                _viewModel.SelectedDriver?.ID,
                 Constants.RouteTypeValues.Empty,
                 Constants.RouteStatusValues.Waiting,
                 null,
-                _viewModel.SelectedAddressStart.ID,
-                _viewModel.SelectedAddressEnd.ID);
+                _viewModel.SelectedAddressStart?.ID,
+                _viewModel.SelectedAddressEnd?.ID);
 
             IsExecuting = true;
 
             try
             {
-                await _servicesStore._routeService.FindMaxEmptyID();
-                int result = await _servicesStore._routeService.AddItemAsync(route);
+                await _servicesStore.GetService<Route>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Route>().AddItemAsync(route);
                 if (result > 0)
                 {
-                    MessageBox.Show("Маршрут добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    bool resultCatch = true;
+
+                    if (_viewModel.SelectedOrders != null) 
+                    {
+                        foreach (var temp in _viewModel.SelectedOrders)
+                        {
+                            bool tempRes = await ((RouteDataService)_servicesStore.GetService<Route>()).AddCatchWithOrder(temp.ID, result);
+                            if (!tempRes) resultCatch = false;
+                        }
+                    }
+
+                    if (resultCatch)
+                        MessageBox.Show("Маршрут добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                    else
+                        MessageBox.Show("Маршрут добавлен, но не удалось привязать заказы", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else
                     MessageBox.Show("Не удалось добавить маршрут", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -54,6 +71,7 @@ namespace CourseProgram.Commands.AddCommands
             }
             finally
             {
+                _navigationService.Navigate();
                 IsExecuting = false;
             }
         }

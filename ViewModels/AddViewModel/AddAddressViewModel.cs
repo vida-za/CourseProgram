@@ -19,7 +19,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _city;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersOnlyRegex.IsMatch(value))
                 {
                     _city = value;
                     OnPropertyChanged(nameof(City));
@@ -33,7 +33,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _street;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersOnlyRegex.IsMatch(value))
                 {
                     _street = value;
                     OnPropertyChanged(nameof(Street));
@@ -47,7 +47,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _house;
             set
             {
-                if (value.Length < 11)
+                if (value.Length < 11 && DigitsOnlyRegex.IsMatch(value))
                 {
                     _house = value;
                     OnPropertyChanged(nameof(House));
@@ -61,7 +61,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _structure;
             set
             {
-                if (value.Length < 6)
+                if (value.Length < 6 && DigitsOnlyRegex.IsMatch(value))
                 {
                     _structure = value;
                     OnPropertyChanged(nameof(Structure));
@@ -75,7 +75,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _frame;
             set
             {
-                if (value.Length < 6)
+                if (value.Length < 6 && DigitsOnlyRegex.IsMatch(value))
                 {
                     _frame = value;
                     OnPropertyChanged(nameof(Frame));

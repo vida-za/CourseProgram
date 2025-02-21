@@ -16,7 +16,7 @@ namespace CourseProgram.Services.DataServices
     {
         protected Connection connection;
 
-        protected List<T> items = new();
+        protected List<T> items = new List<T>();
         protected T temp;
         protected int FreeID;
 
@@ -102,7 +102,13 @@ namespace CourseProgram.Services.DataServices
                     {
                         string columnName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                         var oldValue = property.GetValue(oldItem);
+                        if (property.PropertyType.BaseType.Name == "Enum")
+                            oldValue = GetEnumDescription(property.GetValue(oldItem));
+
                         var newValue = property.GetValue(item);
+                        if (property.PropertyType.BaseType.Name == "Enum")
+                            newValue = GetEnumDescription(property.GetValue(item));
+
                         if (!Equals(oldValue, newValue) && columnName != null)
                         {
                             queryUpd.AddParameter(columnName, newValue);
@@ -229,7 +235,7 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            items.Add(await CreateElement(row));
                         }
                     }
 
@@ -247,7 +253,7 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public abstract void CreateElement(DataRow row);
+        public abstract Task<T> CreateElement(DataRow row);
 
         public async void FillInsertParams(Query query, T item)
         {

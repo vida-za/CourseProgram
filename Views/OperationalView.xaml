@@ -33,12 +33,12 @@
             <Button Content="Начать рейс"
                     Command="{Binding StartHaulCommand}"
                     Visibility="{Binding StateButtonHaul, Converter={StaticResource BoolToVisibleConverter}}"
-                    Width="100" />
+                    Width="130" />
 
             <Button Content="Завершить рейс"
                     Command="{Binding CompleteHaulCommand}"
                     Visibility="{Binding StateButtonHaul, Converter={StaticResource InverseBoolToVisibleConverter}}"
-                    Width="100" />
+                    Width="130" />
         </StackPanel>
 
         <GroupBox Grid.Row="1"
@@ -58,7 +58,8 @@
                           IsReadOnly="True">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding DetailOrderCommand}" />
+                            <i:InvokeCommandAction Command="{Binding DetailOrderCommand}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <i:Interaction.Behaviors>
@@ -78,18 +79,21 @@
                   Header="Доступные заявки">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <DataGrid Grid.Row="0"
+                          x:Name="dataGrid"
                           ItemsSource="{Binding Buds}"
-                          SelectedItem="{Binding SelectedBud}"
+                          SelectedItem="{Binding SelectedBud, Mode=TwoWay}"
                           AutoGenerateColumns="true"
-                          IsReadOnly="true">
+                          IsReadOnly="true"
+                          MaxHeight="250">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding DetailBudCommand}" />
+                            <i:InvokeCommandAction Command="{Binding DetailBudCommand}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <i:Interaction.Behaviors>

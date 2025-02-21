@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:CourseProgram.Views.AddView"
+             xmlns:beh="clr-namespace:CourseProgram.Behaviors"
              xmlns:std="clr-namespace:CourseProgram"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -82,7 +84,11 @@
                 <TextBlock Grid.Row="0"
                            Text="Паспорт" />
                 <TextBox Grid.Row="1"
-                         Text="{Binding Passport, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding Passport, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <beh:PassportMaskBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
             </Grid>
 
@@ -96,7 +102,11 @@
                 <TextBlock Grid.Row="0"
                            Text="Номер телефона" />
                 <TextBox Grid.Row="1"
-                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <beh:PhoneNumberMaskBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
             </Grid>
 

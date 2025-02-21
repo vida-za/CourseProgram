@@ -63,8 +63,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._nomenclatureService.FindMaxEmptyID();
-                int result = await _servicesStore._nomenclatureService.AddItemAsync(nomenclature);
+                await _servicesStore.GetService<Nomenclature>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Nomenclature>().AddItemAsync(nomenclature);
                 if (result > 0)
                     MessageBox.Show("Элемент добавлен!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

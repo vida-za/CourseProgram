@@ -30,6 +30,8 @@ namespace CourseProgram.ViewModels.ListingViewModel
             set
             {
                 _stateFilter = value;
+                if (_stateFilter == false)
+                    TextFilter = string.Empty;
                 OnPropertyChanged(nameof(StateFilter));
             }
         }

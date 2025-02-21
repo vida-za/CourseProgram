@@ -26,7 +26,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         public DriverViewModel(Driver driver)
         {
-            driver.SetStringCategories();
             _model = driver;
 
             ID = _model.ID;

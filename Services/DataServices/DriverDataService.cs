@@ -18,7 +18,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Driver>();
 
                     query.AddFields(Driver.GetFieldNames());
                     query.WhereClause.IsNull("ДатаОкончания");
@@ -34,10 +34,10 @@ namespace CourseProgram.Services.DataServices
                     if (data != null)
                     {
                         foreach (DataRow row in data.Rows)
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -57,7 +57,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Driver>();
 
                     query.AddFields(Driver.GetFieldNames());
                     query.WhereClause.IsNotNull("ДатаОкончания");
@@ -73,10 +73,10 @@ namespace CourseProgram.Services.DataServices
                     if (data != null)
                     {
                         foreach (DataRow row in data.Rows)
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -90,9 +90,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Driver> CreateElement(DataRow row)
         {
-            items.Add(new Driver(
+            return Task.FromResult(new Driver(
                 GetInt(row["КодВодителя"], 0),
                 GetString(row["ФИО"], string.Empty),
                 GetDateOnlyOrNull(row["ДатаРождения"]),

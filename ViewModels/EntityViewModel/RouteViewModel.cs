@@ -1,5 +1,4 @@
 ﻿using CourseProgram.Models;
-using CourseProgram.Stores;
 using System;
 using System.ComponentModel;
 using static CourseProgram.Models.Constants;
@@ -8,35 +7,34 @@ namespace CourseProgram.ViewModels.EntityViewModel
 {
     public class RouteViewModel : BaseViewModel
     {
-        private readonly ServicesStore _servicesStore;
         private readonly Route _model;
-        private Machine _machineModel;
-        private Driver _driverModel;
-        private Address _addressStartModel;
-        private Address _addressEndModel;
+        private readonly Machine? _machineModel;
+        private readonly Driver? _driverModel;
+        private readonly Address? _addressStartModel;
+        private readonly Address? _addressEndModel;
 
         public readonly int ID;
-        public readonly int? MachineID;
-        public readonly int? DriverID;
-        public readonly int? AddressStartID;
-        public readonly int? AddressEndID;
 
-        public RouteViewModel(Route route, ServicesStore servicesStore)
+        public RouteViewModel(Route route, Machine? machine, Driver? driver, Address? addressStart, Address? addressEnd)
         {
             _model = route;
-            _servicesStore = servicesStore;
+            _machineModel = machine;
+            _driverModel = driver;
+            _addressStartModel = addressStart;
+            _addressEndModel = addressEnd;
 
             ID = _model.ID;
-            MachineID = _model.MachineID;
-            DriverID = _model.DriverID;
-            AddressStartID = _model.AddressStartID;
-            AddressEndID = _model.AddressEndID;
-
-            UpdateData();
         }
 
         public Route GetModel() => _model;
 
+        public Machine? GetMachine() => _machineModel;
+
+        public Driver? GetDriver() => _driverModel;
+
+        public Address? GetAddressStart() => _addressStartModel;
+
+        public Address? GetAddressEnd() => _addressEndModel;
 
         [DisplayName("Название машины")]
         public string MachineName => _machineModel?.Name ?? "Не указано";
@@ -51,14 +49,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Статус")]
         public string Status => GetEnumDescription(_model.Status);
         [DisplayName("Время выполнения")]
-        public string CompleteTime => _model.CompleteTime != null ? ((DateTime)_model.CompleteTime).ToString("d") : "-";
-
-        private async void UpdateData()
-        {
-            _machineModel = MachineID != null ? await _servicesStore._machineService.GetItemAsync((int)MachineID) : null;
-            _driverModel = DriverID != null ? await _servicesStore._driverService.GetItemAsync((int)DriverID) : null;
-            _addressStartModel = AddressStartID != null ? await _servicesStore._addressService.GetItemAsync((int)AddressStartID) : null;
-            _addressEndModel = AddressEndID != null ? await _servicesStore._addressService.GetItemAsync((int)AddressEndID) : null;
-        }
+        public string CompleteTime => _model.CompleteTime != null ? ((DateTime)_model.CompleteTime).ToString("f") : "-";
     }
 }

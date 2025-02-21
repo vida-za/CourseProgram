@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
 {
-    public class ClientDetailViewModel : BaseViewModel
+    public class ClientDetailViewModel : BaseDetailViewModel
     {
         #region fields
         private readonly ClientViewModel _clientViewModel;
@@ -38,12 +39,16 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _orders.Clear();
 
-            IEnumerable<Order> temp = await _servicesStore._orderService.GetItemsAsync();
+            IEnumerable<Bud> temp = await ((BudDataService)_servicesStore.GetService<Bud>()).GetBudsByClientController(ID);
 
-            foreach (Order order in temp)
+            foreach (var bud in temp)
             {
-                var orderViewModel = new OrderViewModel(order, _servicesStore);
-                _orders.Add(orderViewModel);
+                Order? order = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrderByBudController(bud.ID);
+                if (order != null) 
+                {
+                    var orderViewModel = new OrderViewModel(order, _servicesStore);
+                    _orders.Add(orderViewModel);
+                }
             }
         }
         #endregion

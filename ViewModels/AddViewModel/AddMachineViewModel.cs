@@ -40,7 +40,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _stateNumber;
             set
             {
-                if (value.Length < 11)
+                if (value.Length < 11 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _stateNumber = value;
                     OnPropertyChanged(nameof(StateNumber));
@@ -112,7 +112,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
@@ -126,7 +126,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _stamp;
             set
             {
-                if (value.Length < 51)
+                if (value.Length < 51 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _stamp = value;
                     OnPropertyChanged(nameof(Stamp));

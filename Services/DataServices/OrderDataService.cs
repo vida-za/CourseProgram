@@ -3,6 +3,7 @@ using CourseProgram.Services.DBServices;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
@@ -12,13 +13,18 @@ namespace CourseProgram.Services.DataServices
     {
         public OrderDataService() : base(User.Username, User.Password) { }
 
+        public Task<Order?> GetOrderByBudController(int budID)
+        {
+            return Task.FromResult(items.FirstOrDefault(o => o.BudID == budID, null));
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByHaulAsync(int HaulID)
         {
             using (var query = new Query(CommandTypes.TableFunction, "GetOrdersByHaul"))
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Order>();
 
                     query.AddFields(Order.GetFieldNames());
                     query.AddParameter("HaulID", HaulID);
@@ -35,11 +41,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -53,9 +59,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Order> CreateElement(DataRow row)
         {
-            items.Add(new Order(GetInt(row["КодЗаказа"], 0),
+            return Task.FromResult(new Order(GetInt(row["КодЗаказа"], 0),
                 GetInt(row["КодЗаявки"], 0),
                 GetDateTime(row["ДатаЗаказа"], DateTime.MinValue),
                 GetDateTimeOrNull(row["ДатаЗагрузки"]),

@@ -65,7 +65,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     temp.AddressID
                     );
 
-                bool result = await _servicesStore._machineService.UpdateItemAsync(newItem);
+                bool result = await _servicesStore.GetService<Machine>().UpdateItemAsync(newItem);
                 if (result)
                     MessageBox.Show("Машина успешно удалена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

@@ -25,7 +25,7 @@ namespace CourseProgram.Commands
             foreach (var temp in _viewModel.Orders)
             {
                 var tempModel = temp.GetModel();
-                if (tempModel.Status != OrderStatusValues.Completed || tempModel.Status != OrderStatusValues.Cancelled)
+                if (tempModel.Status != OrderStatusValues.Completed && tempModel.Status != OrderStatusValues.Cancelled)
                     readyComplete = false;
             }
 
@@ -41,7 +41,7 @@ namespace CourseProgram.Commands
                         Haul tempHaul = _viewModel.Item.GetModel();
                         var newItem = new Haul(tempHaul.ID, tempHaul.DateStart, DateOnly.FromDateTime(DateTime.Now), tempHaul.SumIncome);
 
-                        bool result = await _servicesStore._haulService.UpdateItemAsync(newItem);
+                        bool result = await _servicesStore.GetService<Haul>().UpdateItemAsync(newItem);
                         if (result)
                             MessageBox.Show("Рейс завершен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                         else

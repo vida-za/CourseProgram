@@ -96,25 +96,25 @@
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
                         Margin="5"
                         Content="Назад"
                         Command="{Binding Back}" />
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Margin="5"
+                            Content="Принять"
+                            Command="{Binding AcceptBud}" />
 
-                <Button Grid.Column="1"
-                        Margin="5"
-                        Content="Принять"
-                        Command="{Binding AcceptBud}" />
-
-                <Button Grid.Column="2"
-                        Margin="5"
-                        Content="Отклонить"
-                        Command="{Binding CancelBud}" />
+                    <Button Margin="5"
+                            Content="Отклонить"
+                            Command="{Binding CancelBud}" />
+                </StackPanel>
             </Grid>
         </Grid>
 
@@ -124,10 +124,17 @@
                   IsReadOnly="True"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
-                  AutoGenerateColumns="True">
-            <i:Interaction.Behaviors>
-                <beh:ColumnHeaderBehaviour />
-            </i:Interaction.Behaviors>
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Наименование номенклатуры"
+                                    Binding="{Binding NomenclatureName}" />
+                <DataGridTextColumn Header="Объём"
+                                    Binding="{Binding Volume}" />
+                <DataGridTextColumn Header="Вес"
+                                    Binding="{Binding Weight}" />
+                <DataGridTextColumn Header="Количество"
+                                    Binding="{Binding Count}" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>

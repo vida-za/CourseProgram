@@ -132,7 +132,7 @@ namespace CourseProgram
                 s.GetRequiredService<SelectedStore>(),
                 CreateRouteDetailNavigationService(s)));
 
-            services.AddSingleton(s => new HomeViewModel());
+            services.AddSingleton(s => new HomeViewModel(s.GetRequiredService<ServicesStore>()));
 
             services.AddTransient(CreateNavigationBarViewModel);
             services.AddSingleton<MainViewModel>();

@@ -2,7 +2,6 @@
 using CourseProgram.Commands.AddCommands;
 using CourseProgram.Services;
 using CourseProgram.Stores;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.Collections.ObjectModel;
 using static CourseProgram.Models.Constants;
 
@@ -28,7 +27,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
@@ -42,7 +41,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _type;
             set
             {
-                if (value.Length < 51)
+                if (value.Length < 51 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _type = value;
                     OnPropertyChanged(nameof(Type));
@@ -154,7 +153,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _needTemperature;
             set
             {
-                if (value.Length < 51)
+                if (value.Length < 51 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _needTemperature = value;
                     OnPropertyChanged(nameof(NeedTemperature));
@@ -182,7 +181,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _manufacturer;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _manufacturer = value;
                     OnPropertyChanged(nameof(Manufacturer));

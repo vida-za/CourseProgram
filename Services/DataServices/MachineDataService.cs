@@ -18,7 +18,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Machine>();
 
                     query.AddFields(Machine.GetFieldNames());
                     query.WhereClause.IsNotNull("ДатаВремяСписания");
@@ -35,11 +35,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -59,7 +59,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Machine>();
 
                     query.AddFields(Machine.GetFieldNames());
                     query.WhereClause.IsNull("ДатаВремяСписания");
@@ -76,11 +76,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -94,9 +94,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Machine> CreateElement(DataRow row)
         {
-            items.Add(new Machine(GetInt(row["КодМашины"], 0),
+            return Task.FromResult(new Machine(GetInt(row["КодМашины"], 0),
                 GetString(row["ТипМашины"], string.Empty),
                 GetStringOrNull(row["ТипКузова"]),
                 GetString(row["ТипЗагрузки"], string.Empty),

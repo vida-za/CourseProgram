@@ -37,7 +37,7 @@ namespace CourseProgram.Commands.AddCommands
         {
             return !string.IsNullOrEmpty(_viewModel.DriverName) &&
                    !string.IsNullOrEmpty(_viewModel.Passport) &&
-                   !string.IsNullOrEmpty(_viewModel.Phone) &&
+                   _viewModel.Passport.Length == 11 &&
                    base.CanExecute(parameter);
         }
 
@@ -55,8 +55,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._driverService.FindMaxEmptyID();
-                int resultDrv = await _servicesStore._driverService.AddItemAsync(driver);
+                await _servicesStore.GetService<Driver>().FindMaxEmptyID();
+                int resultDrv = await _servicesStore.GetService<Driver>().AddItemAsync(driver);
                 if (resultDrv > 0)
                 {
                     bool resultCat = true;
@@ -64,7 +64,7 @@ namespace CourseProgram.Commands.AddCommands
                     {
                         if (cat.IsChecked)
                         {
-                            int temp = await _servicesStore._driverCategoriesService.AddItemAsync(new DriverCategories(resultDrv, (int)cat.EnumCategory));
+                            int temp = await _servicesStore.GetService<DriverCategories>().AddItemAsync(new DriverCategories(resultDrv, (int)cat.EnumCategory));
                             if (temp == 0)
                                 resultCat = false;
                         }

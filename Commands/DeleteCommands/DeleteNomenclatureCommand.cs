@@ -1,4 +1,6 @@
-﻿using CourseProgram.Services;
+﻿using CourseProgram.Models;
+using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
@@ -34,13 +36,13 @@ namespace CourseProgram.Commands.DeleteCommands
         {
             try
             {
-                bool check = await _servicesStore._nomenclatureService.CheckCanDelete(_viewModel.SelectedItem.ID);
+                bool check = await ((NomenclatureDataService)_servicesStore.GetService<Nomenclature>()).CheckCanDelete(_viewModel.SelectedItem.ID);
 
                 if (!check)
                     MessageBox.Show("Нельзя удалить номенклатуру так как она уже используется", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 else
                 {
-                    bool result = await _servicesStore._nomenclatureService.DeleteItemAsync(_viewModel.SelectedItem.ID);
+                    bool result = await _servicesStore.GetService<Nomenclature>().DeleteItemAsync(_viewModel.SelectedItem.ID);
                     if (result)
                         MessageBox.Show("Номенклатура удалена", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else

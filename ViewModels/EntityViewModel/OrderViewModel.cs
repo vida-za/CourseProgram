@@ -18,8 +18,17 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         public Order GetModel() => _model;
 
+        private string _clientName;
         [DisplayName("Название клиента")]
-        public string ClientName => _clientModel.Name;
+        public string ClientName
+        {
+            get => _clientName;
+            set
+            {
+                _clientName = value;
+                OnPropertyChanged(nameof(ClientName));
+            }
+        }
         [DisplayName("Время заказа")]
         public string TimeOrder => _model.TimeOrder.ToString("g");
         [DisplayName("Время загрузки")]
@@ -46,8 +55,10 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         private async void UpdateData()
         {
-            _budModel = await _servicesStore._budService.GetItemAsync(BudID);
-            _clientModel = await _servicesStore._clientService.GetItemAsync(_budModel.ClientID);
+            _budModel = await _servicesStore.GetService<Bud>().GetItemAsync(BudID);
+            _clientModel = await _servicesStore.GetService<Client>().GetItemAsync(_budModel.ClientID);
+
+            ClientName = _clientModel.Name;
         }
     }
 }

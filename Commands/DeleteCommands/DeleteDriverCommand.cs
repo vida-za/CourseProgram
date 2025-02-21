@@ -54,7 +54,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     DateOnly.FromDateTime(DateTime.Now)
                     );
 
-                bool result = await _servicesStore._driverService.UpdateItemAsync(newItem);
+                bool result = await _servicesStore.GetService<Driver>().UpdateItemAsync(newItem);
                 if (result)
                     MessageBox.Show("Водитель удален", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

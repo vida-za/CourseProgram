@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Models;
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Services.DataServices
@@ -9,9 +10,9 @@ namespace CourseProgram.Services.DataServices
     {
         public WorkerDataService() : base(User.Username, User.Password) { }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Worker> CreateElement(DataRow row)
         {
-            items.Add(new Worker(GetInt(row["КодСотрудника"], 0),
+            return Task.FromResult(new Worker(GetInt(row["КодСотрудника"], 0),
                 GetString(row["ФИО"], string.Empty),
                 GetDateOnlyOrNull(row["ДатаРождения"]),
                 GetString(row["ПаспортныеДанные"], string.Empty),

@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System;
@@ -10,7 +11,7 @@ using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
 {
-    public class MachineDetailViewModel : BaseViewModel
+    public class MachineDetailViewModel : BaseDetailViewModel
     {
         private readonly MachineViewModel _machineViewModel;
         private readonly ServicesStore _servicesStore;
@@ -34,11 +35,19 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _routes.Clear();
 
-            IEnumerable<Route> temp = await _servicesStore._routeService.GetItemsByMachineAsync(ID);
+            IEnumerable<Route> temp = await ((RouteDataService)_servicesStore.GetService<Route>()).GetItemsByMachineAsync(ID);
 
             foreach (Route route in temp)
             {
-                 var routeViewModel = new RouteViewModel(route, _servicesStore);
+                Driver? driver = null;
+                Address? addressStart = null;
+                Address? addressEnd = null;
+
+                if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
+                if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
+                if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
+
+                var routeViewModel = new RouteViewModel(route, _machineViewModel.GetModel(), driver, addressStart, addressEnd);
                 _routes.Add(routeViewModel);
             }
         }

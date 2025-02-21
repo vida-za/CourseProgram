@@ -110,7 +110,6 @@ namespace CourseProgram.Services.DBServices
                 switch (query.GetType())
                 {
                     case CommandTypes.SelectQuery:
-                    case CommandTypes.ScalarFunction:
                     case CommandTypes.TableFunction:
                         {
                             command.CommandType = CommandType.Text;
@@ -138,6 +137,20 @@ namespace CourseProgram.Services.DBServices
                             {
                                 int result = await command.ExecuteNonQueryAsync();
                                 return (T)(object)result;
+                            }
+                            throw new InvalidCastException($"Invalid type parameter: Expected {typeof(T)}, but got int");
+                        }
+
+                    case CommandTypes.ScalarFunction:
+                        {
+                            if (typeof(T) == typeof(int))
+                            {
+                                object? result = await command.ExecuteScalarAsync();
+                                if (result != null && int.TryParse(result.ToString(), out int scalarResult)) 
+                                {
+                                    return (T)(object)scalarResult;
+                                }
+                                throw new InvalidCastException($"Failed to convert result to int");
                             }
                             throw new InvalidCastException($"Invalid type parameter: Expected {typeof(T)}, but got int");
                         }

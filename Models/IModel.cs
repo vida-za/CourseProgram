@@ -2,10 +2,10 @@
 {
     public interface IModel
     {
-        public int ID { get; }
+        int ID { get; }
 
-        public static abstract string GetTable();
-        public static abstract string GetSelectorID();
-        public static abstract string[] GetFieldNames();
+        static abstract string GetTable();
+        static abstract string GetSelectorID();
+        static abstract string[] GetFieldNames();
     }
 }

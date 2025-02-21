@@ -44,9 +44,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Client> CreateElement(DataRow row)
         {
-            items.Add(new Client(
+            return Task.FromResult(new Client(
                         GetInt(row["КодЗаказчика"], 0),
                         GetString(row["Название"], string.Empty),
                         GetString(row["ТипЗаказчика"], string.Empty),

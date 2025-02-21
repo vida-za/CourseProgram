@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Models;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CourseProgram.ViewModels.EntityViewModel
@@ -13,9 +14,25 @@ namespace CourseProgram.ViewModels.EntityViewModel
         [DisplayName("Улица")]
         public string Street => _model.Street;
         [DisplayName("Дом")]
-        public string House => _model.House + (_model.Structure != "" ? "с" + _model.Structure : string.Empty) + (_model.Frame != "" ? "к" + _model.Frame : string.Empty);
+        public string House => CalcHouse();
         [DisplayName("Активен")]
         public string Active => _model.Active ? "Да" : "Нет";
+
+        private string CalcHouse()
+        {
+            var parts = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(_model.House))
+                parts.Add(_model.House);
+
+            if (!string.IsNullOrWhiteSpace(_model.Structure))
+                parts.Add($"с{_model.Structure}");
+
+            if (!string.IsNullOrWhiteSpace(_model.Frame))
+                parts.Add($"к{_model.Frame}");
+
+            return parts.Count == 0 ? "Не определен" : string.Join("", parts);
+        }
 
         public AddressViewModel(Address address)
         {

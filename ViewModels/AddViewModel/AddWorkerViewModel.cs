@@ -21,7 +21,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
@@ -50,11 +50,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _passport;
             set
             {
-                if (value.Length < 101)
-                {
-                    _passport = value;
-                    OnPropertyChanged(nameof(Passport));
-                }
+                _passport = value;
+                OnPropertyChanged(nameof(Passport));
             }
         }
 
@@ -64,11 +61,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phone; 
             set
             {
-                if (value.Length < 21)
-                {
-                    _phone = value;
-                    OnPropertyChanged(nameof(Phone));
-                }
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
             }
         }
         #endregion

@@ -30,8 +30,8 @@ namespace CourseProgram.Commands
 
                 try
                 {
-                    await _servicesStore._haulService.FindMaxEmptyID();
-                    int result = await _servicesStore._haulService.AddItemAsync(haul);
+                    await _servicesStore.GetService<Haul>().FindMaxEmptyID();
+                    int result = await _servicesStore.GetService<Haul>().AddItemAsync(haul);
                     if (result > 0)
                     {
                         await _viewModel.UpdateDataAsync();

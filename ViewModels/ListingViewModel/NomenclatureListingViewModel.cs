@@ -62,7 +62,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             ObservableCollection<NomenclatureViewModel> _newAllNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
-            IEnumerable<Nomenclature> temp = await _servicesStore._nomenclatureService.GetItemsAsync();
+            IEnumerable<Nomenclature> temp = await _servicesStore.GetService<Nomenclature>().GetItemsAsync();
             foreach (var tempItem in temp)
             {
                 NomenclatureViewModel nomenclatureViewModel = new(tempItem);
@@ -95,7 +95,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
         {
             ObservableCollection<NomenclatureViewModel> _newAllNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
-            IEnumerable<Nomenclature> temp = await _servicesStore._nomenclatureService.GetItemsAsync();
+            IEnumerable<Nomenclature> temp = await _servicesStore.GetService<Nomenclature>().GetItemsAsync();
             foreach (var tempItem in temp)
             {
                 NomenclatureViewModel nomenclatureViewModel = new(tempItem);

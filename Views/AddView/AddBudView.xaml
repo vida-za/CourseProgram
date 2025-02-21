@@ -32,35 +32,7 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0"
-                      Margin="0 5 0 5"
-                      Grid.IsSharedSizeScope="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"
-                                          SharedSizeGroup="Column" />
-                        <ColumnDefinition Width="auto"
-                                          MinWidth="150"
-                                          SharedSizeGroup="Column" />
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox Grid.Column="0"
-                              Style="{StaticResource PlaceholderComboBoxStyle}"
-                              Tag="Заказчик"
-                              Margin="5"
-                              ItemsSource="{Binding Clients}"
-                              SelectedItem="{Binding SelectedClient}"
-                              DisplayMemberPath="Name" />
-
-                    <ComboBox Grid.Column="1"
-                              Style="{StaticResource PlaceholderComboBoxStyle}"
-                              Tag="Сотрудник"
-                              Margin="5"
-                              ItemsSource="{Binding Workers}"
-                              SelectedItem="{Binding SelectedWorker}"
-                              DisplayMemberPath="FIO" />
-                </Grid>
-
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
@@ -117,6 +89,34 @@
                                 Margin="5 5 5 5"
                                 Width="120"/>
                     </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      Margin="0 5 0 5"
+                      Grid.IsSharedSizeScope="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"
+                                          SharedSizeGroup="Column" />
+                        <ColumnDefinition Width="auto"
+                                          MinWidth="150"
+                                          SharedSizeGroup="Column" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0"
+                              Style="{StaticResource PlaceholderComboBoxStyle}"
+                              Tag="Заказчик"
+                              Margin="5"
+                              ItemsSource="{Binding Clients}"
+                              SelectedItem="{Binding SelectedClient}"
+                              DisplayMemberPath="Name" />
+
+                    <ComboBox Grid.Column="1"
+                              Style="{StaticResource PlaceholderComboBoxStyle}"
+                              Tag="Сотрудник"
+                              Margin="5"
+                              ItemsSource="{Binding Workers}"
+                              SelectedItem="{Binding SelectedWorker}"
+                              DisplayMemberPath="FIO" />
                 </Grid>
             </Grid>
         </GroupBox>

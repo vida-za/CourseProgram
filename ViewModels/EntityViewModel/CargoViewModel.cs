@@ -14,7 +14,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
         private float _weight;
         private int _count;
 
-        public int ID { get; }
+        public readonly int ID;
 
         public int NomenclatureID
         {
@@ -92,14 +92,11 @@ namespace CourseProgram.ViewModels.EntityViewModel
         {
             if (NomenclatureID > 0)
             {
-                _nomenclatureModel = await _servicesStore._nomenclatureService.GetItemAsync(NomenclatureID);
+                _nomenclatureModel = await _servicesStore.GetService<Nomenclature>().GetItemAsync(NomenclatureID);
                 OnPropertyChanged(nameof(NomenclatureName));
             }
         }
 
-        public Cargo ToCargo(int BudID)
-        {
-            return new Cargo(ID, BudID, NomenclatureID, _volume, _weight, _count);
-        }
+        public Cargo ToCargo(int BudID) => new Cargo(ID, BudID, NomenclatureID, _volume, _weight, _count);
     }
 }

@@ -38,7 +38,7 @@ namespace CourseProgram.Commands
                         tempRoute.AddressStartID,
                         tempRoute.AddressEndID);
 
-                    bool result = await _servicesStore._routeService.UpdateItemAsync(newItem);
+                    bool result = await _servicesStore.GetService<Route>().UpdateItemAsync(newItem);
                     if (result)
                     {
                         await _routeListingViewModel.UpdateDataAsync();

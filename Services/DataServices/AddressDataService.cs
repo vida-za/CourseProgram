@@ -18,7 +18,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Address>();
 
                     query.AddFields(Address.GetFieldNames());
                     query.WhereClause.Equals("Активен", "true");
@@ -34,11 +34,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -52,9 +52,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Address> CreateElement(DataRow row)
         {
-            items.Add(new Address(GetInt(row["КодАдреса"], 0),
+            return Task.FromResult(new Address(GetInt(row["КодАдреса"], 0),
                 GetString(row["Город"], string.Empty),
                 GetString(row["Улица"], string.Empty),
                 GetStringOrNull(row["Дом"]),

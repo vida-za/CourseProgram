@@ -33,7 +33,7 @@ namespace CourseProgram.Services.DBServices
         {
             string parameterValue;
 
-            if (value == null)
+            if (value is null or (object)"Null")
             {
                 parameterValue = "Null";
             }

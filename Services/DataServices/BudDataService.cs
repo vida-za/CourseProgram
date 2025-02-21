@@ -1,6 +1,9 @@
 ﻿using CourseProgram.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Services.DataServices
@@ -9,9 +12,13 @@ namespace CourseProgram.Services.DataServices
     {
         public BudDataService() : base(User.Username, User.Password) { }
 
-        public override void CreateElement(DataRow row)
+        public Task<IEnumerable<Bud>> GetBudsByWorkerController(int workerID) => Task.FromResult(items.Where(b => b.WorkerID == workerID));
+
+        public Task<IEnumerable<Bud>> GetBudsByClientController(int clientID) => Task.FromResult(items.Where(b => b.ClientID == clientID));
+
+        public override Task<Bud> CreateElement(DataRow row)
         {
-            items.Add(new Bud(GetInt(row["КодЗаявки"], 0),
+            return Task.FromResult(new Bud(GetInt(row["КодЗаявки"], 0),
                 GetInt(row["КодЗаказчика"], 0),
                 GetInt(row["КодСотрудника"], 0),
                 GetDateTime(row["ДатаВремяЗаявки"], DateTime.MinValue),

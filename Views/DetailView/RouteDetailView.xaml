@@ -17,8 +17,8 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text=""
-                   Margin="0 5 0 0"
+                   Text="Маршрут"
+                   Margin="0 5 0 15"
                    Style="{StaticResource Header}"
                    HorizontalAlignment="Center" />
 
@@ -43,40 +43,56 @@
                        Text="Название машины"
                        Margin="0 0 5 0"
                        FontWeight="Bold" />
-            <TextBlock Grid.Row="0"
-                       Grid.Column="1"
-                       Text="{Binding MachineName}"
-                       Margin="5 0 0 0" />
+            <ComboBox Grid.Row="0"
+                      Grid.Column="1"
+                      Style="{StaticResource PlaceholderComboBoxStyle}"
+                      Tag="Машина"
+                      Margin="5 0 0 5"
+                      ItemsSource="{Binding Machines}"
+                      SelectedItem="{Binding SelectedMachine, Mode=TwoWay}"
+                      DisplayMemberPath="Name" />
 
             <TextBlock Grid.Row="1"
                        Grid.Column="0"
                        Text="ФИО водителя"
                        Margin="0 0 5 0"
                        FontWeight="Bold" />
-            <TextBlock Grid.Row="1"
-                       Grid.Column="1"
-                       Text="{Binding DriverName}"
-                       Margin="5 0 0 0" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="1"
+                      Style="{StaticResource PlaceholderComboBoxStyle}"
+                      Tag="Водитель"
+                      Margin="5 0 0 5"
+                      ItemsSource="{Binding Drivers}"
+                      SelectedItem="{Binding SelectedDriver, Mode=TwoWay}"
+                      DisplayMemberPath="FIO" />
 
             <TextBlock Grid.Row="2"
                        Grid.Column="0"
                        Text="Адрес отправки"
                        Margin="0 0 5 0"
                        FontWeight="Bold" />
-            <TextBlock Grid.Row="2"
-                       Grid.Column="1"
-                       Text="{Binding AddressStart}"
-                       Margin="5 0 0 0" />
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      Style="{StaticResource PlaceholderComboBoxStyle}"
+                      Tag="Адрес отправки"
+                      Margin="5 0 0 5"
+                      ItemsSource="{Binding Addresses}"
+                      SelectedItem="{Binding SelectedAddressStart, Mode=TwoWay}"
+                      DisplayMemberPath="FullAddress" />
 
             <TextBlock Grid.Row="3"
                        Grid.Column="0"
                        Text="Адрес прибытия"
                        Margin="0 0 5 0"
                        FontWeight="Bold" />
-            <TextBlock Grid.Row="3"
-                       Grid.Column="1"
-                       Text="{Binding AddressEnd}"
-                       Margin="5 0 0 0" />
+            <ComboBox Grid.Row="3"
+                      Grid.Column="1"
+                      Style="{StaticResource PlaceholderComboBoxStyle}"
+                      Tag="Адрес прибытия"
+                      Margin="5 0 0 5"
+                      ItemsSource="{Binding Addresses}"
+                      SelectedItem="{Binding SelectedAddressEnd, Mode=TwoWay}"
+                      DisplayMemberPath="FullAddress" />
 
             <TextBlock Grid.Row="4"
                        Grid.Column="0"
@@ -89,7 +105,8 @@
                        Margin="5 0 0 0" />
         </Grid>
 
-        <Grid>
+        <Grid Grid.Row="2"
+              Margin="0 15 0 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />

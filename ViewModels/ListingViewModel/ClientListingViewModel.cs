@@ -68,14 +68,14 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<ClientViewModel> _newAllClients = new ObservableCollection<ClientViewModel>();
             ObservableCollection<ClientViewModel> _newDisClients = new ObservableCollection<ClientViewModel>();
 
-            IEnumerable<Client> temp = await _servicesStore._clientService.GetItemsAsync();
+            IEnumerable<Client> temp = await _servicesStore.GetService<Client>().GetItemsAsync();
             foreach (Client itemTemp in temp)
             {
                 ClientViewModel clientViewModel = new(itemTemp);
                 _newAllClients.Add(clientViewModel);
             }
 
-            temp = await _servicesStore._clientService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Client>().GetItemsAsync();
             foreach (Client itemTemp in temp)
             {
                 ClientViewModel clientViewModel = new(itemTemp);
@@ -110,14 +110,14 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<ClientViewModel> _newAllClients = new ObservableCollection<ClientViewModel>();
             ObservableCollection<ClientViewModel> _newDisClients = new ObservableCollection<ClientViewModel>();
 
-            IEnumerable<Client> temp = await _servicesStore._clientService.GetItemsAsync();
+            IEnumerable<Client> temp = await _servicesStore.GetService<Client>().GetItemsAsync();
             foreach (Client itemTemp in temp)
             {
                 ClientViewModel clientViewModel = new(itemTemp);
                 _newAllClients.Add(clientViewModel);
             }
 
-            temp = await _servicesStore._clientService.GetItemsAsync();
+            temp = await _servicesStore.GetService<Client>().GetItemsAsync();
             foreach (Client itemTemp in temp)
             {
                 ClientViewModel clientViewModel = new(itemTemp);

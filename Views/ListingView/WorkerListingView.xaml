@@ -27,15 +27,15 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"
-                       Text="Сотрудники"
+                       Text="Список сотрудников"
                        Style="{StaticResource Header}" />
             <Button Grid.Column="1"
                     Margin="10 0 0 0"
-                    Content="Добавить сотрудника"
+                    Content="Добавить"
                     Command="{Binding AddWorkerCommand}" />
             <Button Grid.Column="2"
                     Margin="10 0 0 0"
-                    Content="Удалить сотрудника"
+                    Content="Уволить"
                     Command="{Binding DeleteWorkerCommand}" />
         </Grid>
 
@@ -53,6 +53,10 @@
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
                                            CommandParameter="{Binding ElementName=dataGrid}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding DetailWorkerCommand}"
+                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <i:Interaction.Behaviors>

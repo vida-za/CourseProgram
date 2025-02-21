@@ -37,7 +37,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             updateTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(3)
+                Interval = TimeSpan.FromSeconds(10)
             };
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Start();
@@ -102,18 +102,31 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async void UpdateData()
         {
-            IEnumerable<Route> temp = await _servicesStore._routeService.GetItemsAsync();
+            IEnumerable<Route> temp = await _servicesStore.GetService<Route>().GetItemsAsync();
             foreach (var route in temp)
             {
-                if (route.Status == Constants.RouteStatusValues.InProgress)
+                if (route.Status == Constants.RouteStatusValues.InProgress || route.Status == Constants.RouteStatusValues.Waiting)
                 {
-                    var routeViewModel = new RouteViewModel(route, _servicesStore);
-                    _progRoutes.Add(routeViewModel);
-                }
-                else if (route.Status == Constants.RouteStatusValues.Waiting)
-                {
-                    var routeViewModel = new RouteViewModel(route, _servicesStore);
-                    _waitRoutes.Add(routeViewModel);
+                    Machine? machine = null;
+                    Driver? driver = null;
+                    Address? addressStart = null;
+                    Address? addressEnd = null;
+
+                    if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
+                    if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
+                    if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
+                    if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
+
+                    if (route.Status == Constants.RouteStatusValues.InProgress)
+                    {
+                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        _progRoutes.Add(routeViewModel);
+                    }
+                    else if (route.Status == Constants.RouteStatusValues.Waiting)
+                    {
+                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        _waitRoutes.Add(routeViewModel);
+                    }
                 }
             }
         }
@@ -126,18 +139,31 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<RouteViewModel> _newProgRoutes = new ObservableCollection<RouteViewModel>();
             ObservableCollection<RouteViewModel> _newWaitRoutes = new ObservableCollection<RouteViewModel>();
 
-            IEnumerable<Route> temp = await _servicesStore._routeService.GetItemsAsync();
+            IEnumerable<Route> temp = await _servicesStore.GetService<Route>().GetItemsAsync();
             foreach (var route in temp)
             {
-                if (route.Status == Constants.RouteStatusValues.InProgress)
+                if (route.Status == Constants.RouteStatusValues.InProgress || route.Status == Constants.RouteStatusValues.Waiting)
                 {
-                    var routeViewModel = new RouteViewModel(route, _servicesStore);
-                    _newProgRoutes.Add(routeViewModel);
-                }
-                else if (route.Status == Constants.RouteStatusValues.Waiting)
-                {
-                    var routeViewModel = new RouteViewModel(route, _servicesStore);
-                    _newWaitRoutes.Add(routeViewModel);
+                    Machine? machine = null;
+                    Driver? driver = null;
+                    Address? addressStart = null;
+                    Address? addressEnd = null;
+
+                    if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
+                    if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
+                    if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
+                    if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
+
+                    if (route.Status == Constants.RouteStatusValues.InProgress)
+                    {
+                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        _newProgRoutes.Add(routeViewModel);
+                    }
+                    else if (route.Status == Constants.RouteStatusValues.Waiting)
+                    {
+                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        _newWaitRoutes.Add(routeViewModel);
+                    }
                 }
             }
 

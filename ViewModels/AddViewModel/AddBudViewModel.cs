@@ -44,15 +44,15 @@ namespace CourseProgram.ViewModels.AddViewModel
             Clients.Clear();
             Workers.Clear();
 
-            IEnumerable<Client> tempClients = await _servicesStore._clientService.GetItemsAsync();
+            IEnumerable<Client> tempClients = await _servicesStore.GetService<Client>().GetItemsAsync();
             foreach (var temp in tempClients)
                 Clients.Add(temp);
 
-            IEnumerable<Worker> tempWorkers = await _servicesStore._workerService.GetItemsAsync();
+            IEnumerable<Worker> tempWorkers = await _servicesStore.GetService<Worker>().GetItemsAsync();
             foreach (var temp in tempWorkers)
                 if (temp.DateEnd == null) Workers.Add(temp);
 
-            Nomenclatures = await _servicesStore._nomenclatureService.GetItemsAsync();
+            Nomenclatures = await _servicesStore.GetService<Nomenclature>().GetItemsAsync();
 
             OnPropertyChanged(nameof(Clients));
             OnPropertyChanged(nameof(Workers));
@@ -98,8 +98,11 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _description;
             set
             {
-                _description = value;
-                OnPropertyChanged(nameof(Description));
+                if (LettersAndDigitsRegex.IsMatch(value))
+                {
+                    _description = value;
+                    OnPropertyChanged(nameof(Description));
+                }
             }
         }
 

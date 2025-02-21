@@ -24,7 +24,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _bik;
             set
             {
-                if (value.Length < 10)
+                if (value.Length < 10 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _bik = value;
                     OnPropertyChanged(nameof(BIK));
@@ -38,7 +38,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _correspondent;
             set
             {
-                if (value.Length < 21)
+                if (value.Length < 21 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _correspondent = value;
                     OnPropertyChanged(nameof(Correspondent));
@@ -52,7 +52,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _bank;
             set
             {
-                if (value.Length < 51)
+                if (value.Length < 51 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _bank = value;
                     OnPropertyChanged(nameof(Bank));
@@ -68,7 +68,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _name;
             set
             {
-                if (value.Length < 101)
+                if (value.Length < 101 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
@@ -82,7 +82,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _type;
             set
             {
-                if (value.Length < 8)
+                if (value.Length < 8 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _type = value;
                     OnPropertyChanged(nameof(Type));
@@ -96,7 +96,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _inn;
             set
             {
-                if (value.Length < 13)
+                if (value.Length < 13 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _inn = value;
                     OnPropertyChanged(nameof(INN));
@@ -110,7 +110,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _kpp;
             set
             {
-                if (value.Length < 10)
+                if (value.Length < 10 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _kpp = value;
                     OnPropertyChanged(nameof(KPP));
@@ -124,7 +124,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _ogrn;
             set
             {
-                if (value.Length < 16)
+                if (value.Length < 16 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _ogrn = value;
                     OnPropertyChanged(nameof(OGRN));
@@ -138,11 +138,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phone;
             set
             {
-                if (value.Length < 21)
-                {
-                    _phone = value;
-                    OnPropertyChanged(nameof(Phone));
-                }
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
             }
         }
 
@@ -152,7 +149,7 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _checking; 
             set
             {
-                if (value.Length < 21)
+                if (value.Length < 21 && LettersAndDigitsRegex.IsMatch(value))
                 {
                     _checking = value;
                     OnPropertyChanged(nameof(Checking));
@@ -166,11 +163,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phoneLoad;
             set
             {
-                if (value.Length < 21)
-                {
-                    _phoneLoad = value;
-                    OnPropertyChanged(nameof(PhoneLoad));
-                }
+                _phoneLoad = value;
+                OnPropertyChanged(nameof(PhoneLoad));
             }
         }
 
@@ -180,11 +174,8 @@ namespace CourseProgram.ViewModels.AddViewModel
             get => _phoneOnLoad;
             set
             {
-                if (value.Length < 21)
-                {
-                    _phoneOnLoad = value;
-                    OnPropertyChanged(nameof(PhoneLoad));
-                }
+                _phoneOnLoad = value;
+                OnPropertyChanged(nameof(PhoneLoad));
             }
         }
         #endregion

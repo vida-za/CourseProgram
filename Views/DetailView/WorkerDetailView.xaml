@@ -96,6 +96,7 @@
             <Button Grid.Row="2"
                     Margin="5"
                     Content="Назад"
+                    MaxWidth="120"
                     Command="{Binding BackCommand}" />
         </Grid>
 

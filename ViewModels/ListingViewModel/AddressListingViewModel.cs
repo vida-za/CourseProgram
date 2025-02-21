@@ -63,7 +63,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             ObservableCollection<AddressViewModel> _newAllAddresses = new ObservableCollection<AddressViewModel>();
 
-            IEnumerable<Address> temp = await _servicesStore._addressService.GetItemsAsync();
+            IEnumerable<Address> temp = await _servicesStore.GetService<Address>().GetItemsAsync();
             foreach (Address address in temp)
             {
                 AddressViewModel addressViewModel = new(address);
@@ -96,7 +96,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             ObservableCollection<AddressViewModel> _newAllAddresses = new ObservableCollection<AddressViewModel>();
 
-            IEnumerable<Address> temp = await _servicesStore._addressService.GetItemsAsync();
+            IEnumerable<Address> temp = await _servicesStore.GetService<Address>().GetItemsAsync();
             foreach (Address address in temp)
             {
                 AddressViewModel addressViewModel = new(address);

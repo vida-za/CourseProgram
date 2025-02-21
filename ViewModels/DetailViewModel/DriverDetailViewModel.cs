@@ -1,6 +1,7 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace CourseProgram.ViewModels.DetailViewModel
 {
-    public class DriverDetailViewModel : BaseViewModel
+    public class DriverDetailViewModel : BaseDetailViewModel
     {
         private readonly DriverViewModel _driverViewModel;
         private readonly ServicesStore _servicesStore;
@@ -33,15 +34,21 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _routes.Clear();
 
-            IEnumerable<Route> temp = await _servicesStore._routeService.GetItemsByDriverAsync(ID);
+            IEnumerable<Route> temp = await ((RouteDataService)_servicesStore.GetService<Route>()).GetItemsByDriverAsync(ID);
 
             foreach (Route route in temp)
             {
-                var routeViewModel = new RouteViewModel(route, _servicesStore);
+                Machine? machine = null;
+                Address? addressStart = null;
+                Address? addressEnd = null;
+
+                if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
+                if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
+                if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
+
+                var routeViewModel = new RouteViewModel(route, machine, _driverViewModel.GetModel(), addressStart, addressEnd);
                 _routes.Add(routeViewModel);
             }
-
-            StringCategories = _driverViewModel.StringCategories;
         }
 
         public int ID => _driverViewModel.ID;
@@ -51,16 +58,6 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string Phone => _driverViewModel.Phone;
         public string DateStart => _driverViewModel.DateStart;
         public string DateEnd => _driverViewModel.DateEnd;
-
-        private string _stringCategories;
-        public string StringCategories
-        {
-            get => _stringCategories;
-            set
-            {
-                _stringCategories = value;
-                OnPropertyChanged(nameof(StringCategories));
-            }
-        }
+        public string StringCategories => _driverViewModel.StringCategories;
     }
 }

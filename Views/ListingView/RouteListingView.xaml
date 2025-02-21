@@ -31,13 +31,14 @@
                         Margin="10 0 0 0"
                         MaxWidth="120"
                         Content="Завершить"
+                        HorizontalAlignment="Left"
                         Command="{Binding CompleteRoute}" />
 
                 <DataGrid Grid.Row="1"
                           Margin="0 25 0 0"
                           MaxHeight="250"
                           ItemsSource="{Binding ProgRoutes}"
-                          SelectedItem="{Binding SelectedProgRoute}"
+                          SelectedItem="{Binding SelectedProgRoute, Mode=TwoWay}"
                           AutoGenerateColumns="True"
                           CanUserAddRows="True"
                           CanUserDeleteRows="True"
@@ -75,7 +76,7 @@
                           Margin="0 25 0 0"
                           MaxHeight="250"
                           ItemsSource="{Binding WaitRoutes}"
-                          SelectedItem="{Binding SelectedWaitRoute}"
+                          SelectedItem="{Binding SelectedWaitRoute, Mode=TwoWay}"
                           AutoGenerateColumns="True"
                           CanUserAddRows="True"
                           CanUserDeleteRows="True"
@@ -83,7 +84,7 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
                             <i:InvokeCommandAction Command="{Binding DetailRoute}"
-                                                   CommandParameter="{Binding SelectedWaitRoute, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <i:Interaction.Behaviors>

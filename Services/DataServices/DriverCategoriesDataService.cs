@@ -45,7 +45,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<DriverCategories>();
 
                     query.AddFields(DriverCategories.GetFieldNames());
                     query.WhereClause.Equals("КодВодителя", id.ToString());
@@ -61,10 +61,10 @@ namespace CourseProgram.Services.DataServices
                     if (data != null)
                     {
                         foreach (DataRow row in data.Rows)
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -78,9 +78,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<DriverCategories> CreateElement(DataRow row)
         {
-            items.Add(new DriverCategories(
+            return Task.FromResult(new DriverCategories(
                 GetInt(row["КодВодителя"], 0),
                 GetInt(row["КодКатегории"], 0)));
         }

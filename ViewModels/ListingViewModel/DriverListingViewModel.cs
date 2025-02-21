@@ -9,6 +9,7 @@ using CourseProgram.Commands;
 using CourseProgram.Commands.DeleteCommands;
 using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
@@ -56,10 +57,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            List<Driver> temp = (await _servicesStore._driverService.GetActDriversAsync()).ToList();
+            List<Driver> temp = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync()).ToList();
             foreach (Driver itemTemp in temp)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -71,10 +72,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            temp = (await _servicesStore._driverService.GetDisDriversAsync()).ToList();
+            temp = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetDisDriversAsync()).ToList();
             foreach (Driver itemTemp in temp)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -165,10 +166,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            List<Driver> tempAll = (await _servicesStore._driverService.GetActDriversAsync()).ToList();
+            List<Driver> tempAll = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync()).ToList();
             foreach (Driver itemTemp in tempAll)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -180,10 +181,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            List<Driver> tempDis = (await _servicesStore._driverService.GetDisDriversAsync()).ToList();
+            List<Driver> tempDis = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetDisDriversAsync()).ToList();
             foreach (Driver itemTemp in tempDis)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await _servicesStore._driverCategoriesService.GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {

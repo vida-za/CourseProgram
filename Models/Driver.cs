@@ -81,6 +81,8 @@ namespace CourseProgram.Models
                 if (arg.IsChecked)
                     ListCategories.Add(arg);
             }
+
+            SetStringCategories();
         }
 
         public List<Category> GetListCategories()
@@ -90,7 +92,11 @@ namespace CourseProgram.Models
 
         public void SetStringCategories()
         {
-            StringCategories = string.Join(", ", ListCategories);
+            var temp = new List<string>();
+            foreach (Category cat in ListCategories)
+                temp.Add(cat.Name);
+
+            StringCategories = string.Join(", ", temp);
         }
 
         public static string GetTable() => "Водитель";

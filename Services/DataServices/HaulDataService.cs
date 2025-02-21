@@ -41,7 +41,7 @@ namespace CourseProgram.Services.DataServices
                         }
 
                         if (targetID > 0)
-                            CreateElement(dataRow);
+                            items.Add(await CreateElement(dataRow));
 
                         foreach (Haul item in items)
                         {
@@ -68,9 +68,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Haul> CreateElement(DataRow row)
         {
-            items.Add(new Haul(GetInt(row["КодРейса"], 0),
+            return Task.FromResult(new Haul(GetInt(row["КодРейса"], 0),
                 GetDateOnly(row["ДатаНачала"], DateOnly.MinValue),
                 GetDateOnlyOrNull(row["ДатаОкончания"]),
                 GetFloatOrNull(row["СуммарныйДоход"])

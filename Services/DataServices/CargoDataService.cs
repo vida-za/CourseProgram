@@ -18,7 +18,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Cargo>();
 
                     query.AddFields(Cargo.GetFieldNames());
                     query.WhereClause.Equals("КодЗаявки", BudID.ToString());
@@ -34,10 +34,10 @@ namespace CourseProgram.Services.DataServices
                     if (data != null)
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -57,7 +57,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Cargo>();
 
                     query.AddFields(Cargo.GetFieldNames());
                     query.AddParameter("OrderID", OrderID);
@@ -73,11 +73,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -91,9 +91,9 @@ namespace CourseProgram.Services.DataServices
             }
         }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Cargo> CreateElement(DataRow row)
         {
-            items.Add(new Cargo(GetInt(row["КодГруза"], 0),
+            return Task.FromResult(new Cargo(GetInt(row["КодГруза"], 0),
                 GetInt(row["КодЗаявки"], 0),
                 GetInt(row["КодНоменклатуры"], 0),
                 GetFloatOrNull(row["Объём"]),

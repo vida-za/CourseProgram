@@ -1,4 +1,6 @@
-﻿using CourseProgram.Stores;
+﻿using CourseProgram.Models;
+using CourseProgram.Services.DataServices;
+using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
 using System.ComponentModel;
@@ -34,13 +36,13 @@ namespace CourseProgram.Commands.DeleteCommands
         {
             try
             {
-                bool check = await _servicesStore._clientService.CheckCanDelete(_viewModel.SelectedItem.ID);
+                bool check = await ((ClientDataService)_servicesStore.GetService<Client>()).CheckCanDelete(_viewModel.SelectedItem.ID);
 
                 if (!check)
                     MessageBox.Show("Нельзя удалить клиента так как он уже используется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 else
                 {
-                    bool result = await _servicesStore._clientService.DeleteItemAsync(_viewModel.SelectedItem.ID);
+                    bool result = await _servicesStore.GetService<Client>().DeleteItemAsync(_viewModel.SelectedItem.ID);
                     if (result)
                         MessageBox.Show("Клиент удален", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                     else

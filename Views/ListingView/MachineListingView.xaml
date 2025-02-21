@@ -40,11 +40,11 @@
 
             <Button Grid.Column="2"
                     Margin="10 0 0 0"
-                    Content="Добавить машину"
+                    Content="Добавить"
                     Command="{Binding AddMachineCommand}" />
             <Button Grid.Column="3"
                     Margin="10 0 0 0"
-                    Content="Удалить машину"
+                    Content="Списать"
                     Command="{Binding DeleteMachineCommand}" />
         </Grid>
 
@@ -74,7 +74,7 @@
                 <DataGridTextColumn Header="Статус"
                                     Binding="{Binding Status}" />
                 <DataGridTextColumn Header="Город"
-                                    Binding="{Binding Town}" />
+                                    Binding="{Binding FullAddress}" />
             </DataGrid.Columns>
         </DataGrid>
 

@@ -37,11 +37,11 @@ namespace CourseProgram.Commands
                     _isAccept ? BudStatusValues.Accepted : BudStatusValues.Cancelled,
                     temp.Description);
 
-                bool result = await _servicesStore._budService.UpdateItemAsync(newItem);
+                bool result = await _servicesStore.GetService<Bud>().UpdateItemAsync(newItem);
                 if (result)
-                    MessageBox.Show("", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Статус заявки успешно обновлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
-                    MessageBox.Show("", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось изменить статус", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 _navigationService.Navigate();
             }

@@ -12,9 +12,9 @@ namespace CourseProgram.Services.DataServices
     {
         public RouteDataService() : base(User.Username, User.Password) { }
 
-        public override void CreateElement(DataRow row)
+        public override Task<Route> CreateElement(DataRow row)
         {
-            items.Add(new Route(GetInt(row["КодМаршрута"], 0),
+            return Task.FromResult(new Route(GetInt(row["КодМаршрута"], 0),
                 GetIntOrNull(row["КодМашины"]),
                 GetIntOrNull(row["КодВодителя"]),
                 GetString(row["Тип"], string.Empty),
@@ -23,6 +23,30 @@ namespace CourseProgram.Services.DataServices
                 GetIntOrNull(row["КодАдресаНачала"]),
                 GetIntOrNull(row["КодАдресаОкончания"])
                 ));
+        }
+
+        public async Task<bool> AddCatchWithOrder(int orderID, int routeID)
+        {
+            using (var query = new Query(CommandTypes.InsertQuery, "Маршруты_заказа"))
+            {
+                try
+                {
+                    query.AddParameter("КодЗаказа", orderID);
+                    query.AddParameter("КодМаршрута", routeID);
+
+                    await using (var con = new Connection(connection))
+                    {
+                        await con.OpenAsync();
+                        int result = await con.ExecuteQueryAsync<int>(query);
+                        return result > 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(AddCatchWithOrder)}: {ex.Message}");
+                    throw;
+                }
+            }
         }
 
         public async Task<bool> StartRouteAsync(int routeID)
@@ -60,7 +84,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Route>();
 
                     query.AddFields(Route.GetFieldNames());
                     query.WhereClause.Equals("КодВодителя", id.ToString());
@@ -78,10 +102,10 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -101,7 +125,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Route>();
 
                     query.AddFields(Route.GetFieldNames());
                     query.WhereClause.Equals("КодМашины", id.ToString());
@@ -119,10 +143,10 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {
@@ -142,7 +166,7 @@ namespace CourseProgram.Services.DataServices
             {
                 try
                 {
-                    items.Clear();
+                    var tempItems = new List<Route>();
 
                     query.AddFields(Route.GetFieldNames());
                     query.AddParameter("OrderID", OrderID);
@@ -159,11 +183,11 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            CreateElement(row);
+                            tempItems.Add(await CreateElement(row));
                         }
                     }
 
-                    return await Task.FromResult(items);
+                    return await Task.FromResult(tempItems);
                 }
                 catch (Exception ex)
                 {

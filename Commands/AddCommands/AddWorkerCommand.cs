@@ -50,8 +50,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._workerService.FindMaxEmptyID();
-                int result = await _servicesStore._workerService.AddItemAsync(worker);
+                await _servicesStore.GetService<Worker>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Worker>().AddItemAsync(worker);
                 if (result > 0)
                     MessageBox.Show("Сотрудник добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else

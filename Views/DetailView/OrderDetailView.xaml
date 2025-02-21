@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:CourseProgram.Views.DetailView"
              xmlns:vm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
              xmlns:beh="clr-namespace:CourseProgram.Behaviors"
+             xmlns:controls="clr-namespace:CourseProgram.Components"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -15,23 +16,31 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0"
-              Margin="10">
+              Margin="10"
+              Grid.IsSharedSizeScope="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row" />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row"  />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row"  />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row"  />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row"  />
+                <RowDefinition Height="auto"
+                               SharedSizeGroup="row"  />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
@@ -41,8 +50,7 @@
                        FontWeight="Bold" />
             <TextBlock Grid.Row="0"
                        Grid.Column="1"
-                       Text="{Binding ClientName}"
-                       Margin="0 5 0 0" />
+                       Text="{Binding ClientName}" />
             
             <TextBlock Grid.Row="1"
                        Grid.Column="0"
@@ -51,8 +59,7 @@
                        FontWeight="Bold" />
             <TextBlock Grid.Row="1"
                        Grid.Column="1"
-                       Text="{Binding TimeOrder}"
-                       Margin="0 5 0 0" />
+                       Text="{Binding TimeOrder}" />
 
             <TextBlock Grid.Row="2"
                        Grid.Column="0"
@@ -61,8 +68,7 @@
                        FontWeight="Bold" />
             <TextBlock Grid.Row="2"
                        Grid.Column="1"
-                       Text="{Binding TimeLoad}"
-                       Margin="0 5 0 0" />
+                       Text="{Binding TimeLoad}" />
 
             <TextBlock Grid.Row="3"
                        Grid.Column="0"
@@ -71,18 +77,16 @@
                        FontWeight="Bold" />
             <TextBlock Grid.Row="3"
                        Grid.Column="1"
-                       Text="{Binding TimeOnLoad}"
-                       Margin="0 5 0 0" />
+                       Text="{Binding TimeOnLoad}" />
 
             <TextBlock Grid.Row="4"
                        Grid.Column="0"
                        Text="Стоимость"
                        Margin="0 0 5 0"
                        FontWeight="Bold" />
-            <TextBlock Grid.Row="4"
-                       Grid.Column="1"
-                       Text="{Binding Price}"
-                       Margin="0 5 0 0" />
+            <controls:EditableTextField Grid.Row="4"
+                                        Grid.Column="1"
+                                        DataContext="{Binding PriceField}" />
 
             <TextBlock Grid.Row="5"
                        Grid.Column="0"
@@ -91,33 +95,63 @@
                        FontWeight="Bold" />
             <TextBlock Grid.Row="5"
                        Grid.Column="1"
-                       Text="{Binding Status}"
-                       Margin="0 5 0 0" />
+                       Text="{Binding Status}" />
         </Grid>
 
-        <Button Grid.Row="1"
-                Margin="5"
-                Content="Назад"
-                Command="{Binding Back}" />
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Margin="5 5 5 5"
+                    Content="Отменить"
+                    MaxWidth="150"
+                    Command="{Binding CancelOrder}" />
 
-        <DataGrid Grid.Row="2"
+            <Button Margin="5 5 5 5"
+                    Content="Завершить"
+                    MaxWidth="150"
+                    Command="{Binding CompleteOrder}" />
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Margin="5 5 5 10"
+                    Content="Назад"
+                    MaxWidth="150"
+                    Command="{Binding Back}" />
+
+            <Button Margin="5 5 5 10"
+                    Content="Сохранить"
+                    MaxWidth="150"
+                    Command="{Binding SaveChanges}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="3"
                   MaxHeight="150"
                   ItemsSource="{Binding Routes}"
                   AutoGenerateColumns="True"
-                  IsReadOnly="True">
+                  IsReadOnly="True"
+                  Margin="0 0 0 10">
             <i:Interaction.Behaviors>
                 <beh:ColumnHeaderBehaviour />
             </i:Interaction.Behaviors>
         </DataGrid>
 
-        <DataGrid Grid.Row="3"
+        <DataGrid Grid.Row="4"
                   MaxHeight="150"
                   ItemsSource="{Binding Cargos}"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   IsReadOnly="True">
-            <i:Interaction.Behaviors>
-                <beh:ColumnHeaderBehaviour />
-            </i:Interaction.Behaviors>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Наименование номенклатуры"
+                                    Binding="{Binding NomenclatureName}" />
+                <DataGridTextColumn Header="Объём"
+                                    Binding="{Binding Volume}" />
+                <DataGridTextColumn Header="Вес"
+                                    Binding="{Binding Weight}" />
+                <DataGridTextColumn Header="Количество"
+                                    Binding="{Binding Count}" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>

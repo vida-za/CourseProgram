@@ -52,7 +52,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     false
                     );
 
-                bool result = await _servicesStore._addressService.UpdateItemAsync(newItem);
+                bool result = await _servicesStore.GetService<Address>().UpdateItemAsync(newItem);
                 if (result)
                     MessageBox.Show("Адрес удален", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 else

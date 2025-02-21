@@ -76,8 +76,8 @@ namespace CourseProgram.Commands.AddCommands
 
             try
             {
-                await _servicesStore._clientService.FindMaxEmptyID();
-                int result = await _servicesStore._clientService.AddItemAsync(client);
+                await _servicesStore.GetService<Client>().FindMaxEmptyID();
+                int result = await _servicesStore.GetService<Client>().AddItemAsync(client);
                 if (result > 0)
                     MessageBox.Show("Заказчик добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else

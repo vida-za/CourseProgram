@@ -1,4 +1,6 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Services;
+using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.ListingViewModel;
 using System;
@@ -11,14 +13,12 @@ namespace CourseProgram.Commands
     {
         private readonly ServicesStore _servicesStore;
         private readonly RouteListingViewModel _routeListingViewModel;
-        private readonly Route _route;
+        private Route _route;
 
         public StartRouteCommand(ServicesStore servicesStore, RouteListingViewModel routeListingViewModel)
         {
             _servicesStore = servicesStore;
             _routeListingViewModel = routeListingViewModel;
-
-            _route = _routeListingViewModel.SelectedWaitRoute?.GetModel();
 
             _routeListingViewModel.PropertyChanged += _routeListingViewModel_PropertyChanged;
         }
@@ -27,6 +27,7 @@ namespace CourseProgram.Commands
         {
             if (e.PropertyName == nameof(_routeListingViewModel.SelectedWaitRoute))
             {
+                _route = _routeListingViewModel.SelectedWaitRoute?.GetModel();
                 OnCanExecuteChanged();
             }
         }
@@ -49,7 +50,7 @@ namespace CourseProgram.Commands
 
                 try
                 {
-                    bool result = await _servicesStore._routeService.StartRouteAsync(_route.ID);
+                    bool result = await ((RouteDataService)_servicesStore.GetService<Route>()).StartRouteAsync(_route.ID);
                     if (result)
                     {
                         await _routeListingViewModel.UpdateDataAsync();
@@ -58,8 +59,9 @@ namespace CourseProgram.Commands
                     else
                         MessageBox.Show("Не удалость начать маршрут", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(StartRouteCommand)}: {ex.Message}");
                     MessageBox.Show("Неизвестная ошибка!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
