@@ -38,8 +38,14 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            Worker worker = new(
-                -1,
+
+            try
+            {
+                await _servicesStore.GetService<Worker>().FindMaxEmptyID();
+                int newId = await _servicesStore.GetService<Worker>().GetFreeID();
+
+                Worker worker = new(
+                newId,
                 _viewModel.Name,
                 _viewModel.BirthDay,
                 _viewModel.Passport,
@@ -48,18 +54,21 @@ namespace CourseProgram.Commands.AddCommands
                 null
                 );
 
-            try
-            {
-                await _servicesStore.GetService<Worker>().FindMaxEmptyID();
                 int result = await _servicesStore.GetService<Worker>().AddItemAsync(worker);
                 if (result > 0)
                     MessageBox.Show("Сотрудник добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
-                    MessageBox.Show("Не удалось добавить сотрудника", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не удалось добавить сотрудника, возможно такие паспортные данные уже есть в системе", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+            }
+            catch(Exception) 
+            {
+                MessageBox.Show("Неизвестная ошибка!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
                 _navigationService.Navigate();
             }
-            catch(Exception) { }
         }
     }
 }

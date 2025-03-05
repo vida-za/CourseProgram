@@ -20,8 +20,10 @@ namespace CourseProgram.Models
         public float? Price { get; }
         [DisplayName("Статус")]
         public OrderStatusValues Status { get; }
-        [DisplayName("Договор")]
-        public string? File { get; }
+        [DisplayName("КонтактПогрузки")]
+        public string? PhoneLoad { get; }
+        [DisplayName("КонтактРазгрузки")]
+        public string? PhoneOnLoad { get; }
 
         public Order()
         {
@@ -32,7 +34,8 @@ namespace CourseProgram.Models
             TimeOnLoad = null;
             Price = null;
             Status = OrderStatusValues.Waiting;
-            File = null;
+            PhoneLoad = null;
+            PhoneOnLoad = null;
         }
 
         public Order(
@@ -43,7 +46,8 @@ namespace CourseProgram.Models
             DateTime? timeOnLoad,
             float? price,
             string status,
-            string? file)
+            string phoneLoad,
+            string phoneOnLoad)
         {
             ID = id;
             BudID = budID;
@@ -51,7 +55,8 @@ namespace CourseProgram.Models
             TimeLoad = timeLoad;
             TimeOnLoad = timeOnLoad;
             Price = price;
-            File = file;
+            PhoneLoad = phoneLoad;
+            PhoneOnLoad = phoneOnLoad;
 
             Status = status switch
             {
@@ -63,7 +68,7 @@ namespace CourseProgram.Models
             };
         }
 
-        public Order(int iD, int budID, DateTime timeOrder, DateTime? timeLoad, DateTime? timeOnLoad, float? price, OrderStatusValues status, string? file)
+        public Order(int iD, int budID, DateTime timeOrder, DateTime? timeLoad, DateTime? timeOnLoad, float? price, OrderStatusValues status, string phoneLoad, string phoneOnLoad)
         {
             ID = iD;
             BudID = budID;
@@ -72,7 +77,8 @@ namespace CourseProgram.Models
             TimeOnLoad = timeOnLoad;
             Price = price;
             Status = status;
-            File = file;
+            PhoneLoad = phoneLoad;
+            PhoneOnLoad = phoneOnLoad;
         }
 
         public static string GetTable() => "Заказ";
@@ -88,7 +94,8 @@ namespace CourseProgram.Models
                 "ДатаВыгрузки",
                 "Стоимость",
                 "Статус",
-                "Договор"
+                "КонтактПогрузки",
+                "КонтактРазгрузки"
             };
         }
 

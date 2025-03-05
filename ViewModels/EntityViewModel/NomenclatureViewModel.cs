@@ -26,10 +26,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string NeedTemperature => _model.NeedTemperature ?? "-";
         [DisplayName("Класс опасности")]
         public string DangerousClass => Constants.GetEnumDescription(_model.DangerousClass);
-        [DisplayName("Производитель")]
-        public string Manufacturer => _model.Manufacturer ?? "-";
-        [DisplayName("Срок годности")]
-        public string ExpiryDate => _model.ExpiryDate != null ? _model.ExpiryDate.ToString() : "-";
 
         public NomenclatureViewModel(Nomenclature nomenclature)
         {

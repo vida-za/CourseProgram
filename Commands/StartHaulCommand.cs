@@ -26,11 +26,13 @@ namespace CourseProgram.Commands
             {
                 IsExecuting = true;
 
-                var haul = new Haul(-1, DateOnly.FromDateTime(DateTime.Now), null, null);
-
                 try
                 {
                     await _servicesStore.GetService<Haul>().FindMaxEmptyID();
+                    int newId = await _servicesStore.GetService<Haul>().GetFreeID();
+
+                    var haul = new Haul(newId, DateOnly.FromDateTime(DateTime.Now), null, null);
+
                     int result = await _servicesStore.GetService<Haul>().AddItemAsync(haul);
                     if (result > 0)
                     {

@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services.DBServices;
+using CourseProgram.Stores;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static CourseProgram.Models.Constants;
 
 namespace CourseProgram.Services.DataServices
@@ -15,6 +17,7 @@ namespace CourseProgram.Services.DataServices
     public abstract class BaseService<T> : IDataService<T> where T : IModel, IEquatable<T>
     {
         protected Connection connection;
+        protected DataStore _dataStore;
 
         protected List<T> items = new List<T>();
         protected T temp;
@@ -28,26 +31,26 @@ namespace CourseProgram.Services.DataServices
             connection = new Connection(Server, Database, User.Username, User.Password);
         }
 
-        public BaseService(string username, string password)
+        public BaseService(string username, string password, DataStore dataStore)
         {
             connection = new Connection(Server, Database, username, password);
+            _dataStore = dataStore;
         }
 
-        public async Task FindMaxEmptyID()
+        public Task FindMaxEmptyID()
         {
-            int i = 0;
-            FreeID = -1;
-            var temp = await GetItemsAsync();
-            for (i = 1; i <= temp.Count(); ++i)
-            {
-                if (!temp.Any(d => d.ID == i))
-                    FreeID = i;
-            }
-            if (FreeID == -1)
-                FreeID = i;
+            var existingIDs = _dataStore.GetArrayData<T>().Select(d => d.ID).OrderBy(id => id).ToList();
 
-            //var temp = await GetItemsAsync();
-            //FreeID = Enumerable.Range(1, temp.Count() + 1).Except(temp.Select(d => d.ID)).FirstOrDefault();
+            FreeID = 1;
+            foreach (int id in existingIDs)
+            {
+                if (id == FreeID)
+                    FreeID++;
+                else
+                    break;
+            }
+
+            return Task.CompletedTask;
         }
 
         public virtual async Task<bool> DeleteItemAsync(int id)
@@ -65,6 +68,7 @@ namespace CourseProgram.Services.DataServices
                     {
                         await con.OpenAsync();
                         int res = await con.ExecuteQueryAsync<int>(queryDel);
+                        _dataStore.RemoveData(current);
                         return res > 0;
                     }
                 }
@@ -72,10 +76,6 @@ namespace CourseProgram.Services.DataServices
                 {
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(DeleteItemAsync)}: {ex.Message}");
                     throw;
-                }
-                finally
-                {
-                    queryDel?.Dispose();
                 }
             }
         }
@@ -87,9 +87,7 @@ namespace CourseProgram.Services.DataServices
 
                 try
                 {
-                    await GetItemsAsync();
-
-                    var oldItem = items.FirstOrDefault(d => d.Equals(item));
+                    var oldItem = _dataStore.FindData(item);
                     if (oldItem == null)
                         return await Task.FromResult(false);
 
@@ -123,6 +121,7 @@ namespace CourseProgram.Services.DataServices
                     {
                         await con.OpenAsync();
                         int res = await con.ExecuteQueryAsync<int>(queryUpd);
+                        _dataStore.ReplaceData(item);
                         return res > 0;
                     }
                 }
@@ -131,10 +130,6 @@ namespace CourseProgram.Services.DataServices
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(UpdateItemAsync)}: {ex.Message}");
                     throw;
                 }
-                finally
-                {
-                    queryUpd?.Dispose();
-                }
             }
         }
 
@@ -142,7 +137,7 @@ namespace CourseProgram.Services.DataServices
         {
             using (var queryIns = new Query(CommandTypes.InsertQuery, T.GetTable()))
             {
-                FillInsertParams(queryIns, item);
+                await FillInsertParams(queryIns, item);
 
                 try
                 {
@@ -150,6 +145,7 @@ namespace CourseProgram.Services.DataServices
                     {
                         await con.OpenAsync();
                         int res = await con.ExecuteQueryAsync<int>(queryIns);
+                        _dataStore.AddData(item);
                         if (res > 0)
                             return FreeID;
                         else 
@@ -161,10 +157,6 @@ namespace CourseProgram.Services.DataServices
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(AddItemAsync)}: {ex.Message}");
                     throw;
                 }
-                finally
-                {
-                    queryIns?.Dispose();
-                }
             }
         }
 
@@ -175,7 +167,7 @@ namespace CourseProgram.Services.DataServices
 
                 try
                 {
-                    queryOneSel.AddFields(T.GetSelectorID());
+                    queryOneSel.AddFields(T.GetFieldNames());
                     queryOneSel.WhereClause.Equals(T.GetSelectorID(), id.ToString());
 
                     DataTable data;
@@ -190,13 +182,16 @@ namespace CourseProgram.Services.DataServices
                     if (data?.Rows.Count == 1 && data != null)
                     {
                         dataRow = data.Rows[0];
+                        T item = await CreateElement(dataRow);
 
-                        foreach (T item in items)
+                        T? res = _dataStore.FindData(item);
+                        if (res != null)
+                            return item;
+                        else
                         {
-                            if (item.ID == GetInt(dataRow[T.GetSelectorID()], 0))
-                                return item;
+                            _dataStore.AddData(item);
+                            return item;
                         }
-                        throw new Exception($"Not found item in collection with id: {id}");
                     }
                     else
                         throw new Exception($"Not found item in DB with id: {id}");
@@ -206,21 +201,15 @@ namespace CourseProgram.Services.DataServices
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemAsync)}: {ex.Message}");
                     throw;
                 }
-                finally
-                {
-                    queryOneSel?.Dispose();
-                }
             }
         }
 
-        public virtual async Task<IEnumerable<T>> GetItemsAsync()
+        public virtual async Task GetItemsAsync()
         {
             using (var queryAllSel = new Query(CommandTypes.SelectQuery, T.GetTable()))
             {
                 try
                 {
-                    items.Clear();
-
                     queryAllSel.AddFields(T.GetFieldNames());
 
                     DataTable data;
@@ -235,27 +224,21 @@ namespace CourseProgram.Services.DataServices
                     {
                         foreach (DataRow row in data.Rows)
                         {
-                            items.Add(await CreateElement(row));
+                            _dataStore.AddData(await CreateElement(row));
                         }
                     }
-
-                    return await Task.FromResult(items);
                 }
                 catch (Exception ex)
                 {
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemsAsync)}: {ex.Message}");
                     throw;
                 }
-                finally
-                {
-                    queryAllSel?.Dispose();
-                }
             }
         }
 
         public abstract Task<T> CreateElement(DataRow row);
 
-        public async void FillInsertParams(Query query, T item)
+        public async Task FillInsertParams(Query query, T item)
         {
             try
             {
@@ -290,5 +273,7 @@ namespace CourseProgram.Services.DataServices
                 throw;
             }
         }
+
+        public Task<int> GetFreeID() => Task.FromResult(FreeID);
     }
 }

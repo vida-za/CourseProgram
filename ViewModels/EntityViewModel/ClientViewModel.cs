@@ -30,10 +30,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string Correspondent => _model.Correspondent;
         [DisplayName("Банк")]
         public string Bank => _model.Bank;
-        [DisplayName("Контакт по загрузке")]
-        public string PhoneLoad => _model.PhoneLoad;
-        [DisplayName("Контакт по разгрузке")]
-        public string PhoneOnLoad => _model.PhoneOnLoad;
 
         public ClientViewModel(Client client)
         {

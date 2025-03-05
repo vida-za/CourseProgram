@@ -98,33 +98,61 @@
                        Text="{Binding Status}" />
         </Grid>
 
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-            <Button Margin="5 5 5 5"
-                    Content="Отменить"
-                    MaxWidth="150"
-                    Command="{Binding CancelOrder}" />
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
-            <Button Margin="5 5 5 5"
-                    Content="Завершить"
-                    MaxWidth="150"
-                    Command="{Binding CompleteOrder}" />
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-            <Button Margin="5 5 5 10"
-                    Content="Назад"
-                    MaxWidth="150"
-                    Command="{Binding Back}" />
+            <Button Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Width="180"
+                    Command="{Binding SetTimeLoad}"
+                    Content="Погрузка завершилась"
+                    Margin="5 10 5 5" />
 
-            <Button Margin="5 5 5 10"
-                    Content="Сохранить"
-                    MaxWidth="150"
-                    Command="{Binding SaveChanges}" />
-        </StackPanel>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Margin="5 10 5 5"
+                        Content="Отменить"
+                        Width="100"
+                        Command="{Binding CancelOrder}" />
+
+                <Button Margin="5 10 5 5"
+                        Content="Завершить"
+                        Width="100"
+                        Command="{Binding CompleteOrder}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Margin="5 5 5 10"
+                    Command="{Binding SetTimeOnLoad}"
+                    Content="Разгрузка завершилась"
+                    Width="180" />
+
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Margin="5 5 5 10"
+                        Content="Назад"
+                        Width="100"
+                        Command="{Binding Back}" />
+
+                <Button Margin="5 5 5 10"
+                        Content="Сохранить"
+                        Width="100"
+                        Command="{Binding SaveChanges}" />
+            </StackPanel>
+        </Grid>
 
         <DataGrid Grid.Row="3"
                   MaxHeight="150"

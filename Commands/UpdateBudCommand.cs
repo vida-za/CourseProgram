@@ -35,7 +35,11 @@ namespace CourseProgram.Commands
                     temp.WorkerID,
                     temp.TimeBud,
                     _isAccept ? BudStatusValues.Accepted : BudStatusValues.Cancelled,
-                    temp.Description);
+                    temp.Description,
+                    temp.AddressLoadID,
+                    temp.AddressOnLoadID,
+                    temp.DateTimeLoadPlan,
+                    temp.DateTimeOnLoadPlan);
 
                 bool result = await _servicesStore.GetService<Bud>().UpdateItemAsync(newItem);
                 if (result)

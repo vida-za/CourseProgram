@@ -7,10 +7,12 @@
         xmlns:av="clr-namespace:CourseProgram.Views.AddView"
         xmlns:dv="clr-namespace:CourseProgram.Views.DetailView"
         xmlns:lv="clr-namespace:CourseProgram.Views.ListingView"
+        xmlns:hv="clr-namespace:CourseProgram.Views.HistoryView"
         xmlns:vm="clr-namespace:CourseProgram.ViewModels"
         xmlns:avm="clr-namespace:CourseProgram.ViewModels.AddViewModel"
         xmlns:dvm="clr-namespace:CourseProgram.ViewModels.DetailViewModel"
         xmlns:lvm="clr-namespace:CourseProgram.ViewModels.ListingViewModel"
+        xmlns:hvm="clr-namespace:CourseProgram.ViewModels.HistoryViewModel"
         xmlns:components="clr-namespace:CourseProgram.Components"
         xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
         mc:Ignorable="d"
@@ -104,6 +106,17 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type dvm:RouteDetailViewModel}">
                 <dv:RouteDetailView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type hvm:BudHistoryViewModel}">
+                <hv:BudHistoryView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type hvm:HaulHistoryViewModel}">
+                <hv:HaulHistoryView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:CreatingItineraryViewModel}">
+                <v:CreatingItineraryView />
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type vm:LayoutViewModel}">

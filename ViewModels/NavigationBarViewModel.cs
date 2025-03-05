@@ -20,6 +20,11 @@ namespace CourseProgram.ViewModels
 
         public ICommand NavigateHomeCommand { get; }
         public ICommand NavigateOperationalCommand { get; }
+
+        public ICommand NavigateBudHistoryCommand { get; }
+        public ICommand NavigateHaulHistoryCommand { get; }
+
+        public ICommand NavigateItineraryCommand { get; }
         #endregion
 
         public NavigationBarViewModel(
@@ -31,7 +36,10 @@ namespace CourseProgram.ViewModels
             INavigationService workersNavigationService,
             INavigationService homeNavigationService,
             INavigationService operationalNavigationService,
-            INavigationService routesNavigationService) 
+            INavigationService routesNavigationService,
+            INavigationService budHistoryNavigationService,
+            INavigationService haulHistoryNavigationService,
+            INavigationService itineraryNavigationService) 
         {
             NavigateAddressesCommand = new NavigateCommand(addressesNavigationService);
             //NavigateCargoesCommand = new NavigateCommand(cargoesNavigationService); 
@@ -46,6 +54,11 @@ namespace CourseProgram.ViewModels
 
             NavigateHomeCommand = new NavigateCommand(homeNavigationService);
             NavigateOperationalCommand = new NavigateCommand(operationalNavigationService);
+
+            NavigateBudHistoryCommand = new NavigateCommand(budHistoryNavigationService);
+            NavigateHaulHistoryCommand = new NavigateCommand(haulHistoryNavigationService);
+
+            NavigateItineraryCommand = new NavigateCommand(itineraryNavigationService);
         }
     }
 }

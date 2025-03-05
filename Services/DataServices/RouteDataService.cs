@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services.DBServices;
+using CourseProgram.Stores;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class RouteDataService : BaseService<Route>
     {
-        public RouteDataService() : base(User.Username, User.Password) { }
+        public RouteDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public override Task<Route> CreateElement(DataRow row)
         {
@@ -69,88 +70,6 @@ namespace CourseProgram.Services.DataServices
                 catch (Exception ex)
                 {
                     await LogManager.Instance.WriteLogAsync($"Error in {nameof(StartRouteAsync)}: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    query?.Dispose();
-                }
-            }
-        }
-
-        public async Task<IEnumerable<Route>> GetItemsByDriverAsync(int id)
-        {
-            using (var query = new Query(CommandTypes.SelectQuery, Route.GetTable()))
-            {
-                try
-                {
-                    var tempItems = new List<Route>();
-
-                    query.AddFields(Route.GetFieldNames());
-                    query.WhereClause.Equals("КодВодителя", id.ToString());
-                    query.WhereClause.NotEquals("Статус", "\'Отменен\'");
-
-                    DataTable data;
-
-                    await using (var con = new Connection(connection))
-                    {
-                        await con.OpenAsync();
-                        data = await con.ExecuteQueryAsync<DataTable>(query);
-                    }
-
-                    if (data != null)
-                    {
-                        foreach (DataRow row in data.Rows)
-                        {
-                            tempItems.Add(await CreateElement(row));
-                        }
-                    }
-                    return await Task.FromResult(tempItems);
-                }
-                catch (Exception ex)
-                {
-                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemsByDriverAsync)}: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    query?.Dispose();
-                }
-            }
-        }
-
-        public async Task<IEnumerable<Route>> GetItemsByMachineAsync(int id)
-        {
-            using (var query = new Query(CommandTypes.SelectQuery, Route.GetTable()))
-            {
-                try
-                {
-                    var tempItems = new List<Route>();
-
-                    query.AddFields(Route.GetFieldNames());
-                    query.WhereClause.Equals("КодМашины", id.ToString());
-                    query.WhereClause.NotEquals("Статус", "\'Отменен\'");
-
-                    DataTable data;
-
-                    await using (var con = new Connection(connection))
-                    {
-                        await con.OpenAsync();
-                        data = await con.ExecuteQueryAsync<DataTable>(query);
-                    }
-
-                    if (data != null)
-                    {
-                        foreach (DataRow row in data.Rows)
-                        {
-                            tempItems.Add(await CreateElement(row));
-                        }
-                    }
-                    return await Task.FromResult(tempItems);
-                }
-                catch (Exception ex)
-                {
-                    await LogManager.Instance.WriteLogAsync($"Error in {nameof(GetItemsByDriverAsync)}: {ex.Message}");
                     throw;
                 }
                 finally

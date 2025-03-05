@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:vm="clr-namespace:CourseProgram.ViewModels.AddViewModel"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -58,7 +59,7 @@
                                     <DataTemplate>
                                         <ComboBox ItemsSource="{Binding DataContext.Nomenclatures, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                   SelectedValue="{Binding NomenclatureID, Mode=TwoWay}"
-                                                  DisplayMemberPath="Name"
+                                                  DisplayMemberPath="NameWithSize"
                                                   SelectedValuePath="ID" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellEditingTemplate>
@@ -94,15 +95,23 @@
                 <Grid Grid.Row="1"
                       Margin="0 5 0 5"
                       Grid.IsSharedSizeScope="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"
+                                       SharedSizeGroup="Row" />
+                        <RowDefinition Height="auto"
+                                       SharedSizeGroup="Row" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"
+                                          SharedSizeGroup="Column" />
                         <ColumnDefinition Width="auto"
                                           SharedSizeGroup="Column" />
                         <ColumnDefinition Width="auto"
-                                          MinWidth="150"
                                           SharedSizeGroup="Column" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox Grid.Column="0"
+                    <ComboBox Grid.Row="0"
+                              Grid.Column="0"
                               Style="{StaticResource PlaceholderComboBoxStyle}"
                               Tag="Заказчик"
                               Margin="5"
@@ -110,13 +119,44 @@
                               SelectedItem="{Binding SelectedClient}"
                               DisplayMemberPath="Name" />
 
-                    <ComboBox Grid.Column="1"
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="0"
                               Style="{StaticResource PlaceholderComboBoxStyle}"
                               Tag="Сотрудник"
                               Margin="5"
                               ItemsSource="{Binding Workers}"
                               SelectedItem="{Binding SelectedWorker}"
                               DisplayMemberPath="FIO" />
+
+                    <ComboBox Grid.Row="0"
+                              Grid.Column="1"
+                              Style="{StaticResource PlaceholderComboBoxStyle}"
+                              Tag="Пункт погрузки"
+                              Margin="5"
+                              ItemsSource="{Binding Addresses}"
+                              SelectedItem="{Binding SelectedAddressLoad}"
+                              DisplayMemberPath="FullAddress" />
+
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1"
+                              Style="{StaticResource PlaceholderComboBoxStyle}"
+                              Tag="Пункт разгрузки"
+                              Margin="5"
+                              ItemsSource="{Binding Addresses}"
+                              SelectedItem="{Binding SelectedAddressOnLoad}"
+                              DisplayMemberPath="FullAddress" />
+
+                    <xctk:DateTimePicker Grid.Row="0"
+                                         Grid.Column="2"
+                                         Margin="5"
+                                         Value="{Binding DateTimeLoadPlan, Mode=TwoWay}"
+                                         Format="FullDateTime" />
+
+                    <xctk:DateTimePicker Grid.Row="1"
+                                         Grid.Column="2"
+                                         Margin="5"
+                                         Value="{Binding DateTimeOnLoadPlan, Mode=TwoWay}"
+                                         Format="FullDateTime" />
                 </Grid>
             </Grid>
         </GroupBox>

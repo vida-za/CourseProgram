@@ -18,6 +18,14 @@ namespace CourseProgram.Models
         public BudStatusValues Status { get; }
         [DisplayName("Описание")]
         public string? Description { get; }
+        [DisplayName("КодАдресаПогрузки")]
+        public int AddressLoadID { get; }
+        [DisplayName("КодАдресаРазгрузки")]
+        public int AddressOnLoadID { get; }
+        [DisplayName("ДатаВремяПогрузкиПлан")]
+        public DateTime DateTimeLoadPlan { get; }
+        [DisplayName("ДатаВремяРазгрузкиПлан")]
+        public DateTime DateTimeOnLoadPlan { get; }
 
         public Bud() 
         {
@@ -27,15 +35,23 @@ namespace CourseProgram.Models
             TimeBud = DateTime.Now;
             Status = BudStatusValues.Waiting;
             Description = null;
+            AddressLoadID = 0;
+            AddressOnLoadID = 0;
+            DateTimeLoadPlan = DateTime.Now;
+            DateTimeOnLoadPlan = DateTime.Now;
         }
 
-        public Bud(int id, int clientID, int workerID, DateTime timeBud, string status, string? description)
+        public Bud(int id, int clientID, int workerID, DateTime timeBud, string status, string? description, int addressLoadID, int addressOnLoadID, DateTime dateTimeLoadPlan, DateTime dateTimeOnLoadPlan)
         {
             ID = id;
             ClientID = clientID;
             WorkerID = workerID;
             TimeBud = timeBud;
             Description = description ?? null;
+            AddressLoadID = addressLoadID;
+            AddressOnLoadID = addressOnLoadID;
+            DateTimeLoadPlan = dateTimeLoadPlan;
+            DateTimeOnLoadPlan = dateTimeOnLoadPlan;
 
             Status = status switch
             {
@@ -46,7 +62,7 @@ namespace CourseProgram.Models
             };
         }
 
-        public Bud(int iD, int clientID, int workerID, DateTime timeBud, BudStatusValues status, string? description)
+        public Bud(int iD, int clientID, int workerID, DateTime timeBud, BudStatusValues status, string? description, int addressLoadID, int addressOnLoadID, DateTime dateTimeLoadPlan, DateTime dateTimeOnLoadPlan)
         {
             ID = iD;
             ClientID = clientID;
@@ -54,6 +70,10 @@ namespace CourseProgram.Models
             TimeBud = timeBud;
             Status = status;
             Description = description;
+            AddressLoadID = addressLoadID;
+            AddressOnLoadID = addressOnLoadID;
+            DateTimeLoadPlan = dateTimeLoadPlan;
+            DateTimeOnLoadPlan = dateTimeOnLoadPlan;
         }
 
         public static string GetTable() => "Заявка";
@@ -67,7 +87,11 @@ namespace CourseProgram.Models
                 "КодСотрудника",
                 "ДатаВремяЗаявки",
                 "Статус",
-                "Описание"
+                "Описание",
+                "КодАдресаПогрузки",
+                "КодАдресаРазгрузки",
+                "ДатаВремяПогрузкиПлан",
+                "ДатаВремяРазгрузкиПлан"
             };
         }
 

@@ -6,7 +6,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
 {
     public class CargoViewModel : BaseViewModel
     {
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
         private Nomenclature _nomenclatureModel;
 
         private int _nomenclatureID;
@@ -14,7 +14,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
         private float _weight;
         private int _count;
 
-        public readonly int ID;
+        public int ID;
 
         public int NomenclatureID
         {
@@ -76,7 +76,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
             }
         }
 
-        public CargoViewModel(Cargo cargo, ServicesStore servicesStore)
+        public CargoViewModel(Cargo cargo, ControllersStore controllersStore)
         {
             ID = cargo.ID;
             _nomenclatureID = cargo.NomenclatureID;
@@ -84,7 +84,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
             _weight = cargo.Weight;
             _count = cargo.Count;
 
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
             UpdateNomenclature();
         }
 
@@ -92,7 +92,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
         {
             if (NomenclatureID > 0)
             {
-                _nomenclatureModel = await _servicesStore.GetService<Nomenclature>().GetItemAsync(NomenclatureID);
+                _nomenclatureModel = await _controllersStore.GetController<Nomenclature>().GetItemByID(NomenclatureID);
                 OnPropertyChanged(nameof(NomenclatureName));
             }
         }

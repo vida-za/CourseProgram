@@ -46,7 +46,7 @@ namespace CourseProgram.Commands.DeleteCommands
                     if (result)
                         MessageBox.Show("Номенклатура удалена", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
-                        MessageBox.Show("Не удалось удалить номенклатура", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Не удалось удалить номенклатуру", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 await _viewModel.UpdateDataAsync();
@@ -54,6 +54,7 @@ namespace CourseProgram.Commands.DeleteCommands
             catch (Exception ex)
             {
                 await LogManager.Instance.WriteLogAsync($"ERROR {ex.Message}");
+                MessageBox.Show("Неизвестная ошибка!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

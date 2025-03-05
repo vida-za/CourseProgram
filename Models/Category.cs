@@ -30,6 +30,13 @@ namespace CourseProgram.Models
             IsChecked = check;
         }
 
+        public Category(int categoryID)
+        {
+            EnumCategory = (Categories)categoryID;
+            Name = GetEnumDescription(EnumCategory);
+            IsChecked = true;
+        }
+
         public Category(DriverCategories driverCategories)
         {
             EnumCategory = (Categories)driverCategories.CategoryID;

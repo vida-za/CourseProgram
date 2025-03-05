@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services.DBServices;
+using CourseProgram.Stores;
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class NomenclatureDataService : BaseService<Nomenclature>
     {
-        public NomenclatureDataService() : base(User.Username, User.Password) { }
+        public NomenclatureDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public async Task<bool> CheckCanDelete(int id)
         {
@@ -20,7 +21,7 @@ namespace CourseProgram.Services.DataServices
                 using (var query = new Query(CommandTypes.SelectQuery, "Груз"))
                 {
                     query.AddFields("Count(1)");
-                    query.WhereClause.Equals(Cargo.GetSelectorID(), id.ToString());
+                    query.WhereClause.Equals("КодНоменклатуры", id.ToString());
 
                     await using (var con = new Connection(connection))
                     {
@@ -57,9 +58,7 @@ namespace CourseProgram.Services.DataServices
                 GetString(row["ЕдиницаИзмерения"], string.Empty),
                 GetStringOrNull(row["Упаковка"]),
                 GetStringOrNull(row["ТребованияКТемпературе"]),
-                GetStringOrNull(row["Опасность"]),
-                GetStringOrNull(row["Производитель"]),
-                GetIntOrNull(row["СрокГодности"])));
+                GetStringOrNull(row["Опасность"])));
         }
     }
 }

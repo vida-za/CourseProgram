@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using static CourseProgram.Models.Constants;
 
@@ -30,10 +31,8 @@ namespace CourseProgram.Models
         public string? NeedTemperature { get; }
         [DisplayName("Опасность")]
         public NomenclatureDangerousValues DangerousClass { get; }
-        [DisplayName("Производитель")]
-        public string? Manufacturer { get; }
-        [DisplayName("СрокГодности")]
-        public int? ExpiryDate { get; }
+
+        public string NameWithSize { get; }
 
         public Nomenclature() 
         {
@@ -49,8 +48,7 @@ namespace CourseProgram.Models
             Pack = NomenclaturePackingValues.None;
             NeedTemperature = null;
             DangerousClass = NomenclatureDangerousValues.None;
-            Manufacturer = null;
-            ExpiryDate = null;
+            NameWithSize = SetDetailName();
         }
 
         public Nomenclature(
@@ -65,9 +63,7 @@ namespace CourseProgram.Models
             string unit,
             string pack,
             string? needTemperature,
-            string dangerousClass,
-            string? manufacturer,
-            int? expiryDate)
+            string dangerousClass)
         {
             ID = iD;
             Name = name;
@@ -76,8 +72,7 @@ namespace CourseProgram.Models
             Height = height;
             Weight = weight;
             NeedTemperature = needTemperature;
-            Manufacturer = manufacturer;
-            ExpiryDate = expiryDate;
+            NameWithSize = SetDetailName();
 
             Type = type switch
             {
@@ -137,9 +132,7 @@ namespace CourseProgram.Models
             NomenclatureMeasureValues unit,
             NomenclaturePackingValues pack,
             string? needTemperature,
-            NomenclatureDangerousValues dangerousClass,
-            string? manufacturer,
-            int? expiryDate)
+            NomenclatureDangerousValues dangerousClass)
         {
             ID = iD;
             Name = name;
@@ -153,8 +146,15 @@ namespace CourseProgram.Models
             Pack = pack;
             NeedTemperature = needTemperature;
             DangerousClass = dangerousClass;
-            Manufacturer = manufacturer;
-            ExpiryDate = expiryDate;
+            NameWithSize = SetDetailName();
+        }
+
+        private string SetDetailName()
+        {
+            List<string> partsSize = new List<string>() { Length.ToString(), Width.ToString(), Height.ToString()};
+            string size = string.Join("x", partsSize);
+
+            return $"{Name}, {size}";
         }
 
         public static string GetTable() => "Номенклатура";
@@ -174,9 +174,7 @@ namespace CourseProgram.Models
                 "ЕдиницаИзмерения",
                 "Упаковка",
                 "ТребованияКТемпературе",
-                "Опасность",
-                "Производитель",
-                "СрокГодности"
+                "Опасность"
             };
         }
 

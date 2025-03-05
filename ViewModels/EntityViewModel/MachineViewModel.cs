@@ -8,7 +8,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
     public class MachineViewModel : BaseViewModel
     {
         private readonly Machine _model;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
 
         private Address _modelAddress;
         public readonly int ID;
@@ -60,11 +60,13 @@ namespace CourseProgram.ViewModels.EntityViewModel
                 }
             }
         }
+        [DisplayName("Категория")]
+        public string CategoryName => _model.CategoryValue.Name;
 
-        public MachineViewModel(Machine model, ServicesStore servicesStore)
+        public MachineViewModel(Machine model, ControllersStore controllersStore)
         {
             _model = model;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             ID = _model.ID;
             AddressID = _model.AddressID;
@@ -74,7 +76,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         private async void UpdateData()
         {
-            _modelAddress = AddressID != null ? await _servicesStore.GetService<Address>().GetItemAsync((int)AddressID) : null;
+            _modelAddress = AddressID != null ? await _controllersStore.GetController<Address>().GetItemByID((int)AddressID) : null;
 
             FullAddress = _modelAddress?.FullAddress;
         }

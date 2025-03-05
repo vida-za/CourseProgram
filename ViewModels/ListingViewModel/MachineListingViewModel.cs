@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Commands.DeleteCommands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
@@ -21,11 +22,12 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public MachineListingViewModel(
             ServicesStore servicesStore,
             SelectedStore selectedStore,
+            ControllersStore controllersStore,
             INavigationService addMachineNavigationService,
             INavigationService detailMachineNavigationService)
         {
-            _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
 
             _disMachines = new ObservableCollection<MachineViewModel>();
             _rdyMachines = new ObservableCollection<MachineViewModel>();
@@ -33,7 +35,7 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             SwitchMachinesCommand = new SwitchHandlerCommand(this);
             AddMachineCommand = new NavigateCommand(addMachineNavigationService);
-            DeleteMachineCommand = new DeleteMachineCommand(this, _servicesStore);
+            DeleteMachineCommand = new DeleteMachineCommand(this, servicesStore);
             DetailMachineCommand = new NavigateDetailCommand(detailMachineNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
 
@@ -58,17 +60,17 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
             ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
-            IEnumerable<Machine> temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
+            IEnumerable<Machine> temp = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(true);
             foreach (Machine machine in temp)
             {
-                var machineViewModel = new MachineViewModel(machine, _servicesStore);
+                var machineViewModel = new MachineViewModel(machine, _controllersStore);
                 _newRdyMachines.Add(machineViewModel);
             }
 
-            temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetDisMachinesAsync();
+            temp = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(false);
             foreach (Machine machine in temp)
             {
-                var machineViewModel = new MachineViewModel(machine, _servicesStore);
+                var machineViewModel = new MachineViewModel(machine, _controllersStore);
                 _newDisMachines.Add(machineViewModel);
             }
 
@@ -99,7 +101,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public ICommand AddMachineCommand { get; }
         public ICommand DeleteMachineCommand { get; }
         public ICommand DetailMachineCommand { get; }
-        public ICommand SelectionChangedCommand { get; }
 
         private MachineViewModel _selectedItem;
         public MachineViewModel SelectedItem
@@ -139,12 +140,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 SelectedItem = Items.FirstOrDefault(obj => obj.Name.ToLower().Contains(TextFilter.ToLower()), SelectedItem);
         }
 
-        private void SelectionChangedExecute(DataGrid dataGrid)
-        {
-            if (dataGrid.SelectedItem != null)
-                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-        }
-
         public override async Task UpdateDataAsync()
         {
             var currentSelected = SelectedItem;
@@ -152,17 +147,17 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<MachineViewModel> _newDisMachines = new ObservableCollection<MachineViewModel>();
             ObservableCollection<MachineViewModel> _newRdyMachines = new ObservableCollection<MachineViewModel>();
 
-            IEnumerable<Machine> temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
+            IEnumerable<Machine> temp = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(true);
             foreach (Machine machine in temp)
             {
-                var machineViewModel = new MachineViewModel(machine, _servicesStore);
+                var machineViewModel = new MachineViewModel(machine, _controllersStore);
                 _newRdyMachines.Add(machineViewModel);
             }
 
-            temp = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetDisMachinesAsync();
+            temp = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(false);
             foreach (Machine machine in temp)
             {
-                var machineViewModel = new MachineViewModel(machine, _servicesStore);
+                var machineViewModel = new MachineViewModel(machine, _controllersStore);
                 _newDisMachines.Add(machineViewModel);
             }
 

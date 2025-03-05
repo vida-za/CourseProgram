@@ -43,19 +43,20 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-             var address = new Address(
-                -1,
-                _viewModel.City,
-                _viewModel.Street,
-                _viewModel.House,
-                _viewModel.Structure,
-                _viewModel.Frame,
-                true
-                );
-
             try
             {
                 await _servicesStore.GetService<Address>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Address>().GetFreeID();
+
+                var address = new Address(
+                   newID,
+                   _viewModel.City,
+                   _viewModel.Street,
+                   _viewModel.House,
+                   _viewModel.Structure,
+                   _viewModel.Frame
+                   );
+
                 int result = await _servicesStore.GetService<Address>().AddItemAsync(address);
                 if (result > 0)
                     MessageBox.Show("Адрес добавлен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -4,6 +4,7 @@ using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class OrderDetailViewModel : BaseDetailViewModel
     {
         private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
         private readonly OrderViewModel _orderViewModel;
         private readonly Order _base;
         private float? fPrice;
@@ -24,11 +26,14 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public ICommand SaveChanges { get; }
         public ICommand CancelOrder { get; }
         public ICommand CompleteOrder { get; }
+        public ICommand SetTimeLoad { get; }
+        public ICommand SetTimeOnLoad { get; }
 
-        public OrderDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
+        public OrderDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, ControllersStore controllersStore, INavigationService closeNavigationService)
         {
             _servicesStore = servicesStore;
             _orderViewModel = selectedStore.CurrentOrder;
+            _controllersStore = controllersStore;
 
             Price = _orderViewModel.Price;
             _base = _orderViewModel.GetModel();
@@ -43,7 +48,9 @@ namespace CourseProgram.ViewModels.DetailViewModel
             SaveChanges = new UpdateEntityCommand<Order>(this, _servicesStore.GetService<Order>(), GetUpdatedOrder, closeNavigationService, () => IsDirty, () => IsDirty = false);
             CancelOrder = new UpdateEntityCommand<Order>(this, _servicesStore.GetService<Order>(), GetCancelledOrder, closeNavigationService);
             CompleteOrder = new UpdateEntityCommand<Order>(this, _servicesStore.GetService<Order>(), GetCompletedOrder, closeNavigationService, 
-                () => Routes.All(r => (r.Status == Constants.GetEnumDescription(Constants.RouteStatusValues.Cancelled) || r.Status == Constants.GetEnumDescription(Constants.RouteStatusValues.Completed))));
+                () => Routes.All(r => (r.Status == Constants.GetEnumDescription(Constants.RouteStatusValues.Cancelled) || r.Status == Constants.GetEnumDescription(Constants.RouteStatusValues.Completed))) && Routes.Any(r => r.Status == Constants.GetEnumDescription(Constants.RouteStatusValues.Completed)));
+            SetTimeLoad = new UpdateEntityCommand<Order>(this, _servicesStore.GetService<Order>(), GetNewLoadOrder, closeNavigationService, () => TimeLoad == "-");
+            SetTimeOnLoad = new UpdateEntityCommand<Order>(this, _servicesStore.GetService<Order>(), GetNewOnLoadOrder, closeNavigationService, () => TimeOnLoad == "-" && TimeLoad != "-");
 
             UpdateData();
         }
@@ -64,31 +71,24 @@ namespace CourseProgram.ViewModels.DetailViewModel
             IEnumerable<Route> tempRoutes = await ((RouteDataService)_servicesStore.GetService<Route>()).GetRoutesByOrderAsync(ID);
             foreach (var route in tempRoutes)
             {
-                Machine? machine = null;
-                Driver? driver = null;
-                Address? addressStart = null;
-                Address? addressEnd = null;
-
-                if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
-                if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
-                if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
-                if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
-
-                var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                var routeViewModel = new RouteViewModel(route, _controllersStore);
                 _routes.Add(routeViewModel);
             }
 
             IEnumerable<Cargo> tempCargos = await ((CargoDataService)_servicesStore.GetService<Cargo>()).GetCargosByOrderAsync(ID);
             foreach (var temp in tempCargos)
             {
-                var cargoViewModel = new CargoViewModel(temp, _servicesStore);
+                var cargoViewModel = new CargoViewModel(temp, _controllersStore);
                 _cargos.Add(cargoViewModel);
             }
         }
 
-        private Order GetUpdatedOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, fPrice, _base.Status, _base.File);
-        private Order GetCancelledOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, _base.Price, Constants.OrderStatusValues.Cancelled, _base.File);
-        private Order GetCompletedOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, _base.Price, Constants.OrderStatusValues.Completed, _base.File);
+        private Order GetUpdatedOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, fPrice, _base.Status, _base.PhoneLoad, _base.PhoneOnLoad);
+        private Order GetCancelledOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, _base.Price, Constants.OrderStatusValues.Cancelled, _base.PhoneLoad, _base.PhoneOnLoad);
+        private Order GetCompletedOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, _base.TimeOnLoad, _base.Price, Constants.OrderStatusValues.Completed, _base.PhoneLoad, _base.PhoneOnLoad);
+        private Order GetNewLoadOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, DateTime.Now, _base.TimeOnLoad, _base.Price, _base.Status, _base.PhoneLoad, _base.PhoneOnLoad);
+        private Order GetNewOnLoadOrder() => new Order(_base.ID, _base.BudID, _base.TimeOrder, _base.TimeLoad, DateTime.Now, _base.Price, _base.Status, _base.PhoneLoad, _base.PhoneOnLoad);
+
 
 
         private string _price;

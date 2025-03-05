@@ -7,7 +7,7 @@ namespace CourseProgram.ViewModels.EntityViewModel
 {
     public class OrderViewModel : BaseViewModel
     {
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
 
         private readonly Order _model;
         private Bud _budModel;
@@ -39,13 +39,11 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string Price => _model.Price.ToString();
         [DisplayName("Статус")]
         public string Status => Constants.GetEnumDescription(_model.Status);
-        [DisplayName("Договор")]
-        public string File => _model.File ?? "-";
 
-        public OrderViewModel(Order model, ServicesStore servicesStore)
+        public OrderViewModel(Order model, ControllersStore controllersStore)
         {
             _model = model;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             ID = _model.ID;
             BudID = _model.BudID;
@@ -55,8 +53,8 @@ namespace CourseProgram.ViewModels.EntityViewModel
 
         private async void UpdateData()
         {
-            _budModel = await _servicesStore.GetService<Bud>().GetItemAsync(BudID);
-            _clientModel = await _servicesStore.GetService<Client>().GetItemAsync(_budModel.ClientID);
+            _budModel = await _controllersStore.GetController<Bud>().GetItemByID(BudID);
+            _clientModel = await _controllersStore.GetController<Client>().GetItemByID(_budModel.ClientID);
 
             ClientName = _clientModel.Name;
         }

@@ -32,7 +32,8 @@ namespace CourseProgram.Commands.AddCommands
                 e.PropertyName == nameof(_viewModel.Volume) ||
                 e.PropertyName == nameof(_viewModel.LengthBodywork) ||
                 e.PropertyName == nameof(_viewModel.WidthBodywork) ||
-                e.PropertyName == nameof(_viewModel.HeightBodywork))
+                e.PropertyName == nameof(_viewModel.HeightBodywork) ||
+                e.PropertyName == nameof(_viewModel.SelectedCategory))
             {
                 OnCanExecuteChanged();
             }
@@ -50,12 +51,19 @@ namespace CourseProgram.Commands.AddCommands
                    (float.TryParse(_viewModel.LengthBodywork, out temp) || string.IsNullOrEmpty(_viewModel.LengthBodywork)) &&
                    (float.TryParse(_viewModel.WidthBodywork, out temp) || string.IsNullOrEmpty(_viewModel.WidthBodywork)) &&
                    (float.TryParse(_viewModel.HeightBodywork, out temp) || string.IsNullOrEmpty(_viewModel.HeightBodywork)) &&
+                   _viewModel.SelectedCategory != null &&
                    base.CanExecute(parameter);
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            var machine = new Machine(
+
+            try
+            {
+                await _servicesStore.GetService<Machine>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Machine>().GetFreeID();
+
+                var machine = new Machine(
                 -1,
                 _viewModel.TypeMachine,
                 _viewModel.TypeBodywork == null ? Constants.GetEnumDescription(Constants.MachineTypeBodyworkValues.Null) : _viewModel.TypeBodywork,
@@ -72,12 +80,9 @@ namespace CourseProgram.Commands.AddCommands
                 Constants.GetEnumDescription(Constants.MachineStatusValues.Waiting),
                 DateTime.Now,
                 null,
-                null
-                );
+                null,
+                (int)_viewModel.SelectedCategory.EnumCategory);
 
-            try
-            {
-                await _servicesStore.GetService<Machine>().FindMaxEmptyID();
                 int result = await _servicesStore.GetService<Machine>().AddItemAsync(machine);
                 if (result > 0)
                     MessageBox.Show("Машина добавлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -89,6 +94,10 @@ namespace CourseProgram.Commands.AddCommands
             catch (RepeatConflictException<Machine>)
             {
                 MessageBox.Show("Такая машина уже имеется", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Неизвестная ошибка", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -78,7 +78,7 @@ namespace CourseProgram.Models
         {
             foreach (Category arg in args)
             {
-                if (arg.IsChecked)
+                if (arg.IsChecked && !ListCategories.Contains(arg))
                     ListCategories.Add(arg);
             }
 

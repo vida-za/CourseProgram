@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:CourseProgram.ViewModels.AddViewModel"
              xmlns:local="clr-namespace:CourseProgram.Views.AddView"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:AddMachineViewModel}">
     <Grid Grid.IsSharedSizeScope="True"
           Margin="10 10 10 10">
 
@@ -28,6 +30,8 @@
             <Grid Margin="0 5 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"
+                                   SharedSizeGroup="Row" />
+                    <RowDefinition Height="auto"
                                    SharedSizeGroup="Row" />
                     <RowDefinition Height="auto"
                                    SharedSizeGroup="Row" />
@@ -89,6 +93,14 @@
                               Margin="3"
                               IsChecked="{Binding HydroBoard}" />
                 </StackPanel>
+
+                <ComboBox Grid.Row="2"
+                          Style="{StaticResource PlaceholderComboBoxStyle}"
+                          Tag="Категория"
+                          Margin="5"
+                          ItemsSource="{Binding Categories}"
+                          SelectedItem="{Binding SelectedCategory}"
+                          DisplayMemberPath="Name" />
             </Grid>
         </GroupBox>
 

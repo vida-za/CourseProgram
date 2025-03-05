@@ -10,24 +10,39 @@ namespace CourseProgram.Commands
     public class CompleteRouteCommand : CommandBaseAsync
     {
         private readonly ServicesStore _servicesStore;
-        private readonly RouteListingViewModel _routeListingViewModel;
+        private readonly RouteListingViewModel _viewModel;
 
-        public CompleteRouteCommand(ServicesStore servicesStore, RouteListingViewModel routeListingViewModel)
+        public CompleteRouteCommand(ServicesStore servicesStore, RouteListingViewModel viewModel)
         {
             _servicesStore = servicesStore;
-            _routeListingViewModel = routeListingViewModel;
+            _viewModel = viewModel;
+
+            _viewModel.PropertyChanged += _viewModel_PropertyChanged;
+        }
+
+        private void _viewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_viewModel.SelectedProgRoute))
+            {
+                OnCanExecuteChanged();
+            }
+        }
+
+        public override bool CanExecute(object? parameter)
+        {
+            return base.CanExecute(parameter) && _viewModel.SelectedProgRoute != null;
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
             MessageBoxResult message = MessageBox.Show("Вы уверены что хотите завершить маршрут?", "Подтверждение закрытия маршрута", MessageBoxButton.YesNo);
-            if (message == MessageBoxResult.Yes && _routeListingViewModel.SelectedProgRoute != null)
+            if (message == MessageBoxResult.Yes && _viewModel.SelectedProgRoute != null)
             {
                 IsExecuting = true;
 
                 try
                 {
-                    Route tempRoute = _routeListingViewModel.SelectedProgRoute.GetModel();
+                    Route tempRoute = _viewModel.SelectedProgRoute.GetModel();
                     var newItem = new Route(
                         tempRoute.ID,
                         tempRoute.MachineID,
@@ -41,7 +56,7 @@ namespace CourseProgram.Commands
                     bool result = await _servicesStore.GetService<Route>().UpdateItemAsync(newItem);
                     if (result)
                     {
-                        await _routeListingViewModel.UpdateDataAsync();
+                        await _viewModel.UpdateDataAsync();
                         MessageBox.Show("Маршрут завершен!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else

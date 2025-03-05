@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Stores;
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class WorkerDataService : BaseService<Worker>
     {
-        public WorkerDataService() : base(User.Username, User.Password) { }
+        public WorkerDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public override Task<Worker> CreateElement(DataRow row)
         {

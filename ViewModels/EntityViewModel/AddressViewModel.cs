@@ -15,8 +15,6 @@ namespace CourseProgram.ViewModels.EntityViewModel
         public string Street => _model.Street;
         [DisplayName("Дом")]
         public string House => CalcHouse();
-        [DisplayName("Активен")]
-        public string Active => _model.Active ? "Да" : "Нет";
 
         private string CalcHouse()
         {

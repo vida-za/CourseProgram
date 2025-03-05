@@ -1,7 +1,7 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class RouteDetailViewModel : BaseDetailViewModel
     {
         private readonly RouteViewModel _routeViewModel;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
         private readonly Route _base;
 
         public IEnumerable<Machine> Machines { get; set; }
@@ -22,11 +22,11 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public ICommand Back { get; }
         public ICommand Save { get; }
 
-        public RouteDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
+        public RouteDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, ControllersStore controllersStore, INavigationService closeNavigationService)
         {
             _routeViewModel = selectedStore.CurrentRoute;
             _base = _routeViewModel.GetModel();
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             SelectedMachine = _routeViewModel.GetMachine();
             SelectedDriver = _routeViewModel.GetDriver();
@@ -35,12 +35,12 @@ namespace CourseProgram.ViewModels.DetailViewModel
             IsDirty = false;
 
             Back = new NavigateCommand(closeNavigationService);
-            Save = new UpdateEntityCommand<Route>(this, _servicesStore.GetService<Route>(), GetUpdatedRoute, closeNavigationService, () => IsDirty, () => IsDirty = false);
+            Save = new UpdateEntityCommand<Route>(this, servicesStore.GetService<Route>(), GetUpdatedRoute, closeNavigationService, () => IsDirty, () => IsDirty = false);
 
             UpdateData();
         }
 
-        private Route GetUpdatedRoute() => new Route(_base.ID, SelectedMachine.ID, SelectedDriver.ID, _base.Type, _base.Status, _base.CompleteTime, SelectedAddressStart.ID, SelectedAddressEnd.ID);
+        private Route GetUpdatedRoute() => new Route(_base.ID, SelectedMachine?.ID, SelectedDriver?.ID, _base.Type, _base.Status, _base.CompleteTime, SelectedAddressStart?.ID, SelectedAddressEnd?.ID);
 
         private Machine _selectedMachine;
         public Machine SelectedMachine
@@ -92,9 +92,9 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
         private async void UpdateData()
         {
-            Machines = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
-            Drivers = await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync();
-            Addresses = await ((AddressDataService)_servicesStore.GetService<Address>()).GetActAddressesAsync();
+            Machines = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(true);
+            Drivers = await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(true);
+            Addresses = await ((AddressDataController)_controllersStore.GetController<Address>()).GetItems();
 
             OnPropertyChanged(nameof(Machines));
             OnPropertyChanged(nameof(Drivers));

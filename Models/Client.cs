@@ -28,10 +28,6 @@ namespace CourseProgram.Models
         public string? Correspondent { get; }
         [DisplayName("Банк")]
         public string? Bank { get; }
-        [DisplayName("КонтактЗагрузки")]
-        public string PhoneLoad { get; }
-        [DisplayName("КонтактВыгрузки")]
-        public string PhoneOnLoad { get; }
 
         public Client()
         {
@@ -46,8 +42,6 @@ namespace CourseProgram.Models
             BIK = null;
             Correspondent = null;
             Bank = null;
-            PhoneLoad = string.Empty;
-            PhoneOnLoad = string.Empty;
         }
 
         public Client(
@@ -61,9 +55,7 @@ namespace CourseProgram.Models
             string checking,
             string? bik,
             string? correspondent,
-            string? bank,
-            string phoneLoad,
-            string phoneOnLoad)
+            string? bank)
         {
             ID = id;
             Name = name;
@@ -75,8 +67,6 @@ namespace CourseProgram.Models
             BIK = bik;
             Correspondent = correspondent;
             Bank = bank;
-            PhoneLoad = phoneLoad;
-            PhoneOnLoad = phoneOnLoad;
 
             Type = type switch
             {
@@ -86,7 +76,7 @@ namespace CourseProgram.Models
             };
         }
 
-        public Client(int iD, string name, ClientTypeValues type, string iNN, string kPP, string oGRN, string phone, string checking, string? bIK, string? correspondent, string? bank, string phoneLoad, string phoneOnLoad)
+        public Client(int iD, string name, ClientTypeValues type, string iNN, string kPP, string oGRN, string phone, string checking, string? bIK, string? correspondent, string? bank)
         {
             ID = iD;
             Name = name;
@@ -99,8 +89,6 @@ namespace CourseProgram.Models
             BIK = bIK;
             Correspondent = correspondent;
             Bank = bank;
-            PhoneLoad = phoneLoad;
-            PhoneOnLoad = phoneOnLoad;
         }
 
         public static string GetTable() => "Заказчик";
@@ -119,9 +107,7 @@ namespace CourseProgram.Models
                 "РасчётныйСчёт",
                 "БИК",
                 "КорреспондентскийСчёт",
-                "Банк",
-                "КонтактЗагрузки",
-                "КонтактВыгрузки"
+                "Банк"
             };
         }
 

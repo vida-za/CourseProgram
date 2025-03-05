@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Commands.AddCommands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
@@ -16,16 +17,17 @@ namespace CourseProgram.ViewModels.AddViewModel
 {
     public class AddRouteViewModel : BaseAddViewModel
     {
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
+
         public ICommand SelectionChangedCommand { get; }
 
-        public AddRouteViewModel(ServicesStore servicesStore, INavigationService closeNavigationService) 
+        public AddRouteViewModel(ServicesStore servicesStore, ControllersStore controllersStore, INavigationService closeNavigationService) 
         {
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             _orders = new ObservableCollection<OrderViewModel>();
 
-            SubmitCommand = new AddRouteCommand(this, _servicesStore, closeNavigationService);
+            SubmitCommand = new AddRouteCommand(this, servicesStore, closeNavigationService);
             CancelCommand = new NavigateCommand(closeNavigationService);
             SelectionChangedCommand = new RelayCommand<object>(UpdateSelectedOrders);
 
@@ -48,16 +50,16 @@ namespace CourseProgram.ViewModels.AddViewModel
 
         private async void UpdateData()
         {
-            Machines = await ((MachineDataService)_servicesStore.GetService<Machine>()).GetRdyMachinesAsync();
-            Drivers = await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync();
-            Addresses = await ((AddressDataService)_servicesStore.GetService<Address>()).GetActAddressesAsync();
+            Machines = await ((MachineDataController)_controllersStore.GetController<Machine>()).GetActiveMachines(true);
+            Drivers = await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(true);
+            Addresses = await ((AddressDataController)_controllersStore.GetController<Address>()).GetItems();
 
-            IEnumerable<Order> temp = await _servicesStore.GetService<Order>().GetItemsAsync();
+            IEnumerable<Order> temp = await _controllersStore.GetController<Order>().GetItems();
             foreach (var ord in temp)
             {
                 if (ord.Status == Constants.OrderStatusValues.InProgress || ord.Status == Constants.OrderStatusValues.Waiting)
                 {
-                    var orderViewModel = new OrderViewModel(ord, _servicesStore);
+                    var orderViewModel = new OrderViewModel(ord, _controllersStore);
                     Orders.Add(orderViewModel);
                 }
             }

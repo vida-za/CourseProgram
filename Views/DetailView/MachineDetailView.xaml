@@ -51,6 +51,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -205,6 +206,16 @@
                 <TextBlock Grid.Row="14"
                            Grid.Column="1"
                            Text="{Binding FullAddress}"
+                           Margin="5 5 0 0" />
+
+                <TextBlock Grid.Row="15"
+                           Grid.Column="0"
+                           Text="Необходима категория"
+                           Margin="0 5 5 0"
+                           FontWeight="Bold" />
+                <TextBlock Grid.Row="15"
+                           Grid.Column="1"
+                           Text="{Binding CategoryName}"
                            Margin="5 5 0 0" />
             </Grid>
 

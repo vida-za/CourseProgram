@@ -36,9 +36,7 @@ namespace CourseProgram.Commands.AddCommands
                 e.PropertyName == nameof(_viewModel.KPP) ||
                 e.PropertyName == nameof(_viewModel.OGRN) ||
                 e.PropertyName == nameof(_viewModel.Phone) ||
-                e.PropertyName == nameof(_viewModel.Checking) ||
-                e.PropertyName == nameof(_viewModel.PhoneLoad) ||
-                e.PropertyName == nameof(_viewModel.PhoneOnLoad))
+                e.PropertyName == nameof(_viewModel.Checking))
                 OnCanExecuteChanged();
         }
 
@@ -51,32 +49,30 @@ namespace CourseProgram.Commands.AddCommands
                 !string.IsNullOrEmpty(_viewModel.OGRN) &&
                 !string.IsNullOrEmpty(_viewModel.Phone) &&
                 !string.IsNullOrEmpty(_viewModel.Checking) &&
-                !string.IsNullOrEmpty(_viewModel.PhoneLoad) &&
-                !string.IsNullOrEmpty(_viewModel.PhoneOnLoad) &&
                 base.CanExecute(parameter);
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            Client client = new(
-                -1,
-                _viewModel.Name,
-                _viewModel.Type,
-                _viewModel.INN,
-                _viewModel.KPP,
-                _viewModel.OGRN,
-                _viewModel.Phone,
-                _viewModel.Checking,
-                _viewModel.BIK,
-                _viewModel.Correspondent,
-                _viewModel.Bank,
-                _viewModel.PhoneLoad,
-                _viewModel.PhoneOnLoad
-                );
-
             try
             {
                 await _servicesStore.GetService<Client>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Client>().GetFreeID();
+
+                Client client = new(
+                    newID,
+                    _viewModel.Name,
+                    _viewModel.Type,
+                    _viewModel.INN,
+                    _viewModel.KPP,
+                    _viewModel.OGRN,
+                    _viewModel.Phone,
+                    _viewModel.Checking,
+                    _viewModel.BIK,
+                    _viewModel.Correspondent,
+                    _viewModel.Bank
+                    );
+
                 int result = await _servicesStore.GetService<Client>().AddItemAsync(client);
                 if (result > 0)
                     MessageBox.Show("Заказчик добавлен", "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -85,7 +81,10 @@ namespace CourseProgram.Commands.AddCommands
 
                 _navigationService.Navigate();
             }
-            catch(Exception) { }
+            catch(Exception) 
+            {
+                MessageBox.Show("Неизвестная ошибка", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         #endregion
     }

@@ -1,7 +1,7 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class WorkerDetailViewModel : BaseDetailViewModel
     {
         private readonly WorkerViewModel _workerViewModel;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
 
         private ObservableCollection<OrderViewModel> _orders = new ObservableCollection<OrderViewModel>();
         public IEnumerable<OrderViewModel> Orders => _orders;
@@ -21,12 +21,12 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public ICommand BackCommand { get; }
 
         public WorkerDetailViewModel(
-            ServicesStore servicesStore,
             SelectedStore selectedStore,
+            ControllersStore controllersStore,
             INavigationService closeNavigationService) 
         {
             _workerViewModel = selectedStore.CurrentWorker;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             BackCommand = new NavigateCommand(closeNavigationService);
 
@@ -37,14 +37,14 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _orders.Clear();
 
-            IEnumerable<Bud> temp = await ((BudDataService)_servicesStore.GetService<Bud>()).GetBudsByWorkerController(ID);
+            IEnumerable<Bud> temp = await ((BudDataController)_controllersStore.GetController<Bud>()).GetBudsByWorker(ID);
 
             foreach (var bud in temp)
             {
-                Order? order = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrderByBudController(bud.ID);
+                Order? order = await ((OrderDataController)_controllersStore.GetController<Order>()).GetOrderByBud(bud.ID);
                 if (order != null)
                 {
-                    var orderViewModel = new OrderViewModel(order, _servicesStore);
+                    var orderViewModel = new OrderViewModel(order, _controllersStore);
                     _orders.Add(orderViewModel);
                 }
             }

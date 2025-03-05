@@ -1,4 +1,5 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Services.DataServices;
@@ -19,7 +20,6 @@ namespace CourseProgram.ViewModels
     public class OperationalViewModel : BaseListingViewModel
     {
         #region fields
-        public ICommand SelectionChangedCommand { get; }
         public ICommand DetailOrderCommand { get; }
         public ICommand DetailBudCommand { get; }
         public ICommand StartHaulCommand { get; }
@@ -31,6 +31,7 @@ namespace CourseProgram.ViewModels
         public OperationalViewModel(
             ServicesStore servicesStore,
             SelectedStore selectedStore,
+            ControllersStore controllersStore,
             INavigationService detailOrderNavigationService,
             INavigationService detailBudNavigationService,
             INavigationService addBudNavigationService,
@@ -38,6 +39,7 @@ namespace CourseProgram.ViewModels
         {
             _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
 
             _orders = new ObservableCollection<OrderViewModel>();
             _buds = new ObservableCollection<BudViewModel>();
@@ -68,19 +70,19 @@ namespace CourseProgram.ViewModels
 
         public override async void UpdateData()
         {
-            Haul? temp = await ((HaulDataService)_servicesStore.GetService<Haul>()).GetCurrentHaul();
+            Haul? temp = await ((HaulDataController)_controllersStore.GetController<Haul>()).GetCurrentHaul();
             if (temp == null)
                 Item = null;
             else
                 Item = new HaulViewModel(temp);
 
             ObservableCollection<BudViewModel> _newBuds = new ObservableCollection<BudViewModel>();
-            IEnumerable<Bud> tempBuds = await _servicesStore.GetService<Bud>().GetItemsAsync();
+            IEnumerable<Bud> tempBuds = await _controllersStore.GetController<Bud>().GetItems();
             foreach (Bud bud in tempBuds)
             {
                 if (bud.Status == Constants.BudStatusValues.Waiting)
                 {
-                    var budViewModel = new BudViewModel(bud, _servicesStore);
+                    var budViewModel = new BudViewModel(bud, _controllersStore);
                     _newBuds.Add(budViewModel);
                 }
             }
@@ -99,7 +101,7 @@ namespace CourseProgram.ViewModels
                 IEnumerable<Order> tempOrders = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrdersByHaulAsync(temp.ID);
                 foreach (Order order in tempOrders)
                 {
-                    var orderViewModel = new OrderViewModel(order, _servicesStore);
+                    var orderViewModel = new OrderViewModel(order, _controllersStore);
                     _newOrders.Add(orderViewModel);
                 }
 
@@ -118,19 +120,19 @@ namespace CourseProgram.ViewModels
 
         public override async Task UpdateDataAsync()
         {
-            Haul? temp = await ((HaulDataService)_servicesStore.GetService<Haul>()).GetCurrentHaul();
+            Haul? temp = await ((HaulDataController)_controllersStore.GetController<Haul>()).GetCurrentHaul();
             if (temp == null)
                 Item = null;
             else
                 Item = new HaulViewModel(temp);
 
             ObservableCollection<BudViewModel> _newBuds = new ObservableCollection<BudViewModel>();
-            IEnumerable<Bud> tempBuds = await _servicesStore.GetService<Bud>().GetItemsAsync();
+            IEnumerable<Bud> tempBuds = await _controllersStore.GetController<Bud>().GetItems();
             foreach (Bud bud in tempBuds)
             {
                 if (bud.Status == Constants.BudStatusValues.Waiting)
                 {
-                    var budViewModel = new BudViewModel(bud, _servicesStore);
+                    var budViewModel = new BudViewModel(bud, _controllersStore);
                     _newBuds.Add(budViewModel);
                 }
             }
@@ -148,7 +150,7 @@ namespace CourseProgram.ViewModels
                 IEnumerable<Order> tempOrders = await ((OrderDataService)_servicesStore.GetService<Order>()).GetOrdersByHaulAsync(temp.ID);
                 foreach (Order order in tempOrders)
                 {
-                    var orderViewModel = new OrderViewModel(order, _servicesStore);
+                    var orderViewModel = new OrderViewModel(order, _controllersStore);
                     _newOrders.Add(orderViewModel);
                 }
 
@@ -169,12 +171,6 @@ namespace CourseProgram.ViewModels
         {
             if (!string.IsNullOrEmpty(TextFilter))
                 SelectedOrder = Orders.FirstOrDefault(obj => obj.ClientName.ToLower().Contains(TextFilter.ToLower()), SelectedOrder);
-        }
-
-        private void SelectionChangedExecute(DataGrid dataGrid)
-        {
-            if (dataGrid.SelectedItem != null)
-                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
         }
 
         private void ChangeTitle()

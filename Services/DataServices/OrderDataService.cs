@@ -1,9 +1,9 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services.DBServices;
+using CourseProgram.Stores;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
@@ -11,12 +11,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class OrderDataService : BaseService<Order>
     {
-        public OrderDataService() : base(User.Username, User.Password) { }
-
-        public Task<Order?> GetOrderByBudController(int budID)
-        {
-            return Task.FromResult(items.FirstOrDefault(o => o.BudID == budID, null));
-        }
+        public OrderDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public async Task<IEnumerable<Order>> GetOrdersByHaulAsync(int HaulID)
         {
@@ -68,7 +63,8 @@ namespace CourseProgram.Services.DataServices
                 GetDateTimeOrNull(row["ДатаВыгрузки"]),
                 GetFloatOrNull(row["Стоимость"]),
                 GetString(row["Статус"], string.Empty),
-                GetStringOrNull(row["Договор"])
+                GetStringOrNull(row["КонтактПогрузки"]),
+                GetStringOrNull(row["КонтактРазгрузки"])
                 ));
         }
     }

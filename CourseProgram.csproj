@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25103.5738" />
     <PackageReference Include="H.XamlStyler" Version="1.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.17" />
@@ -15,6 +16,7 @@
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Include="SimpleModal.WPF" Version="1.0.0" />
+    <PackageReference Include="Spire.Doc" Version="13.2.3" />
   </ItemGroup>
 
   <ItemGroup>

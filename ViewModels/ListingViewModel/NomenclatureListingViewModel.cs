@@ -22,21 +22,21 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public ICommand AddNomenclatureCommand {  get; }
         public ICommand DeleteNomenclatureCommand { get; }
-        public ICommand SelectionChangedCommand { get; }
         #endregion
 
         public NomenclatureListingViewModel(
             ServicesStore servicesStore, 
             SelectedStore selectedStore, 
+            ControllersStore controllersStore,
             INavigationService addNomenclatureNavigationService) 
         {
-            _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
 
             _allNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
             AddNomenclatureCommand = new NavigateCommand(addNomenclatureNavigationService);
-            DeleteNomenclatureCommand = new DeleteNomenclatureCommand(this, _servicesStore);
+            DeleteNomenclatureCommand = new DeleteNomenclatureCommand(this, servicesStore);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
 
             UpdateData();
@@ -62,10 +62,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
             ObservableCollection<NomenclatureViewModel> _newAllNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
-            IEnumerable<Nomenclature> temp = await _servicesStore.GetService<Nomenclature>().GetItemsAsync();
+            IEnumerable<Nomenclature> temp = await _controllersStore.GetController<Nomenclature>().GetItems();
             foreach (var tempItem in temp)
             {
-                NomenclatureViewModel nomenclatureViewModel = new(tempItem);
+                var nomenclatureViewModel = new NomenclatureViewModel(tempItem);
                 _newAllNomenclatures.Add(nomenclatureViewModel);
             }
 
@@ -85,20 +85,14 @@ namespace CourseProgram.ViewModels.ListingViewModel
                     .FirstOrDefault();
         }
 
-        private void SelectionChangedExecute(DataGrid dataGrid)
-        {
-            if (dataGrid.SelectedItem != null) 
-                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-        }
-
         public override async void UpdateData()
         {
             ObservableCollection<NomenclatureViewModel> _newAllNomenclatures = new ObservableCollection<NomenclatureViewModel>();
 
-            IEnumerable<Nomenclature> temp = await _servicesStore.GetService<Nomenclature>().GetItemsAsync();
+            IEnumerable<Nomenclature> temp = await _controllersStore.GetController<Nomenclature>().GetItems();
             foreach (var tempItem in temp)
             {
-                NomenclatureViewModel nomenclatureViewModel = new(tempItem);
+                var nomenclatureViewModel = new NomenclatureViewModel(tempItem);
                 _newAllNomenclatures.Add(nomenclatureViewModel);
             }
 

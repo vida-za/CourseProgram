@@ -135,19 +135,6 @@
                          Tag="Температурный режим"
                          Margin="5"
                          Text="{Binding NeedTemperature}" />
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         Style="{StaticResource PlaceholderTextBoxStyle}"
-                         Tag="Производитель"
-                         Margin="5"
-                         Text="{Binding Manufacturer}" />
-                <TextBox Grid.Row="2"
-                         Grid.Column="2"
-                         Margin="5"
-                         Style="{StaticResource PlaceholderTextBoxStyle}"
-                         Tag="Срок годности, дни"
-                         Text="{Binding ExpiryDate}" />
-
             </Grid>
 
             <StackPanel Grid.Row="3"

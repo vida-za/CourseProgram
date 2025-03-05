@@ -32,7 +32,7 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && (_viewModel.SelectedItem.GetModel()).TimeEnd == DateTime.MinValue;
+            return base.CanExecute(parameter) && _viewModel.SelectedItem.GetModel().TimeEnd == null;
         }
 
         protected override bool IsItemSelected()
@@ -62,8 +62,8 @@ namespace CourseProgram.Commands.DeleteCommands
                     temp.Status,
                     temp.TimeStart,
                     DateTime.Now,
-                    temp.AddressID
-                    );
+                    temp.AddressID,
+                    temp.CategoryValue);
 
                 bool result = await _servicesStore.GetService<Machine>().UpdateItemAsync(newItem);
                 if (result)

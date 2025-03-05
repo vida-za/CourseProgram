@@ -52,6 +52,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0"
@@ -63,7 +64,10 @@
         <Button Grid.Row="2"
                 Content="Текущие маршруты"
                 Command="{Binding NavigateRoutesCommand}" />
-        <TreeView Grid.Row="3"
+        <Button Grid.Row="3"
+                Content="Создать маршрутный лист"
+                Command="{Binding NavigateItineraryCommand}" />
+        <TreeView Grid.Row="4"
                   Background="Transparent"
                   BorderThickness="0">
             <TreeViewItem Header="Справочники">
@@ -80,7 +84,16 @@
                 <Button Content="Номенклатура"
                         Command="{Binding NavigateNomenclaturesCommand}" />
             </TreeViewItem>
-
+        </TreeView>
+        <TreeView Grid.Row="5"
+                  Background="Transparent"
+                  BorderThickness="0">
+            <TreeViewItem Header="Исторические данные">
+                <Button Content="Заявки"
+                        Command="{Binding NavigateBudHistoryCommand}" />
+                <Button Content="Рейсы"
+                        Command="{Binding NavigateHaulHistoryCommand}" />
+            </TreeViewItem>
         </TreeView>
     </Grid>
 

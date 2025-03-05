@@ -12,20 +12,20 @@ namespace CourseProgram.Stores
 
         public readonly CategoryDataService _categoryService;
 
-        public ServicesStore() 
+        public ServicesStore(DataStore dataStore) 
         {
-            _services[typeof(Address)] = new AddressDataService();
-            _services[typeof(Bud)] = new BudDataService();
-            _services[typeof(Cargo)] = new CargoDataService();
-            _services[typeof(Client)] = new ClientDataService();
-            _services[typeof(Driver)] = new DriverDataService();
-            _services[typeof(DriverCategories)] = new DriverCategoriesDataService();
-            _services[typeof(Haul)] = new HaulDataService();
-            _services[typeof(Machine)] = new MachineDataService();
-            _services[typeof(Nomenclature)] = new NomenclatureDataService();
-            _services[typeof(Order)] = new OrderDataService();
-            _services[typeof(Route)] = new RouteDataService();
-            _services[typeof(Worker)] = new WorkerDataService();
+            _services[typeof(Address)] = new AddressDataService(dataStore);
+            _services[typeof(Bud)] = new BudDataService(dataStore);
+            _services[typeof(Cargo)] = new CargoDataService(dataStore);
+            _services[typeof(Client)] = new ClientDataService(dataStore );
+            _services[typeof(Driver)] = new DriverDataService(dataStore);
+            _services[typeof(DriverCategories)] = new DriverCategoriesDataService(dataStore);
+            _services[typeof(Haul)] = new HaulDataService(dataStore);
+            _services[typeof(Machine)] = new MachineDataService(dataStore);
+            _services[typeof(Nomenclature)] = new NomenclatureDataService(dataStore);
+            _services[typeof(Order)] = new OrderDataService(dataStore);
+            _services[typeof(Route)] = new RouteDataService(dataStore);
+            _services[typeof(Worker)] = new WorkerDataService(dataStore);
 
             _categoryService = new CategoryDataService();
         }

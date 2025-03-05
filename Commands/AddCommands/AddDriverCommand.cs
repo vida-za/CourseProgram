@@ -43,19 +43,21 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            var driver = new Driver(
-                -1,
-                _viewModel.DriverName,
-                _viewModel.BirthDay,
-                _viewModel.Passport,
-                _viewModel.Phone,
-                DateOnly.FromDateTime(DateTime.Now),
-                null
-                );
-
             try
             {
                 await _servicesStore.GetService<Driver>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Driver>().GetFreeID();
+
+                var driver = new Driver(
+                    newID,
+                    _viewModel.DriverName,
+                    _viewModel.BirthDay,
+                    _viewModel.Passport,
+                    _viewModel.Phone,
+                    DateOnly.FromDateTime(DateTime.Now),
+                    null
+                    );
+
                 int resultDrv = await _servicesStore.GetService<Driver>().AddItemAsync(driver);
                 if (resultDrv > 0)
                 {
@@ -75,7 +77,7 @@ namespace CourseProgram.Commands.AddCommands
                         MessageBox.Show("Водитель добавлен, но возникла проблема с категориями", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
-                    MessageBox.Show("Не удалось добавить водителя", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось добавить водителя, возможно такие паспортные данные уже есть в системе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 _navigationService.Navigate();
             }

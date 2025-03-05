@@ -12,12 +12,16 @@ namespace CourseProgram.Commands
     public class StartRouteCommand : CommandBaseAsync
     {
         private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
         private readonly RouteListingViewModel _routeListingViewModel;
         private Route _route;
+        private Machine _machine;
+        private Driver _driver;
 
-        public StartRouteCommand(ServicesStore servicesStore, RouteListingViewModel routeListingViewModel)
+        public StartRouteCommand(ServicesStore servicesStore, ControllersStore controllersStore, RouteListingViewModel routeListingViewModel)
         {
             _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
             _routeListingViewModel = routeListingViewModel;
 
             _routeListingViewModel.PropertyChanged += _routeListingViewModel_PropertyChanged;
@@ -39,10 +43,26 @@ namespace CourseProgram.Commands
                 && _route?.DriverID != null
                 && _route?.AddressStartID != null
                 && _route?.AddressEndID != null;
+
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
+            _machine = await _controllersStore.GetController<Machine>().GetItemByID((int)_route.MachineID);
+            _driver = await _controllersStore.GetController<Driver>().GetItemByID((int)_route.DriverID);
+
+            if (_machine.AddressID != null && _machine.AddressID != _route.AddressStartID)
+            {
+                MessageBox.Show("Машина не находится в пункте начала маршрута", "Маршрут нельзя начать", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!_driver.GetListCategories().Contains(_machine.CategoryValue))
+            {
+                MessageBox.Show("У данного водителя нет прав на управление этим ТС", "Маршрут нельзя начать", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             MessageBoxResult message = MessageBox.Show("Начать маршрут?", "Подтверждение старта", MessageBoxButton.YesNo);
             if (message == MessageBoxResult.Yes)
             {

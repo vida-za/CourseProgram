@@ -1,7 +1,7 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -13,9 +13,11 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class BudDetailViewModel : BaseDetailViewModel
     {
         private readonly BudViewModel _budViewModel;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
         private Client _clientModel;
         private Worker _workerModel;
+        private Address _addressLoad;
+        private Address _addressOnLoad;
 
         public ICommand AcceptBud { get; }
         public ICommand CancelBud { get; }
@@ -34,15 +36,16 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
         public int ID => _budViewModel.ID;
 
-        public BudDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
+        public BudDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, ControllersStore controllersStore, INavigationService closeNavigationService)
         {
             _budViewModel = selectedStore.CurrentBud;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
+            _isHistory = _budViewModel.GetModel().Status != Constants.BudStatusValues.Waiting;
 
             _cargos = new ObservableCollection<CargoViewModel>();
 
-            AcceptBud = new UpdateBudCommand(_servicesStore, _budViewModel, true, closeNavigationService);
-            CancelBud = new UpdateBudCommand(_servicesStore, _budViewModel, false, closeNavigationService);
+            AcceptBud = new UpdateBudCommand(servicesStore, _budViewModel, true, closeNavigationService);
+            CancelBud = new UpdateBudCommand(servicesStore, _budViewModel, false, closeNavigationService);
             Back = new NavigateCommand(closeNavigationService);
 
             UpdateData();
@@ -50,19 +53,34 @@ namespace CourseProgram.ViewModels.DetailViewModel
 
         private async void UpdateData()
         {
-            _clientModel = await _servicesStore.GetService<Client>().GetItemAsync(_budViewModel.ClientID);
-            _workerModel = await _servicesStore.GetService<Worker>().GetItemAsync(_budViewModel.WorkerID);
+            _clientModel = await _controllersStore.GetController<Client>().GetItemByID(_budViewModel.ClientID);
+            _workerModel = await _controllersStore.GetController<Worker>().GetItemByID(_budViewModel.WorkerID);
+            _addressLoad = await _controllersStore.GetController<Address>().GetItemByID(_budViewModel.AddressLoadID);
+            _addressOnLoad = await _controllersStore.GetController<Address>().GetItemByID(_budViewModel.AddressOnLoadID);
 
-            ClientName = _clientModel != null ? _clientModel.Name : "Не указан";
-            WorkerName = _workerModel != null ? _workerModel.FIO : "Не указан";
+            ClientName = _clientModel != null ? _clientModel.Name : "Ошибка";
+            WorkerName = _workerModel != null ? _workerModel.FIO : "Ошибка";
+            AddressLoadName = _addressLoad != null ? _addressLoad.FullAddress : "Ошибка";
+            AddressOnLoadName = _addressOnLoad != null ? _addressOnLoad.FullAddress : "Ошибка";
 
             _cargos.Clear();
 
-            IEnumerable<Cargo> temp = await ((CargoDataService)_servicesStore.GetService<Cargo>()).GetCargosByBudAsync(ID);
+            IEnumerable<Cargo> temp = await ((CargoDataController)_controllersStore.GetController<Cargo>()).GetCargosByBud(ID);
             foreach (var cargo in temp)
             {
-                var cargoViewModel = new CargoViewModel(cargo, _servicesStore);
+                var cargoViewModel = new CargoViewModel(cargo, _controllersStore);
                 _cargos.Add(cargoViewModel);
+            }
+        }
+
+        private bool _isHistory;
+        public bool IsHistory
+        {
+            get => _isHistory;
+            set
+            {
+                _isHistory = value;
+                OnPropertyChanged(nameof(IsHistory));
             }
         }
 
@@ -86,8 +104,30 @@ namespace CourseProgram.ViewModels.DetailViewModel
                 OnPropertyChanged(nameof(WorkerName));
             }
         }
+        private string _addressLoadName;
+        public string AddressLoadName
+        {
+            get => _addressLoadName;
+            set
+            {
+                _addressLoadName = value;
+                OnPropertyChanged(nameof(AddressLoadName));
+            }
+        }
+        private string _addressOnLoadName;
+        public string AddressOnLoadName
+        {
+            get => _addressOnLoadName;
+            set
+            {
+                _addressOnLoadName = value;
+                OnPropertyChanged(nameof(AddressOnLoadName));
+            }
+        }
         public string TimeBud => _budViewModel.TimeBud;
         public string Status => _budViewModel.Status;
         public string Description => _budViewModel.Description;
+        public string DateTimeLoad => _budViewModel.DateTimeLoad;
+        public string DateTimeOnLoad => _budViewModel.DateTimeOnLoad;
     }
 }

@@ -1,8 +1,7 @@
 ﻿using CourseProgram.Models;
+using CourseProgram.Stores;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using static CourseProgram.Models.Constants;
 
@@ -10,11 +9,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class BudDataService : BaseService<Bud>
     {
-        public BudDataService() : base(User.Username, User.Password) { }
-
-        public Task<IEnumerable<Bud>> GetBudsByWorkerController(int workerID) => Task.FromResult(items.Where(b => b.WorkerID == workerID));
-
-        public Task<IEnumerable<Bud>> GetBudsByClientController(int clientID) => Task.FromResult(items.Where(b => b.ClientID == clientID));
+        public BudDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public override Task<Bud> CreateElement(DataRow row)
         {
@@ -23,7 +18,11 @@ namespace CourseProgram.Services.DataServices
                 GetInt(row["КодСотрудника"], 0),
                 GetDateTime(row["ДатаВремяЗаявки"], DateTime.MinValue),
                 GetString(row["Статус"], string.Empty),
-                GetStringOrNull(row["Описание"])));
+                GetStringOrNull(row["Описание"]),
+                GetInt(row["КодАдресаПогрузки"], 0),
+                GetInt(row["КодАдресаРазгрузки"], 0),
+                GetDateTime(row["ДатаВремяПогрузкиПлан"], DateTime.Now),
+                GetDateTime(row["ДатаВремяРазгрузкиПлан"], DateTime.Now)));
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -14,17 +13,17 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class MachineDetailViewModel : BaseDetailViewModel
     {
         private readonly MachineViewModel _machineViewModel;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
 
         private readonly ObservableCollection<RouteViewModel> _routes = new ObservableCollection<RouteViewModel>();
         public IEnumerable<RouteViewModel> Routes => _routes;
 
         public ICommand BackCommand { get; }
 
-        public MachineDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
+        public MachineDetailViewModel(SelectedStore selectedStore, ControllersStore controllersStore, INavigationService closeNavigationService)
         {
             _machineViewModel = selectedStore.CurrentMachine;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             BackCommand = new NavigateCommand(closeNavigationService);
 
@@ -35,19 +34,11 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _routes.Clear();
 
-            IEnumerable<Route> temp = await ((RouteDataService)_servicesStore.GetService<Route>()).GetItemsByMachineAsync(ID);
+            IEnumerable<Route> temp = await ((RouteDataController)_controllersStore.GetController<Route>()).GetRoutesByMachine(ID);
 
             foreach (Route route in temp)
             {
-                Driver? driver = null;
-                Address? addressStart = null;
-                Address? addressEnd = null;
-
-                if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
-                if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
-                if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
-
-                var routeViewModel = new RouteViewModel(route, _machineViewModel.GetModel(), driver, addressStart, addressEnd);
+                var routeViewModel = new RouteViewModel(route, _controllersStore);
                 _routes.Add(routeViewModel);
             }
         }
@@ -69,5 +60,6 @@ namespace CourseProgram.ViewModels.DetailViewModel
         public string TimeStart => _machineViewModel.TimeStart.ToString();
         public string TimeEnd => _machineViewModel.TimeEnd;
         public string FullAddress => _machineViewModel.FullAddress;
+        public string CategoryName => _machineViewModel.CategoryName;
     }
 }

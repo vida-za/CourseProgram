@@ -27,21 +27,24 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            var route = new Route(
-                -1,
-                _viewModel.SelectedMachine?.ID,
-                _viewModel.SelectedDriver?.ID,
-                Constants.RouteTypeValues.Empty,
-                Constants.RouteStatusValues.Waiting,
-                null,
-                _viewModel.SelectedAddressStart?.ID,
-                _viewModel.SelectedAddressEnd?.ID);
-
             IsExecuting = true;
 
             try
             {
                 await _servicesStore.GetService<Route>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Route>().GetFreeID();
+
+                var route = new Route(
+                    newID,
+                    _viewModel.SelectedMachine?.ID,
+                    _viewModel.SelectedDriver?.ID,
+                    Constants.RouteTypeValues.Empty,
+                    Constants.RouteStatusValues.Waiting,
+                    null,
+                    _viewModel.SelectedAddressStart?.ID,
+                    _viewModel.SelectedAddressEnd?.ID);
+
+
                 int result = await _servicesStore.GetService<Route>().AddItemAsync(route);
                 if (result > 0)
                 {

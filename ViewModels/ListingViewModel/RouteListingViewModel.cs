@@ -20,17 +20,17 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public ICommand CancelRoute { get; }
         public ICommand DetailRoute { get; }
 
-        public RouteListingViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService detailRouteNavigationService)
+        public RouteListingViewModel(ServicesStore servicesStore, SelectedStore selectedStore, ControllersStore controllersStore, INavigationService detailRouteNavigationService)
         { 
-            _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
 
             _progRoutes = new ObservableCollection<RouteViewModel>();
             _waitRoutes = new ObservableCollection<RouteViewModel>();
 
-            CompleteRoute = new CompleteRouteCommand(_servicesStore, this);
-            StartRoute = new StartRouteCommand(_servicesStore, this);
-            CancelRoute = new CancelRouteCommand(_servicesStore, this);
+            CompleteRoute = new CompleteRouteCommand(servicesStore, this);
+            StartRoute = new StartRouteCommand(servicesStore, controllersStore, this);
+            CancelRoute = new CancelRouteCommand(servicesStore, this);
             DetailRoute = new NavigateDetailCommand(detailRouteNavigationService);
 
             UpdateData();
@@ -54,10 +54,16 @@ namespace CourseProgram.ViewModels.ListingViewModel
             get => _selectedProgRoute;
             set
             {
-                if (_selectedProgRoute == value) return;
-                _selectedProgRoute = value;
-                _selectedStore.CurrentRoute = _selectedProgRoute;
-                SelectedWaitRoute = null;
+                if (_selectedProgRoute == value || value == null)
+                {
+                    _selectedProgRoute = null;
+                }
+                else
+                {
+                    _selectedProgRoute = value;
+                    _selectedStore.CurrentRoute = _selectedProgRoute;
+                    SelectedWaitRoute = null;
+                }
                 OnPropertyChanged(nameof(SelectedProgRoute));
             }
         }
@@ -68,10 +74,16 @@ namespace CourseProgram.ViewModels.ListingViewModel
             get => _selectedWaitRoute;
             set
             {
-                if (_selectedWaitRoute == value) return;
-                _selectedWaitRoute = value;
-                _selectedStore.CurrentRoute = _selectedWaitRoute;
-                SelectedProgRoute = null;
+                if (_selectedWaitRoute == value || value == null)
+                {
+                    _selectedWaitRoute = null;
+                }
+                else
+                {
+                    _selectedWaitRoute = value;
+                    _selectedStore.CurrentRoute = _selectedWaitRoute;
+                    SelectedProgRoute = null;
+                }
                 OnPropertyChanged(nameof(SelectedWaitRoute));
             }
         }
@@ -102,29 +114,19 @@ namespace CourseProgram.ViewModels.ListingViewModel
 
         public override async void UpdateData()
         {
-            IEnumerable<Route> temp = await _servicesStore.GetService<Route>().GetItemsAsync();
+            IEnumerable<Route> temp = await _controllersStore.GetController<Route>().GetItems();
             foreach (var route in temp)
             {
                 if (route.Status == Constants.RouteStatusValues.InProgress || route.Status == Constants.RouteStatusValues.Waiting)
                 {
-                    Machine? machine = null;
-                    Driver? driver = null;
-                    Address? addressStart = null;
-                    Address? addressEnd = null;
-
-                    if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
-                    if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
-                    if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
-                    if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
-
                     if (route.Status == Constants.RouteStatusValues.InProgress)
                     {
-                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        var routeViewModel = new RouteViewModel(route, _controllersStore);
                         _progRoutes.Add(routeViewModel);
                     }
                     else if (route.Status == Constants.RouteStatusValues.Waiting)
                     {
-                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        var routeViewModel = new RouteViewModel(route, _controllersStore);
                         _waitRoutes.Add(routeViewModel);
                     }
                 }
@@ -139,29 +141,19 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<RouteViewModel> _newProgRoutes = new ObservableCollection<RouteViewModel>();
             ObservableCollection<RouteViewModel> _newWaitRoutes = new ObservableCollection<RouteViewModel>();
 
-            IEnumerable<Route> temp = await _servicesStore.GetService<Route>().GetItemsAsync();
+            IEnumerable<Route> temp = await _controllersStore.GetController<Route>().GetItems();
             foreach (var route in temp)
             {
                 if (route.Status == Constants.RouteStatusValues.InProgress || route.Status == Constants.RouteStatusValues.Waiting)
                 {
-                    Machine? machine = null;
-                    Driver? driver = null;
-                    Address? addressStart = null;
-                    Address? addressEnd = null;
-
-                    if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
-                    if (route.DriverID != null) driver = await _servicesStore.GetService<Driver>().GetItemAsync((int)route.DriverID);
-                    if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
-                    if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
-
                     if (route.Status == Constants.RouteStatusValues.InProgress)
                     {
-                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        var routeViewModel = new RouteViewModel(route, _controllersStore);
                         _newProgRoutes.Add(routeViewModel);
                     }
                     else if (route.Status == Constants.RouteStatusValues.Waiting)
                     {
-                        var routeViewModel = new RouteViewModel(route, machine, driver, addressStart, addressEnd);
+                        var routeViewModel = new RouteViewModel(route, _controllersStore);
                         _newWaitRoutes.Add(routeViewModel);
                     }
                 }

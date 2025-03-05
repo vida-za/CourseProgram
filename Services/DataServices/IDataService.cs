@@ -13,8 +13,9 @@ namespace CourseProgram.Services.DataServices
         Task<bool> UpdateItemAsync(T item);
         Task<bool> DeleteItemAsync(int id);
         Task<T> GetItemAsync(int id);
-        Task<IEnumerable<T>> GetItemsAsync();
+        Task GetItemsAsync();
         Task<T> CreateElement(DataRow row);
-        void FillInsertParams(Query query, T item);
+        Task FillInsertParams(Query query, T item);
+        Task<int> GetFreeID();
     }
 }

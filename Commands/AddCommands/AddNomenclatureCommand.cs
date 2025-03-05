@@ -44,8 +44,13 @@ namespace CourseProgram.Commands.AddCommands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            Nomenclature nomenclature = new Nomenclature(
-                -1,
+            try
+            {
+                await _servicesStore.GetService<Nomenclature>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Nomenclature>().GetFreeID();
+
+                Nomenclature nomenclature = new Nomenclature(
+                newID,
                 _viewModel.Name,
                 _viewModel.Type,
                 _viewModel.CategoryCargo,
@@ -56,14 +61,10 @@ namespace CourseProgram.Commands.AddCommands
                 _viewModel.Unit,
                 _viewModel.Pack == null ? Constants.GetEnumDescription(Constants.NomenclaturePackingValues.Null) : _viewModel.Pack,
                 _viewModel.NeedTemperature,
-                _viewModel.DangerousClass == null ? Constants.GetEnumDescription(Constants.NomenclatureDangerousValues.Null) : _viewModel.DangerousClass,
-                _viewModel.Manufacturer,
-                _viewModel.ExpiryDate == null ? null : int.Parse(_viewModel.ExpiryDate)
+                _viewModel.DangerousClass == null ? Constants.GetEnumDescription(Constants.NomenclatureDangerousValues.Null) : _viewModel.DangerousClass
                 );
 
-            try
-            {
-                await _servicesStore.GetService<Nomenclature>().FindMaxEmptyID();
+
                 int result = await _servicesStore.GetService<Nomenclature>().AddItemAsync(nomenclature);
                 if (result > 0)
                     MessageBox.Show("Элемент добавлен!", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);

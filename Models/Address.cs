@@ -18,8 +18,6 @@ namespace CourseProgram.Models
         public string? Structure { get; }
         [DisplayName("Корпус")]
         public string? Frame { get; }
-        [DisplayName("Активен")]
-        public bool Active { get; }
         public string FullAddress { get; }
 
         public Address()
@@ -30,7 +28,6 @@ namespace CourseProgram.Models
             House = null;
             Structure = null;
             Frame = null;
-            Active = true;
 
             FullAddress = SetFullAddress();
         }
@@ -41,8 +38,7 @@ namespace CourseProgram.Models
             string street,
             string? house,
             string? structure,
-            string? frame,
-            bool active)
+            string? frame)
         {
             ID = id;
             City = city;
@@ -50,7 +46,6 @@ namespace CourseProgram.Models
             House = house;
             Structure = structure;
             Frame = frame;
-            Active = active;
 
             FullAddress = SetFullAddress();
         }
@@ -86,8 +81,7 @@ namespace CourseProgram.Models
                 "Улица",
                 "Дом",
                 "Строение",
-                "Корпус",
-                "Активен"
+                "Корпус"
             };
         }
 

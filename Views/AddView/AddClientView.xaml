@@ -95,26 +95,6 @@
                         <beh:PhoneNumberMaskBehavior />
                     </i:Interaction.Behaviors>
                 </TextBox>
-                <TextBox Grid.Row="2"
-                         Grid.Column="1"
-                         Style="{StaticResource PlaceholderTextBoxStyle}"
-                         Tag="Контакт погрузки"
-                         Margin="5"
-                         Text="{Binding PhoneLoad, UpdateSourceTrigger=PropertyChanged}">
-                    <i:Interaction.Behaviors>
-                        <beh:PhoneNumberMaskBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <TextBox Grid.Row="2"
-                         Grid.Column="2"
-                         Style="{StaticResource PlaceholderTextBoxStyle}"
-                         Tag="Контакт разгрузки"
-                         Margin="5"
-                         Text="{Binding PhoneOnLoad, UpdateSourceTrigger=PropertyChanged}">
-                    <i:Interaction.Behaviors>
-                        <beh:PhoneNumberMaskBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
             </Grid>
         </GroupBox>
 

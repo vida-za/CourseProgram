@@ -7,9 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CourseProgram.Commands;
 using CourseProgram.Commands.DeleteCommands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using GalaSoft.MvvmLight.Command;
@@ -21,17 +21,19 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public DriverListingViewModel(
             ServicesStore servicesStore,
             SelectedStore selectedStore,
+            ControllersStore controllersStore,
             INavigationService addDriverNavigationService,
             INavigationService detailDriverNavigationService)
         {
-            _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
+
             _allDrivers = new ObservableCollection<DriverViewModel>();
             _disDrivers = new ObservableCollection<DriverViewModel>();
             _items = new ObservableCollection<DriverViewModel>();
 
             AddDriverCommand = new NavigateCommand(addDriverNavigationService);
-            DeleteDriverCommand = new DeleteDriverCommand(this, _servicesStore);
+            DeleteDriverCommand = new DeleteDriverCommand(this, servicesStore);
             DetailDriverCommand = new NavigateDetailCommand(detailDriverNavigationService);
             SwitchBusyDrivers = new SwitchHandlerCommand(this);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
@@ -57,10 +59,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            List<Driver> temp = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync()).ToList();
+            List<Driver> temp = (await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(true)).ToList();
             foreach (Driver itemTemp in temp)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataController)_controllersStore.GetController<DriverCategories>()).GetDriverCategories(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -72,10 +74,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            temp = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetDisDriversAsync()).ToList();
+            temp = (await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(false)).ToList();
             foreach (Driver itemTemp in temp)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataController)_controllersStore.GetController<DriverCategories>()).GetDriverCategories(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -114,7 +116,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public ICommand DeleteDriverCommand { get; }
         public ICommand DetailDriverCommand { get; }
         public ICommand SwitchBusyDrivers { get; }
-        public ICommand SelectionChangedCommand { get; }
 
         private DriverViewModel _selectedItem;
         public DriverViewModel SelectedItem
@@ -153,12 +154,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 SelectedItem = Items.FirstOrDefault(obj => obj.FIO.ToLower().Contains(TextFilter.ToLower()), SelectedItem);
         }
 
-        private void SelectionChangedExecute(DataGrid dataGrid)
-        {
-            if (dataGrid.SelectedItem != null)
-                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-        }
-
         public override async Task UpdateDataAsync()
         {
             var currentSelected = SelectedItem;
@@ -166,10 +161,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<DriverViewModel> _newAllDrivers = new ObservableCollection<DriverViewModel>();
             ObservableCollection<DriverViewModel> _newDisDrivers = new ObservableCollection<DriverViewModel>();
 
-            List<Driver> tempAll = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetActDriversAsync()).ToList();
+            List<Driver> tempAll = (await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(true)).ToList();
             foreach (Driver itemTemp in tempAll)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataController)_controllersStore.GetController<DriverCategories>()).GetDriverCategories(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {
@@ -181,10 +176,10 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 _newAllDrivers.Add(driverViewModel);
             }
 
-            List<Driver> tempDis = (await ((DriverDataService)_servicesStore.GetService<Driver>()).GetDisDriversAsync()).ToList();
+            List<Driver> tempDis = (await ((DriverDataController)_controllersStore.GetController<Driver>()).GetActiveDrivers(false)).ToList();
             foreach (Driver itemTemp in tempDis)
             {
-                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataService)_servicesStore.GetService<DriverCategories>()).GetListForDriverAsync(itemTemp.ID);
+                IEnumerable<DriverCategories> tempDrvCats = await ((DriverCategoriesDataController)_controllersStore.GetController<DriverCategories>()).GetDriverCategories(itemTemp.ID);
                 var tempCats = new List<Category>();
                 foreach (var drvCat in tempDrvCats)
                 {

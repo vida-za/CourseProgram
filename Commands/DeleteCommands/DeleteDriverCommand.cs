@@ -31,7 +31,7 @@ namespace CourseProgram.Commands.DeleteCommands
 
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter) && _viewModel.SelectedItem.DateEnd == DateOnly.MinValue.ToString();
+            return base.CanExecute(parameter) && _viewModel.SelectedItem.GetModel().DateEnd == null;
         }
 
         protected override bool IsItemSelected()

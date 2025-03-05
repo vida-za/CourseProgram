@@ -1,7 +1,10 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Commands.AddCommands;
+using CourseProgram.Models;
 using CourseProgram.Services;
+using CourseProgram.Services.DataServices.ExtDataService;
 using CourseProgram.Stores;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using static CourseProgram.Models.Constants;
 
@@ -9,12 +12,34 @@ namespace CourseProgram.ViewModels.AddViewModel
 {
     public class AddMachineViewModel : BaseAddViewModel
     {
+        private readonly CategoryDataService _dataService;
+        private readonly List<Category> _categories;
+
         public AddMachineViewModel(ServicesStore servicesStore, INavigationService machineViewNavigationService)
         {
+            _categories = new List<Category>();
+
             SubmitCommand = new AddMachineCommand(this, servicesStore, machineViewNavigationService);
             CancelCommand = new NavigateCommand(machineViewNavigationService);
+
+            _dataService = servicesStore._categoryService;
+
+            UpdateData();
         }
 
+        private async void UpdateData()
+        {
+            _categories.Clear();
+
+            IEnumerable<Category> temp = await _dataService.GetTemplateList();
+
+            foreach (Category category in temp)
+            {
+                _categories.Add(category);
+            }
+        }
+
+        public List<Category> Categories => _categories;
         public ObservableCollection<string> TypeMachineArray => GetFullEnumDescription(typeof(MachineTypeValues));
         public ObservableCollection<string> TypeBodyworkArray => GetFullEnumDescription(typeof(MachineTypeBodyworkValues));
         public ObservableCollection<string> TypeLoadingArray => GetFullEnumDescription(typeof(MachineTypeLoadingValues));
@@ -184,6 +209,17 @@ namespace CourseProgram.ViewModels.AddViewModel
             {
                 _hydroBoard = value;
                 OnPropertyChanged(nameof(HydroBoard));
+            }
+        }
+
+        private Category _selectedCategory;
+        public Category SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged(nameof(SelectedCategory));
             }
         }
         #endregion

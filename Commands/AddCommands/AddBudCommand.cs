@@ -14,11 +14,13 @@ namespace CourseProgram.Commands.AddCommands
     public class AddBudCommand : BaseAddCommand
     {
         private readonly AddBudViewModel _viewModel;
+        private readonly ControllersStore _controllersStore;
 
-        public AddBudCommand(AddBudViewModel viewModel, ServicesStore servicesStore, INavigationService operationalViewNavigationService)
+        public AddBudCommand(AddBudViewModel viewModel, ServicesStore servicesStore, ControllersStore controllersStore, INavigationService operationalViewNavigationService)
         {
             _viewModel = viewModel;
             _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
             _navigationService = operationalViewNavigationService;
 
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -28,6 +30,10 @@ namespace CourseProgram.Commands.AddCommands
         {
             if (e.PropertyName == nameof(_viewModel.SelectedClient) ||
                 e.PropertyName == nameof(_viewModel.SelectedWorker) ||
+                e.PropertyName == nameof(_viewModel.SelectedAddressLoad) ||
+                e.PropertyName == nameof(_viewModel.SelectedAddressOnLoad) ||
+                e.PropertyName == nameof(_viewModel.DateTimeLoadPlan) ||
+                e.PropertyName == nameof(_viewModel.DateTimeOnLoadPlan) ||
                 e.PropertyName == nameof(_viewModel.Cargos.Count))
             {
                 OnCanExecuteChanged();
@@ -38,23 +44,34 @@ namespace CourseProgram.Commands.AddCommands
         {
             return _viewModel.SelectedClient != null &&
                    _viewModel.SelectedWorker != null &&
+                   _viewModel.SelectedAddressLoad != null &&
+                   _viewModel.SelectedAddressOnLoad != null &&
+                   _viewModel.DateTimeLoadPlan > DateTime.Now &&
+                   _viewModel.DateTimeOnLoadPlan > DateTime.Now &&
+                   _viewModel.DateTimeOnLoadPlan > _viewModel.DateTimeLoadPlan &&
                    _viewModel.Cargos.Count > 0 &&
                    base.CanExecute(parameter);
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            var bud = new Bud(
-                -1,
-                _viewModel.SelectedClient.ID,
-                _viewModel.SelectedWorker.ID,
-                DateTime.Now,
-                BudStatusValues.Waiting,
-                _viewModel.Description); 
-
             try
             {
                 await _servicesStore.GetService<Bud>().FindMaxEmptyID();
+                int newID = await _servicesStore.GetService<Bud>().GetFreeID();
+
+                var bud = new Bud(
+                    newID,
+                    _viewModel.SelectedClient.ID,
+                    _viewModel.SelectedWorker.ID,
+                    DateTime.Now,
+                    BudStatusValues.Waiting,
+                    _viewModel.Description, 
+                    _viewModel.SelectedAddressLoad.ID,
+                    _viewModel.SelectedAddressOnLoad.ID,
+                    _viewModel.DateTimeLoadPlan,
+                    _viewModel.DateTimeOnLoadPlan);
+
                 int resultBud = await _servicesStore.GetService<Bud>().AddItemAsync(bud);
                 if (resultBud > 0)
                 {
@@ -66,6 +83,7 @@ namespace CourseProgram.Commands.AddCommands
                             FixFieldsCargo(cargo);
 
                             await _servicesStore.GetService<Cargo>().FindMaxEmptyID();
+                            cargo.ID = await _servicesStore.GetService<Cargo>().GetFreeID();
                             int temp = await _servicesStore.GetService<Cargo>().AddItemAsync(cargo.ToCargo(resultBud));
                             if (temp == 0)
                                 resultCargo = false;
@@ -93,7 +111,7 @@ namespace CourseProgram.Commands.AddCommands
         {
             if (!(cargo.Volume != null && cargo.Weight != "0"))
             {
-                Nomenclature nomenclature = await _servicesStore.GetService<Nomenclature>().GetItemAsync(cargo.NomenclatureID);
+                Nomenclature nomenclature = await _controllersStore.GetController<Nomenclature>().GetItemByID(cargo.NomenclatureID);
 
                 if (!float.TryParse(cargo.Volume, out _) && int.TryParse(cargo.Count, out int counts) && nomenclature.Length != null && nomenclature.Width != null && nomenclature.Height != null)
                 {

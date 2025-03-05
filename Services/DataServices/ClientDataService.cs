@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Models;
 using CourseProgram.Services.DBServices;
+using CourseProgram.Stores;
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace CourseProgram.Services.DataServices
 {
     public class ClientDataService : BaseService<Client>
     {
-        public ClientDataService() : base(User.Username, User.Password) { }
+        public ClientDataService(DataStore dataStore) : base(User.Username, User.Password, dataStore) { }
 
         public async Task<bool> CheckCanDelete(int id)
         {
@@ -57,9 +58,7 @@ namespace CourseProgram.Services.DataServices
                         GetString(row["РасчётныйСчёт"], string.Empty),
                         GetStringOrNull(row["БИК"]),
                         GetStringOrNull(row["КорреспондентскийСчёт"]),
-                        GetStringOrNull(row["Банк"]),
-                        GetString(row["КонтактЗагрузки"], string.Empty),
-                        GetString(row["КонтактВыгрузки"], string.Empty)
+                        GetStringOrNull(row["Банк"])
                         ));
         }
     }

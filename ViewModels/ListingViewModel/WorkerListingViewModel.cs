@@ -1,5 +1,6 @@
 ﻿using CourseProgram.Commands;
 using CourseProgram.Commands.DeleteCommands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
 using CourseProgram.Stores;
@@ -25,25 +26,25 @@ namespace CourseProgram.ViewModels.ListingViewModel
         public ICommand AddWorkerCommand { get; }
         public ICommand DeleteWorkerCommand { get; }
         public ICommand DetailWorkerCommand { get; }
-        public ICommand SelectionChangedCommand { get; }
         public ICommand SwitchHandlerCommand { get; }
         #endregion
 
         public WorkerListingViewModel(
             ServicesStore servicesStore,
             SelectedStore selectedStore,
+            ControllersStore controllersStore,
             INavigationService addWorkerNavigationService,
             INavigationService detailWorkerNavigationService)
         {
-            _servicesStore = servicesStore;
             _selectedStore = selectedStore;
+            _controllersStore = controllersStore;
 
             _allWorkers = new ObservableCollection<WorkerViewModel>();
             _rdyWorkers = new ObservableCollection<WorkerViewModel>();
             _disWorkers = new ObservableCollection<WorkerViewModel>();
 
             AddWorkerCommand = new NavigateCommand(addWorkerNavigationService);
-            DeleteWorkerCommand = new DeleteWorkerCommand(this, _servicesStore);
+            DeleteWorkerCommand = new DeleteWorkerCommand(this, servicesStore);
             DetailWorkerCommand = new NavigateDetailCommand(detailWorkerNavigationService);
             SelectionChangedCommand = new RelayCommand<DataGrid>(SelectionChangedExecute);
             SwitchHandlerCommand = new SwitchHandlerCommand(this);
@@ -71,21 +72,21 @@ namespace CourseProgram.ViewModels.ListingViewModel
             var _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
             var _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
-            IEnumerable<Worker> temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            IEnumerable<Worker> temp = await _controllersStore.GetController<Worker>().GetItems();
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
                 _newAllWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            temp = await ((WorkerDataController)_controllersStore.GetController<Worker>()).GetActiveWorkers(true);
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
                 _newRdyWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            temp = await ((WorkerDataController)_controllersStore.GetController<Worker>()).GetActiveWorkers(false);
             foreach (Worker worker in temp)
             {
                 var workerViewModel = new WorkerViewModel(worker);
@@ -112,12 +113,6 @@ namespace CourseProgram.ViewModels.ListingViewModel
                 SelectedItem = Items.FirstOrDefault(obj => obj.FIO.ToLower().Contains(TextFilter.ToLower()), SelectedItem);
         }
 
-        private void SelectionChangedExecute(DataGrid dataGrid)
-        {
-            if (dataGrid.SelectedItem != null)
-                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-        }
-
         public override void SwitchHandler()
         {
             base.SwitchHandler();
@@ -131,24 +126,24 @@ namespace CourseProgram.ViewModels.ListingViewModel
             ObservableCollection<WorkerViewModel> _newRdyWorkers = new ObservableCollection<WorkerViewModel>();
             ObservableCollection<WorkerViewModel> _newDisWorkers = new ObservableCollection<WorkerViewModel>();
 
-            IEnumerable<Worker> temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            IEnumerable<Worker> temp = await _controllersStore.GetController<Worker>().GetItems();
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newAllWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            temp = await ((WorkerDataController)_controllersStore.GetController<Worker>()).GetActiveWorkers(true);
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newRdyWorkers.Add(workerViewModel);
             }
 
-            temp = await _servicesStore.GetService<Worker>().GetItemsAsync();
+            temp = await ((WorkerDataController)_controllersStore.GetController<Worker>()).GetActiveWorkers(false);
             foreach (Worker worker in temp)
             {
-                WorkerViewModel workerViewModel = new(worker);
+                var workerViewModel = new WorkerViewModel(worker);
                 _newDisWorkers.Add(workerViewModel);
             }
 

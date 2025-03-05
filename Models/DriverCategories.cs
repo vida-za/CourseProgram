@@ -36,7 +36,7 @@ namespace CourseProgram.Models
             };
         }
 
-        public bool Equals(DriverCategories? other) => other != null && ID == other.ID;
+        public bool Equals(DriverCategories? other) => other != null && DriverID == other.DriverID && CategoryID == other.CategoryID;
 
         public override bool Equals(object obj) => Equals(obj as DriverCategories);
 

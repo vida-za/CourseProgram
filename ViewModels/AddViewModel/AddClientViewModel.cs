@@ -156,28 +156,6 @@ namespace CourseProgram.ViewModels.AddViewModel
                 }
             }
         }
-
-        private string _phoneLoad;
-        public string PhoneLoad
-        {
-            get => _phoneLoad;
-            set
-            {
-                _phoneLoad = value;
-                OnPropertyChanged(nameof(PhoneLoad));
-            }
-        }
-
-        private string _phoneOnLoad;
-        public string PhoneOnLoad
-        {
-            get => _phoneOnLoad;
-            set
-            {
-                _phoneOnLoad = value;
-                OnPropertyChanged(nameof(PhoneLoad));
-            }
-        }
         #endregion
     }
 }

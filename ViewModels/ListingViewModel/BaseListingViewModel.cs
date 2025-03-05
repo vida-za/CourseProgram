@@ -1,5 +1,7 @@
 ﻿using CourseProgram.Stores;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace CourseProgram.ViewModels.ListingViewModel
@@ -8,8 +10,11 @@ namespace CourseProgram.ViewModels.ListingViewModel
     {
         protected ServicesStore _servicesStore;
         protected SelectedStore _selectedStore;
+        protected ControllersStore _controllersStore;
 
         protected DispatcherTimer updateTimer;
+
+        public ICommand SelectionChangedCommand { get; protected set; }
 
         private string _textFilter;
         public string TextFilter
@@ -34,6 +39,12 @@ namespace CourseProgram.ViewModels.ListingViewModel
                     TextFilter = string.Empty;
                 OnPropertyChanged(nameof(StateFilter));
             }
+        }
+
+        protected static void SelectionChangedExecute(DataGrid dataGrid)
+        {
+            if (dataGrid.SelectedItem != null)
+                dataGrid.ScrollIntoView(dataGrid.SelectedItem);
         }
 
         protected abstract void Find();

@@ -40,6 +40,9 @@ namespace CourseProgram.Models
         public DateTime? TimeEnd { get; }
         [DisplayName("КодАдреса")]
         public int? AddressID { get; }
+        [DisplayName("КодКатегории")]
+        public int CategoryID { get; }
+        public Category CategoryValue { get; }
 
         public Machine()
         {
@@ -60,6 +63,8 @@ namespace CourseProgram.Models
             TimeStart = new DateTime();
             TimeEnd = null;
             AddressID = null;
+            CategoryID = 0;
+            CategoryValue = new Category(CategoryID);
         }
 
         public Machine(
@@ -79,7 +84,8 @@ namespace CourseProgram.Models
             string status,
             DateTime timeStart,
             DateTime? timeEnd,
-            int? addressID)
+            int? addressID,
+            int categoryID)
         {
             ID = id;
             LoadCapacity = loadCapacity;
@@ -94,6 +100,8 @@ namespace CourseProgram.Models
             TimeStart = timeStart;
             TimeEnd = timeEnd;
             AddressID = addressID;
+            CategoryID = categoryID;
+            CategoryValue = new Category(categoryID);
 
             TypeMachine = typeMachine switch
             {
@@ -145,7 +153,8 @@ namespace CourseProgram.Models
             MachineStatusValues status,
             DateTime timeStart,
             DateTime? timeEnd,
-            int? addressID)
+            int? addressID,
+            Category categoryValue)
         {
             ID = iD;
             TypeMachine = typeMachine;
@@ -164,6 +173,8 @@ namespace CourseProgram.Models
             TimeStart = timeStart;
             TimeEnd = timeEnd;
             AddressID = addressID;
+            CategoryID = (int)categoryValue.EnumCategory;
+            CategoryValue = categoryValue;
         }
 
         public static string GetTable() => "Машина";
@@ -188,7 +199,8 @@ namespace CourseProgram.Models
                 "Состояние",
                 "ДатаВремяПоступления",
                 "ДатаВремяСписания",
-                "КодАдреса"
+                "КодАдреса",
+                "КодКатегории"
             };
         }
 

@@ -1,7 +1,7 @@
 ﻿using CourseProgram.Commands;
+using CourseProgram.Controllers.DataControllers.EntityDataControllers;
 using CourseProgram.Models;
 using CourseProgram.Services;
-using CourseProgram.Services.DataServices;
 using CourseProgram.Stores;
 using CourseProgram.ViewModels.EntityViewModel;
 using System.Collections.Generic;
@@ -13,17 +13,17 @@ namespace CourseProgram.ViewModels.DetailViewModel
     public class DriverDetailViewModel : BaseDetailViewModel
     {
         private readonly DriverViewModel _driverViewModel;
-        private readonly ServicesStore _servicesStore;
+        private readonly ControllersStore _controllersStore;
 
         private ObservableCollection<RouteViewModel> _routes = new ObservableCollection<RouteViewModel>();
         public IEnumerable<RouteViewModel> Routes => _routes;
 
         public ICommand BackCommand { get; }
 
-        public DriverDetailViewModel(ServicesStore servicesStore, SelectedStore selectedStore, INavigationService closeNavigationService)
+        public DriverDetailViewModel(SelectedStore selectedStore, ControllersStore controllersStore, INavigationService closeNavigationService)
         {
             _driverViewModel = selectedStore.CurrentDriver;
-            _servicesStore = servicesStore;
+            _controllersStore = controllersStore;
 
             BackCommand = new NavigateCommand(closeNavigationService);
 
@@ -34,19 +34,11 @@ namespace CourseProgram.ViewModels.DetailViewModel
         {
             _routes.Clear();
 
-            IEnumerable<Route> temp = await ((RouteDataService)_servicesStore.GetService<Route>()).GetItemsByDriverAsync(ID);
+            IEnumerable<Route> temp = await ((RouteDataController)_controllersStore.GetController<Route>()).GetRoutesByDriver(ID);
 
             foreach (Route route in temp)
             {
-                Machine? machine = null;
-                Address? addressStart = null;
-                Address? addressEnd = null;
-
-                if (route.MachineID != null) machine = await _servicesStore.GetService<Machine>().GetItemAsync((int)route.MachineID);
-                if (route.AddressStartID != null) addressStart = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressStartID);
-                if (route.AddressEndID != null) addressEnd = await _servicesStore.GetService<Address>().GetItemAsync((int)route.AddressEndID);
-
-                var routeViewModel = new RouteViewModel(route, machine, _driverViewModel.GetModel(), addressStart, addressEnd);
+                var routeViewModel = new RouteViewModel(route, _controllersStore);
                 _routes.Add(routeViewModel);
             }
         }
